@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_02_082459) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_02_084341) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -47,6 +47,49 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_02_082459) do
     t.bigint "model_id"
     t.datetime "updated_at", null: false
     t.index ["model_id"], name: "index_chats_on_model_id"
+  end
+
+  create_table "creators", force: :cascade do |t|
+    t.string "audience"
+    t.datetime "created_at", null: false
+    t.string "goal"
+    t.string "name"
+    t.string "topic"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_creators_on_user_id"
+  end
+
+  create_table "generated_ideas", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.bigint "idea_id", null: false
+    t.string "title"
+    t.string "topic"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["idea_id"], name: "index_generated_ideas_on_idea_id"
+    t.index ["user_id"], name: "index_generated_ideas_on_user_id"
+  end
+
+  create_table "ideas", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "title"
+    t.string "topic"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_ideas_on_user_id"
+  end
+
+  create_table "linkedin_posts", force: :cascade do |t|
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.string "hook"
+    t.bigint "script_id", null: false
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.index ["script_id"], name: "index_linkedin_posts_on_script_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -91,6 +134,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_02_082459) do
     t.index ["modalities"], name: "index_models_on_modalities", using: :gin
     t.index ["provider", "model_id"], name: "index_models_on_provider_and_model_id", unique: true
     t.index ["provider"], name: "index_models_on_provider"
+  end
+
+  create_table "scripts", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.bigint "idea_id", null: false
+    t.string "length"
+    t.string "style"
+    t.text "system_prompt"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.index ["idea_id"], name: "index_scripts_on_idea_id"
   end
 
   create_table "solid_cable_messages", force: :cascade do |t|
@@ -263,9 +318,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_02_082459) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "chats", "models"
+  add_foreign_key "creators", "users"
+  add_foreign_key "generated_ideas", "ideas"
+  add_foreign_key "generated_ideas", "users"
+  add_foreign_key "ideas", "users"
+  add_foreign_key "linkedin_posts", "scripts"
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "models"
   add_foreign_key "messages", "tool_calls"
+  add_foreign_key "scripts", "ideas"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

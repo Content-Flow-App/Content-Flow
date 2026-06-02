@@ -1,0 +1,2 @@
+class GeneratedIdeasController < ApplicationController
+end
