@@ -1,0 +1,12 @@
+<% if notice %>
+  <div data-controller="flash" class="flex items-center gap-3 px-4 py-3 m-2 rounded-lg bg-blue-50 text-blue-800 text-sm" role="alert">
+    <span class="flex-1"><%= notice %></span>
+    <button type="button" data-action="click->flash#dismiss" class="text-blue-500 hover:text-blue-700 font-bold" aria-label="Close">&times;</button>
+  </div>
+<% end %>
+<% if alert %>
+  <div data-controller="flash" class="flex items-center gap-3 px-4 py-3 m-2 rounded-lg bg-yellow-50 text-yellow-800 text-sm" role="alert">
+    <span class="flex-1"><%= alert %></span>
+    <button type="button" data-action="click->flash#dismiss" class="text-yellow-500 hover:text-yellow-700 font-bold" aria-label="Close">&times;</button>
+  </div>
+<% end %>
