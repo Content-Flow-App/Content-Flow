@@ -1,5 +1,12 @@
 class CreatorsController < ApplicationController
-  before_action :set_creator, only: [:edit, :update]
+  before_action :set_creator, only: [ :show, :edit, :update ]
+
+  # def show
+  # end
+
+  def new
+    @creator = current_user.build_creator
+  end
 
   def create
     @creator = current_user.build_creator(creator_params)
@@ -18,12 +25,15 @@ class CreatorsController < ApplicationController
     end
   end
 
-  def edit
-  end
-
+  #  def edit
+  #  end
   private
 
   def set_creator
     @creator = current_user.creator
+  end
+
+  def creator_params
+    params.require(:creators).permit(:name, :topic, :goal, :audience)
   end
 end
