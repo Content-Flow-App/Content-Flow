@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- SQL XML created by WWW SQL Designer, https://github.com/ondras/wwwsqldesigner/ -->
+<!-- Generated from db/schema.rb (version 2026_06_02_084341) — app-model tables only -->
+<sql>
+<datatypes db="postgresql">
+      <group label="Numeric" color="rgb(238,238,170)">
+        <type label="Integer" length="0" sql="INTEGER" re="INT" quote=""/>
+        <type label="Small Integer" length="0" sql="SMALLINT" quote=""/>
+        <type label="Big Integer" length="0" sql="BIGINT" quote=""/>
+        <type label="Decimal" length="1" sql="DECIMAL" re="numeric" quote=""/>
+        <type label="Serial" length="0" sql="SERIAL" re="SERIAL4" fk="Integer" quote=""/>
+        <type label="Big Serial" length="0" sql="BIGSERIAL" re="SERIAL8" fk="Big      Integer" quote=""/>
+        <type label="Real" length="0" sql="BIGINT" quote=""/>
+        <type label="Single precision" length="0" sql="FLOAT" quote=""/>
+        <type label="Double precision" length="0" sql="DOUBLE" re="DOUBLE" quote=""/>
+      </group>
+      <group label="Character" color="rgb(255,200,200)">
+        <type label="Char" length="1" sql="CHAR" quote="'"/>
+        <type label="Varchar" length="1" sql="VARCHAR" re="CHARACTER VARYING" quote="'"/>
+        <type label="Text" length="0" sql="TEXT" quote="'"/>
+        <type label="Binary" length="1" sql="BYTEA" quote="'"/>
+        <type label="Boolean" length="0" sql="BOOLEAN" quote="'"/>
+      </group>
+      <group label="Date &amp; Time" color="rgb(200,255,200)">
+        <type label="Date" length="0" sql="DATE" quote="'"/>
+        <type label="Time" length="1" sql="TIME" quote="'"/>
+        <type label="Time w/ TZ" length="0" sql="TIME WITH TIME ZONE" quote="'"/>
+        <type label="Interval" length="1" sql="INTERVAL" quote="'"/>
+        <type label="Timestamp" length="1" sql="TIMESTAMP" quote="'"/>
+        <type label="Timestamp w/ TZ" length="0" sql="TIMESTAMP WITH TIME ZONE" quote="'"/>
+        <type label="Timestamp wo/ TZ" length="0" sql="TIMESTAMP WITHOUT TIME      ZONE" quote="'"/>
+      </group>
+      <group label="Miscellaneous" color="rgb(200,200,255)">
+        <type label="XML" length="1" sql="XML" quote="'"/>
+        <type label="JSON" length="0" sql="JSON" quote="'"/>
+        <type label="JSONB" length="0" sql="JSONB" quote="'"/>
+        <type label="Bit" length="1" sql="BIT" quote="'"/>
+        <type label="Bit Varying" length="1" sql="VARBIT" re="BIT VARYING" quote="'"/>
+        <type label="Inet Host Addr" length="0" sql="INET" quote="'"/>
+        <type label="Inet CIDR Addr" length="0" sql="CIDR" quote="'"/>
+        <type label="Geometry" length="0" sql="GEOMETRY" quote="'"/>
+      </group>
+    </datatypes><table x="200" y="80" name="users">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="email" null="0" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>''</default></row>
+<row name="encrypted_password" null="0" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>''</default></row>
+<row name="reset_password_token" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="reset_password_sent_at" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="remember_created_at" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+<key type="UNIQUE" name="index_users_on_email">
+<part>email</part>
+</key>
+<key type="UNIQUE" name="index_users_on_reset_password_token">
+<part>reset_password_token</part>
+</key>
+</table>
+<table x="200" y="420" name="creators">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="user_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="name" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="topic" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="goal" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="audience" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+<key type="INDEX" name="index_creators_on_user_id">
+<part>user_id</part>
+</key>
+</table>
+<table x="560" y="80" name="ideas">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="user_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="title" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="description" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="topic" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+<key type="INDEX" name="index_ideas_on_user_id">
+<part>user_id</part>
+</key>
+</table>
+<table x="560" y="400" name="generated_ideas">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="user_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="idea_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="ideas" row="id" />
+</row>
+<row name="topic" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="title" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="description" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+<key type="INDEX" name="index_generated_ideas_on_user_id">
+<part>user_id</part>
+</key>
+<key type="INDEX" name="index_generated_ideas_on_idea_id">
+<part>idea_id</part>
+</key>
+</table>
+<table x="920" y="80" name="scripts">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="idea_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="ideas" row="id" />
+</row>
+<row name="length" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="style" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="title" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="description" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="system_prompt" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+<key type="INDEX" name="index_scripts_on_idea_id">
+<part>idea_id</part>
+</key>
+</table>
+<table x="1280" y="80" name="linkedin_posts">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="script_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="scripts" row="id" />
+</row>
+<row name="title" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="hook" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="body" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+<key type="INDEX" name="index_linkedin_posts_on_script_id">
+<part>script_id</part>
+</key>
+</table>
+<table x="920" y="440" name="chats">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="model_id" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default><relation table="models" row="id" />
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+<key type="INDEX" name="index_chats_on_model_id">
+<part>model_id</part>
+</key>
+</table>
+<table x="1280" y="400" name="messages">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="chat_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="chats" row="id" />
+</row>
+<row name="model_id" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default><relation table="models" row="id" />
+</row>
+<row name="tool_call_id" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default><relation table="tool_calls" row="id" />
+</row>
+<row name="role" null="0" autoincrement="0">
+<datatype>VARCHAR</datatype>
+</row>
+<row name="content" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="content_raw" null="1" autoincrement="0">
+<datatype>JSON</datatype>
+<default>NULL</default></row>
+<row name="thinking_text" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="thinking_signature" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="thinking_tokens" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="input_tokens" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="output_tokens" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="cached_tokens" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="cache_creation_tokens" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+<key type="INDEX" name="index_messages_on_chat_id">
+<part>chat_id</part>
+</key>
+<key type="INDEX" name="index_messages_on_model_id">
+<part>model_id</part>
+</key>
+<key type="INDEX" name="index_messages_on_role">
+<part>role</part>
+</key>
+<key type="INDEX" name="index_messages_on_tool_call_id">
+<part>tool_call_id</part>
+</key>
+</table>
+<table x="1640" y="80" name="models">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="model_id" null="0" autoincrement="0">
+<datatype>VARCHAR</datatype>
+</row>
+<row name="name" null="0" autoincrement="0">
+<datatype>VARCHAR</datatype>
+</row>
+<row name="provider" null="0" autoincrement="0">
+<datatype>VARCHAR</datatype>
+</row>
+<row name="family" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="context_window" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="max_output_tokens" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="knowledge_cutoff" null="1" autoincrement="0">
+<datatype>DATE</datatype>
+<default>NULL</default></row>
+<row name="modalities" null="1" autoincrement="0">
+<datatype>JSONB</datatype>
+<default>'{}'</default></row>
+<row name="capabilities" null="1" autoincrement="0">
+<datatype>JSONB</datatype>
+<default>'[]'</default></row>
+<row name="pricing" null="1" autoincrement="0">
+<datatype>JSONB</datatype>
+<default>'{}'</default></row>
+<row name="metadata" null="1" autoincrement="0">
+<datatype>JSONB</datatype>
+<default>'{}'</default></row>
+<row name="model_created_at" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+<key type="UNIQUE" name="index_models_on_provider_and_model_id">
+<part>provider</part>
+<part>model_id</part>
+</key>
+<key type="INDEX" name="index_models_on_provider">
+<part>provider</part>
+</key>
+<key type="INDEX" name="index_models_on_family">
+<part>family</part>
+</key>
+<key type="INDEX" name="index_models_on_capabilities">
+<part>capabilities</part>
+</key>
+<key type="INDEX" name="index_models_on_modalities">
+<part>modalities</part>
+</key>
+</table>
+<table x="1640" y="440" name="tool_calls">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="message_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="messages" row="id" />
+</row>
+<row name="tool_call_id" null="0" autoincrement="0">
+<datatype>VARCHAR</datatype>
+</row>
+<row name="name" null="0" autoincrement="0">
+<datatype>VARCHAR</datatype>
+</row>
+<row name="arguments" null="1" autoincrement="0">
+<datatype>JSONB</datatype>
+<default>'{}'</default></row>
+<row name="thought_signature" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+<key type="INDEX" name="index_tool_calls_on_message_id">
+<part>message_id</part>
+</key>
+<key type="INDEX" name="index_tool_calls_on_name">
+<part>name</part>
+</key>
+<key type="UNIQUE" name="index_tool_calls_on_tool_call_id">
+<part>tool_call_id</part>
+</key>
+</table>
+</sql>
