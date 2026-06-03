@@ -1,19 +1,14 @@
 <% content_for :title, "Ideas" %>
 
 <div class="min-h-screen bg-[var(--cf-bg)]">
-  <nav class="flex justify-between items-center h-16 px-7">
-    <%= link_to "ContentFlow.", root_path, class: "cf-wordmark" %>
-    <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "cf-meta hover:text-black transition-colors duration-150 ease-in-out" %>
-  </nav>
-
-  <div class="px-14 pt-8">
+  <div class="px-7 pt-8">
     <div class="flex justify-between items-end gap-4">
       <h1 class="cf-headline text-[clamp(72px,13vw,120px)]">
         HERE ARE<br>YOUR IDEAS
       </h1>
       <%= link_to new_idea_path, class: "shrink-0 flex items-end" do %>
         <%= image_tag "big_plus.svg", class: "w-16 h-16 md:w-28 md:h-28", alt: "New idea" %>
-        <span class="cf-action -ml-10">new idea</span>
+        <span class="cf-action -ml-10 font-normal">new idea</span>
       <% end %>
     </div>
 
@@ -21,9 +16,9 @@
       <table class="w-full border-collapse min-w-[500px]">
         <thead>
           <tr class="text-left">
-            <th class="pt-12 pb-3 cf-h2">title</th>
-            <th class="pt-12 pb-3 cf-h2">subject</th>
-            <th class="pt-12 pb-3 cf-h2">created</th>
+            <th class="pt-12 pb-3 cf-h2 font-normal">title</th>
+            <th class="pt-12 pb-3 cf-h2 font-normal">subject</th>
+            <th class="pt-12 pb-3 cf-h2 font-normal">created</th>
             <th></th>
           </tr>
         </thead>
@@ -32,10 +27,10 @@
           <% if @ideas.any? %>
             <% @ideas.each do |idea| %>
               <tr class="cf-row">
-                <td class="py-[18px] cf-label"><%= idea.title %></td>
-                <td class="py-[18px] cf-label"><%= idea.topic %></td>
-                <td class="py-[18px] cf-label"><%= idea.created_at.strftime("%b %d, %Y") %></td>
-                <td class="py-[18px] cf-label text-right whitespace-nowrap">
+                <td class="py-[18px] cf-label font-normal"><%= idea.title %></td>
+                <td class="py-[18px] cf-label font-normal"><%= idea.topic %></td>
+                <td class="py-[18px] cf-label font-normal"><%= idea.created_at.strftime("%b %d, %Y") %></td>
+                <td class="py-[18px] cf-label font-normal text-right whitespace-nowrap">
                   <%= link_to "view", idea, class: "hover:text-[#ff5733] transition-colors duration-150 ease-in-out" %> /
                   <%= link_to "edit", edit_idea_path(idea), class: "hover:text-[#ff5733] transition-colors duration-150 ease-in-out" %> /
                   <%= link_to "delete", idea, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-[#ff5733] hover:text-[#e8431f] transition-colors duration-150 ease-in-out" %>

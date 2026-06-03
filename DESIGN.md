@@ -175,15 +175,16 @@ No `box-shadow`, no blur, no glassmorphism, no translucency except the wave tint
 | Navbar height | `64px`, transparent, padding `0 28px`. |
 | Sidebar width | `248px`, orange fill, full height. |
 | Sidebar padding | `26px 28px`. |
-| Page content padding | `~8-12px 56px 56px` (generous left/right margins). |
+| Page content padding | `~8-12px 28px 28px` (aligned with navbar). |
 | Auth panel | `440px` wide, `border-radius: 18px`, padding `40px 38px`. |
 | Form field height | `46-48px`. |
 | Checkbox | `26 x 26px`, `5px` cream border. |
 
 ### 3.5 Spacing approach
 
-- **Generous, poster-like whitespace.** Big left margins (~56px on content),
-  large gaps between sections (40-64px).
+- **H1 aligns with the logo.** Page content uses the same `28px` horizontal
+  padding as the navbar so headings sit flush with the wordmark.
+- **Generous, poster-like whitespace.** Large gaps between sections (40-64px).
 - Use **flex / grid with `gap`** for grouping rather than per-element margins.
 - List rows: `~18px` vertical padding, separated by hairlines.
 

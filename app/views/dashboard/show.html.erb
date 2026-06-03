@@ -1,12 +1,7 @@
 <% content_for :title, "Dashboard" %>
 
 <div class="min-h-screen bg-[var(--cf-bg)]">
-  <nav class="flex justify-between items-center h-16 px-7">
-    <%= link_to "ContentFlow.", root_path, class: "cf-wordmark" %>
-    <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "cf-meta hover:text-black transition-colors duration-150 ease-in-out" %>
-  </nav>
-
-  <div class="px-14 pt-8">
+  <div class="px-7 pt-8">
     <h1 class="cf-headline text-[clamp(72px,13vw,120px)]">
       DASHBOARD
     </h1>

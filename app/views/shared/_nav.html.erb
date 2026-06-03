@@ -1,0 +1,15 @@
+<nav class="flex justify-between items-center h-16 px-7">
+  <%= link_to "ContentFlow.", root_path, class: "cf-wordmark" %>
+
+  <div class="flex items-center gap-6">
+    <% if user_signed_in? %>
+      <%= link_to "dashboard", dashboard_path, class: "cf-meta hover:text-black transition-colors duration-150 ease-in-out" %>
+      <%= link_to "ideas", ideas_path, class: "cf-meta hover:text-black transition-colors duration-150 ease-in-out" %>
+      <%= link_to "creator", creator_path, class: "cf-meta hover:text-black transition-colors duration-150 ease-in-out" %>
+      <%= button_to "sign out", destroy_user_session_path, method: :delete, class: "cf-meta hover:text-black transition-colors duration-150 ease-in-out" %>
+    <% elsif !current_page?(new_user_session_path) && !current_page?(new_user_registration_path) %>
+      <%= link_to "log in", new_user_session_path, class: "cf-meta hover:text-black transition-colors duration-150 ease-in-out" %>
+      <%= link_to "sign up", new_user_registration_path, class: "cf-meta hover:text-black transition-colors duration-150 ease-in-out" %>
+    <% end %>
+  </div>
+</nav>
