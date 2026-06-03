@@ -82,6 +82,48 @@ All issues: repo `theodora22/Content-Flow`, assignee `theodora22`, project #4 "P
 - **Merge / supersede:** #8 → B1, #32 → C1, #33 → F2, #15/#16 → F2.
 - **Coordinate:** #34, #29 with F1 (schema/seed for `chattable`).
 
+## Team division (4 developers)
+
+**Headline:** the dependency chain — not headcount — sets the pace. The critical path is 7 issues deep and strictly sequential:
+
+```
+A2 → A3 → C1 → D1 → E1 → F2 → F4
+```
+
+A script needs an idea; a post needs a script; chat wiring needs the show pages. So 4 devs ≈ the speed of this spine, with the side branches (A1, B1, F1, F3, G1, H1) done in parallel "for free" around it. Keep one focused owner driving the spine; absorb everything else alongside.
+
+### Lanes (by ownership)
+
+| Dev | Lane | Issues |
+|-----|------|--------|
+| **Dev 1** | Foundation & Dashboard | A2 → A3 → G1 |
+| **Dev 2** | Content CRUD spine (pace-setter) | C1 → D1 → E1 |
+| **Dev 3** | Chat & LLM | F1 → F3 → F2 → F4 |
+| **Dev 4** | Shell, Profile & Auth | A1 → B1 → H1 |
+
+### Wave schedule
+
+| Wave | Dev 1 | Dev 2 | Dev 3 | Dev 4 |
+|------|-------|-------|-------|-------|
+| 1 | **A2** | *prep: shared `_form`/view + Tailwind kit* | **F1** | **A1** |
+| 2 | **A3** | **C1** (← A3) | **F3** (← F1) | **B1** (← A3) |
+| 3 | *pair on spine* | **D1** | **F2** idea-chat (← C1) | *UI polish / pair* |
+| 4 | *pair on spine* | **E1** | **F2** extend to scripts | **H1** (alongside D1/E1) |
+| 5 | **G1** (← E1) | review | **F2** finish (posts) → **F4** | review / E2E |
+
+### Make it work
+1. **A2 + A3 unblock everyone** — Dev 2 and Dev 4 are idle until A3 lands. Consider Dev 1 + Dev 2 **pairing on A2→A3 in Wave 1** to finish it a day early and shorten the whole project.
+2. **Dev 2 is the bottleneck.** When Dev 1 frees up after A3, the highest-leverage move is to **pair on the C1→D1→E1 spine**, not start new side work.
+
+### Coordination hotspots (shared files)
+- `app/controllers/application_controller.rb` — A3 (Dev 1) + H1 (Dev 4). Mitigate: H1 lives in a concern (`app/controllers/concerns/`) with a one-line `include`.
+- `app/models/user.rb` — A3 only (Dev 1).
+- `app/views/layouts/application.html.erb` — A1 only (Dev 4).
+- `config/routes.rb` — only A2 adds a route (resource routes already exist).
+- `ChatsController#create` — F2 + F3, same owner (Dev 3).
+
+With H1 as a concern, there is effectively no cross-dev file contention.
+
 ## Teaching notes (per CLAUDE.md)
 
 Each EPIC's implementation must explain: `resources ... shallow: true` helper split (`idea_scripts_path` vs `script_path`), singular `resource :linkedin_post` (no index, id-less paths), implicit template lookup for each filled-in view, and `form_with model:` create-vs-update inference. All JS as Stimulus controllers.
