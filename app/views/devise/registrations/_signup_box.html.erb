@@ -1,0 +1,45 @@
+<div class="w-[454px] rounded-[25px] bg-[#ff5733] px-10 py-6">
+  <h1 class="font-bold text-[#fffdf3] text-[64px] tracking-[-2.56px] leading-[0.8] mb-6">sign up</h1>
+
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
+
+    <div class="mb-2">
+      <%= f.label :email, class: "block font-bold text-[#fffdf3] text-2xl tracking-[-0.96px] mb-1" %>
+      <%= f.email_field :email,
+            autofocus: true,
+            autocomplete: "email",
+            class: "w-full rounded-[10px] border-[5px] border-[#fffdf3] bg-transparent px-3 py-2 text-[#fffdf3] text-lg outline-none placeholder-[#fffdf3]/50" %>
+    </div>
+
+    <div class="mb-2">
+      <div class="flex items-baseline gap-2">
+        <%= f.label :password, class: "font-bold text-[#fffdf3] text-2xl tracking-[-0.96px]" %>
+        <% if @minimum_password_length %>
+          <span class="font-bold text-[#fffdf3] text-xs tracking-[-0.48px]">(<%= @minimum_password_length %> characters minimum)</span>
+        <% end %>
+      </div>
+      <%= f.password_field :password,
+            autocomplete: "new-password",
+            class: "mt-1 w-full rounded-[10px] border-[5px] border-[#fffdf3] bg-transparent px-3 py-2 text-[#fffdf3] text-lg outline-none placeholder-[#fffdf3]/50" %>
+    </div>
+
+    <div class="mb-4">
+      <%= f.label :password_confirmation, "password confirmation",
+            class: "block font-bold text-[#fffdf3] text-2xl tracking-[-0.96px] mb-1" %>
+      <%= f.password_field :password_confirmation,
+            autocomplete: "new-password",
+            class: "w-full rounded-[10px] border-[5px] border-[#fffdf3] bg-transparent px-3 py-2 text-[#fffdf3] text-lg outline-none placeholder-[#fffdf3]/50" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.submit "sign up",
+            class: "w-full rounded-[10px] bg-[#fffdf3] py-3 text-center font-bold text-[#ff5733] text-[32px] tracking-[-1.28px] cursor-pointer hover:bg-white transition-colors" %>
+    </div>
+  <% end %>
+
+  <div class="flex flex-col items-center gap-1">
+    <%= link_to "log in", new_session_path(resource_name),
+          class: "font-bold text-[#fffdf3] text-2xl tracking-[-0.96px] underline hover:text-white" %>
+  </div>
+</div>

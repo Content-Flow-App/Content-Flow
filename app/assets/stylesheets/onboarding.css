@@ -1,0 +1,20 @@
+@keyframes draw-wave {
+  0% { stroke-dashoffset: 1; }
+  100% { stroke-dashoffset: 0; }
+}
+
+@keyframes fade-restart {
+  0%, 80% { opacity: 1; }
+  90% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+.wave-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw-wave linear forwards;
+}
+
+.wave-group {
+  animation: fade-restart ease-in-out infinite;
+}

@@ -29,3 +29,12 @@ When making a refactor, always explain what is changing and why it is beneficial
 ## JavaScript
 
 All JavaScript must be written as Stimulus controllers. No inline scripts or bare `addEventListener` calls.
+
+## Design & Styling
+
+Designs are created in Figma and provided to Claude Code via MCP. When given a design, apply the following guidelines:
+
+- **Templates** — this project uses `.html.erb` files for all views.
+- **CSS approach** — use Tailwind CSS as the first resort. Only reach for custom CSS if a design requirement cannot be achieved with Tailwind utility classes.
+- **Custom CSS** — if custom CSS is needed, create a dedicated partial stylesheet in `app/assets/stylesheets/` and import it in `tailwind.css`. Do not add custom styles inline or in a shared global file.
+- **Model requirements** — if the design relates to a specific model, review the model file, the schema, and the controller before implementing. Confirm that all required form fields or displayable data columns are already supported; if not, flag the gap before writing any view code.

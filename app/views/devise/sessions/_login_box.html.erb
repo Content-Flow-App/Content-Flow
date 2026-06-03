@@ -1,0 +1,48 @@
+<div class="w-[454px] rounded-[25px] bg-[#ff5733] px-10 py-6">
+  <h1 class="font-bold text-[#fffdf3] text-[64px] tracking-[-2.56px] leading-[0.8] mb-6">log in</h1>
+
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+    <div class="mb-2">
+      <%= f.label :email, class: "block font-bold text-[#fffdf3] text-2xl tracking-[-0.96px] mb-1" %>
+      <%= f.email_field :email,
+            autofocus: true,
+            autocomplete: "email",
+            class: "w-full rounded-[10px] border-[5px] border-[#fffdf3] bg-transparent px-3 py-2 text-[#fffdf3] text-lg outline-none placeholder-[#fffdf3]/50" %>
+    </div>
+
+    <div class="mb-4">
+      <%= f.label :password, class: "block font-bold text-[#fffdf3] text-2xl tracking-[-0.96px] mb-1" %>
+      <%= f.password_field :password,
+            autocomplete: "current-password",
+            class: "w-full rounded-[10px] border-[5px] border-[#fffdf3] bg-transparent px-3 py-2 text-[#fffdf3] text-lg outline-none placeholder-[#fffdf3]/50" %>
+    </div>
+
+    <div class="mb-10 flex items-center justify-between">
+      <% if devise_mapping.rememberable? %>
+        <div class="flex items-center gap-2">
+          <%= f.check_box :remember_me,
+                class: "h-5 w-5 rounded-[5px] border-4 border-[#fffdf3] bg-transparent appearance-none checked:bg-[#fffdf3] cursor-pointer" %>
+          <%= f.label :remember_me, "remember me?",
+                class: "font-bold text-[#fffdf3] text-base tracking-[-0.64px] underline cursor-pointer" %>
+        </div>
+      <% end %>
+
+      <% if devise_mapping.recoverable? %>
+        <%= link_to "forgot your password ?", new_password_path(resource_name),
+              class: "font-bold text-[#fffdf3] text-base tracking-[-0.64px] underline hover:text-white" %>
+      <% end %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.submit "log in",
+            class: "w-full rounded-[10px] bg-[#fffdf3] py-3 text-center font-bold text-[#ff5733] text-[32px] tracking-[-1.28px] cursor-pointer hover:bg-white transition-colors" %>
+    </div>
+  <% end %>
+
+  <div class="flex flex-col items-center gap-1">
+    <% if devise_mapping.registerable? %>
+      <%= link_to "sign up", new_registration_path(resource_name),
+            class: "font-bold text-[#fffdf3] text-2xl tracking-[-0.96px] underline hover:text-white" %>
+    <% end %>
+  </div>
+</div>

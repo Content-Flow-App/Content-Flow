@@ -38,6 +38,7 @@
 !/app/assets/builds/.keep
 # Ignore .env file containing credentials.
 .env*
+./CLAUDE.md
 
 # Ignore Mac and Linux file system files
 *.swp
