@@ -1,8 +1,9 @@
 class CreatorsController < ApplicationController
   before_action :set_creator, only: [ :show, :edit, :update ]
+  skip_before_action :check_creator_exist, only: [ :new, :create ]
 
-  # def show
-  # end
+  def show
+  end
 
   def new
     @creator = current_user.build_creator
@@ -27,13 +28,15 @@ class CreatorsController < ApplicationController
 
   def edit
   end
+
   private
 
   def set_creator
     @creator = current_user.creator
+    redirect_to new_creator_path if @creator.nil?
   end
 
   def creator_params
-    params.require(:creators).permit(:name, :topic, :goal, :audience)
+    params.require(:creator).permit(:name, :topic, :goal, :audience)
   end
 end
