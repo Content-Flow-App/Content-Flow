@@ -190,7 +190,115 @@ No `box-shadow`, no blur, no glassmorphism, no translucency except the wave tint
 
 ---
 
-## 4. Motion (recommended)
+## 4. Page patterns
+
+These patterns are extracted from the ideas index — the canonical reference for
+content-list pages. Follow them on every new view.
+
+### 4.1 Page shell
+
+Every page wraps content in a full-height cream container with consistent
+padding:
+
+```html
+<div class="min-h-screen bg-[var(--cf-bg)]">
+  <div class="px-7 pt-8">
+    <!-- page content -->
+  </div>
+</div>
+```
+
+`px-7` (28px) aligns content with the navbar wordmark. `pt-8` (32px) sets the
+top breathing room.
+
+### 4.2 Page header
+
+A flex row with the headline on the left and a CTA on the right, bottom-aligned:
+
+```html
+<div class="flex justify-between items-end gap-4">
+  <h1 class="cf-headline text-[clamp(72px,13vw,120px)]">
+    PAGE<br>HEADLINE
+  </h1>
+  <!-- CTA on the right -->
+</div>
+```
+
+Headlines use `cf-headline` with a responsive clamp: min `72px`, preferred
+`13vw`, max `120px`. Two-line headlines use a `<br>` — no wrapping prose.
+
+### 4.3 Table / list
+
+Content lists use a `<table>` with this structure:
+
+| Part | Classes | Notes |
+|---|---|---|
+| Table | `w-full border-collapse min-w-[500px]` | Wrapped in `overflow-x-auto` for mobile. |
+| Column headers | `cf-h2 font-normal`, `pt-12 pb-3` | Generous top gap separates header from headline. `font-normal` overrides the bold default. |
+| Accent rule | `cf-rule` in a full-colspan row after `<thead>` | The thick orange 4px bar. |
+| Data rows | `cf-row` on `<tr>` | Provides hairline border + hover tint. |
+| Row cells | `cf-label font-normal`, `py-[18px]` | 24px Helvetica, normal weight, 18px vertical padding. |
+
+### 4.4 Inline row actions
+
+Row actions sit in the last `<td>`, right-aligned:
+
+```html
+<td class="py-[18px] cf-label font-normal text-right whitespace-nowrap">
+  <%= link_to "view", item, class: "hover:text-[var(--cf-orange)] transition-colors duration-150" %> /
+  <%= link_to "edit", edit_path(item), class: "hover:text-[var(--cf-orange)] transition-colors duration-150" %> /
+  <%= link_to "delete", item,
+        data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+        class: "text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %>
+</td>
+```
+
+- Separated by ` / ` (space-slash-space).
+- Default links are ink, hover to orange.
+- Delete is orange by default, darkens on hover.
+- Always use CSS variable colors (`var(--cf-orange)`), never hardcoded hex.
+
+### 4.5 Detail (show) page
+
+Show pages follow the same shell (`§4.1`) and add:
+
+| Part | Classes | Notes |
+|---|---|---|
+| Breadcrumb | `cf-meta` | `ideas › title` — link back to index, plain text for current. |
+| Headline + actions | `flex justify-between items-start gap-4 mb-10` | Headline left, edit/delete right. |
+| Edit link | `cf-action hover:text-[var(--cf-orange)]` | |
+| Delete link | `cf-action text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)]` | |
+| Section header | `cf-h2 font-normal` with a CTA link on the right | Same flex row pattern as the page header. |
+| Child rows | `cf-row py-[18px]` | Same row pattern as the table, but as `<div>`s. |
+
+### 4.6 Empty states
+
+When a list has no items:
+
+```html
+<p class="cf-meta py-10 text-center">No items yet.</p>
+```
+
+Keep the message short and lowercase. Optionally point to the CTA
+("Click + to create your first one.").
+
+### 4.7 CTA with icon
+
+The primary page-level action pairs an SVG icon with a label:
+
+```html
+<%= link_to path, class: "shrink-0 flex items-end" do %>
+  <%= image_tag "big_plus.svg", class: "w-16 h-16 md:w-28 md:h-28", alt: "New item" %>
+  <span class="cf-action -ml-10 font-normal">new item</span>
+<% end %>
+```
+
+The icon is oversized and the label tucks underneath with a negative margin.
+Label text is lowercase.
+
+---
+
+## 5. Motion
 
 The source is static; these are the house rules for adding interaction.
 
@@ -206,7 +314,7 @@ bouncy. No elaborate or looping animation on content.
 
 ---
 
-## 5. Quick-start
+## 6. Quick-start
 
 ```html
 <link rel="stylesheet" href="colors_and_type.css">

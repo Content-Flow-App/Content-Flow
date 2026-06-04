@@ -1,47 +1,112 @@
 <% content_for :title, @idea.title %>
 
-<div class="min-h-screen bg-[var(--cf-bg)]">
+<div class="min-h-screen bg-[var(--cf-bg)]" data-controller="idea-edit">
   <div class="px-7 pt-8">
-    <div class="mb-2 cf-meta">
-      <%= link_to "ideas", ideas_path, class: "hover:text-[var(--cf-ink)] transition-colors duration-150" %>
-      <span class="mx-2">›</span>
-      <span><%= @idea.title %></span>
-    </div>
-
-    <div class="flex justify-between items-start gap-4 mb-10">
-      <h1 class="cf-headline text-[clamp(48px,8vw,120px)]"><%= @idea.title.upcase %></h1>
-      <div class="flex gap-6 shrink-0 pt-2">
-        <%= link_to "edit", edit_idea_path(@idea), class: "cf-action hover:text-[var(--cf-orange)] transition-colors duration-150" %>
-        <%= link_to "delete", @idea,
-              data: { turbo_method: :delete, turbo_confirm: "Delete this idea?" },
-              class: "cf-action text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %>
+    <div class="flex justify-between items-start mb-10 relative z-10 bg-[var(--cf-bg)]">
+      <h1 class="cf-headline text-[clamp(72px,13vw,120px)]" data-idea-edit-target="showTitle"><%= @idea.title.upcase %></h1>
+      <div class="shrink-0 pt-2">
+        <button type="button" data-idea-edit-target="pen" data-action="idea-edit#toggle" class="hover:opacity-70 transition-opacity duration-150 flex flex-col items-center">
+          <div data-idea-edit-target="penIcon">
+            <%= image_tag "pen_edit.svg", class: "w-14 h-14", alt: "Edit idea" %>
+          </div>
+          <div data-idea-edit-target="penLine" class="w-14 mt-1 h-0.5 overflow-hidden transition-all duration-500 ease-in-out">
+            <%= image_tag "pen_line.svg", class: "w-14 h-0.5", alt: "" %>
+          </div>
+        </button>
       </div>
     </div>
 
-    <% if @idea.topic.present? %>
-      <p class="cf-meta mb-4"><%= @idea.topic %></p>
-    <% end %>
+    <%# ---- Show content ---- %>
+    <div class="overflow-hidden">
+    <div data-idea-edit-target="show">
+      <p class="cf-meta mb-4" data-idea-edit-target="showPart showTopic"><%= @idea.topic %></p>
+      <p class="cf-body mb-10 max-w-2xl" data-idea-edit-target="showPart showDescription"><%= @idea.description %></p>
 
-    <% if @idea.description.present? %>
-      <p class="cf-body mb-10 max-w-2xl"><%= @idea.description %></p>
-    <% end %>
-
-    <div class="cf-rule mb-0"></div>
-
-    <div class="flex justify-between items-center pt-6 mb-4">
-      <h2 class="cf-h2 font-normal">scripts</h2>
-      <%= link_to "write a script", new_idea_script_path(@idea), class: "cf-action hover:text-[var(--cf-orange)] transition-colors duration-150" %>
+      <div data-idea-edit-target="showPart" class="overflow-x-auto">
+        <table class="w-full border-collapse min-w-[500px]">
+          <thead>
+            <tr class="text-left">
+              <th class="pt-12 pb-3 cf-h2 font-normal">script title</th>
+              <th class="pt-12 pb-3 cf-h2 font-normal">style</th>
+              <th class="pt-12 pb-3 cf-h2 font-normal">created</th>
+              <th class="pt-12 pb-3 cf-h2 font-normal text-right">
+                <%= link_to new_idea_script_path(@idea), class: "inline-flex items-center gap-2 hover:text-[var(--cf-orange)] transition-colors duration-150" do %>
+                  <%= image_tag "big_plus.svg", class: "w-6 h-6 translate-y-1", alt: "New script" %>
+                  <span>write a script</span>
+                <% end %>
+              </th>
+            </tr>
+          </thead>
+          <tr><td colspan="4"><div class="cf-rule"></div></td></tr>
+          <tbody>
+            <% if @idea.scripts.any? %>
+              <% @idea.scripts.each do |script| %>
+                <tr class="cf-row cursor-pointer" data-controller="row-link" data-row-link-url-value="<%= script_path(script) %>" data-action="click->row-link#visit">
+                  <td class="py-[18px] cf-label font-normal"><%= script.title.presence || "untitled script" %></td>
+                  <td class="py-[18px] cf-label font-normal"><%= script.style %></td>
+                  <td class="py-[18px] cf-label font-normal"><%= script.created_at.strftime("%b %d, %Y") %></td>
+                  <td class="py-[18px] pr-px cf-label font-normal text-right whitespace-nowrap">
+                    <%= link_to "edit", edit_script_path(script), class: "hover:text-[var(--cf-orange)] transition-colors duration-150" %> /
+                    <%= link_to "delete", script_path(script),
+                          data: { turbo_method: :delete, turbo_confirm: "Delete this script?" },
+                          class: "text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %>
+                  </td>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr>
+                <td colspan="4" class="py-10 text-center cf-meta">No scripts yet.</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <% if @idea.scripts.any? %>
-      <% @idea.scripts.each do |script| %>
-        <div class="py-[18px] border-b border-[var(--cf-gray-line)]">
-          <%= link_to script.title.presence || "untitled script", script_path(script),
-                class: "cf-label font-normal hover:text-[var(--cf-orange)] transition-colors duration-150" %>
+    </div>
+
+    <%# ---- Edit form (hidden until pen click) ---- %>
+    <div data-idea-edit-target="form" class="hidden opacity-0 overflow-hidden flex flex-col justify-end" style="min-height: calc(100vh - 350px);">
+      <div class="flex items-end justify-between">
+        <div class="max-w-lg">
+          <%= form_with model: @idea, class: "flex flex-col gap-4" do |f| %>
+            <div class="group relative pb-2" data-idea-edit-target="field">
+              <%= f.label :title, "title", class: "cf-h2 font-normal" %>
+              <%= f.text_field :title,
+                readonly: true,
+                class: "cf-input border-0 rounded-none bg-transparent px-0 outline-none cursor-default",
+                placeholder: "your idea title...",
+                data: { idea_edit_target: "input" } %>
+              <span data-idea-edit-target="line" class="absolute bottom-0 left-0 h-px w-0 bg-black transition-all duration-700 ease-in-out"></span>
+            </div>
+
+            <div class="group relative pb-2" data-idea-edit-target="field">
+              <%= f.label :topic, "topic", class: "cf-h2 font-normal" %>
+              <%= f.text_field :topic,
+                readonly: true,
+                class: "cf-input border-0 rounded-none bg-transparent px-0 outline-none cursor-default",
+                placeholder: "e.g. AI & productivity, fitness...",
+                data: { idea_edit_target: "input" } %>
+              <span data-idea-edit-target="line" class="absolute bottom-0 left-0 h-px w-0 bg-black transition-all duration-700 ease-in-out"></span>
+            </div>
+
+            <div class="group relative pb-2" data-idea-edit-target="field">
+              <%= f.label :description, "description", class: "cf-h2 font-normal" %>
+              <%= f.text_area :description,
+                readonly: true,
+                rows: 1,
+                class: "cf-input border-0 rounded-none bg-transparent px-0 outline-none cursor-default h-auto py-3 resize-none overflow-hidden",
+                placeholder: "what's this idea about...",
+                style: "field-sizing: content; min-height: 46px;",
+                data: { idea_edit_target: "input" } %>
+              <span data-idea-edit-target="line" class="absolute bottom-0 left-0 h-px w-0 bg-black transition-all duration-700 ease-in-out"></span>
+            </div>
+          <% end %>
         </div>
-      <% end %>
-    <% else %>
-      <p class="cf-meta py-10">No scripts yet.</p>
-    <% end %>
+        <div class="flex justify-end mt-6">
+          <button type="button" data-idea-edit-target="submit" data-action="idea-edit#submit" class="opacity-0 pointer-events-none rounded-[10px] border-2 border-[var(--cf-ink)] bg-transparent text-[var(--cf-ink)] px-8 py-3.5 cf-action font-normal cursor-pointer transition-all duration-300 ease-in-out hover:bg-[var(--cf-accent)] hover:border-[var(--cf-accent)] hover:text-[var(--cf-cream)]">update</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

@@ -26,14 +26,13 @@
         <tbody>
           <% if @ideas.any? %>
             <% @ideas.each do |idea| %>
-              <tr class="cf-row">
+              <tr class="cf-row cursor-pointer" data-controller="row-link" data-row-link-url-value="<%= idea_path(idea) %>" data-action="click->row-link#visit">
                 <td class="py-[18px] cf-label font-normal"><%= idea.title %></td>
                 <td class="py-[18px] cf-label font-normal"><%= idea.topic %></td>
                 <td class="py-[18px] cf-label font-normal"><%= idea.created_at.strftime("%b %d, %Y") %></td>
-                <td class="py-[18px] cf-label font-normal text-right whitespace-nowrap">
-                  <%= link_to "view", idea, class: "hover:text-[#ff5733] transition-colors duration-150 ease-in-out" %> /
-                  <%= link_to "edit", edit_idea_path(idea), class: "hover:text-[#ff5733] transition-colors duration-150 ease-in-out" %> /
-                  <%= link_to "delete", idea, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-[#ff5733] hover:text-[#e8431f] transition-colors duration-150 ease-in-out" %>
+                <td class="py-[18px] pr-px cf-label font-normal text-right whitespace-nowrap">
+                  <%= link_to "edit", edit_idea_path(idea), class: "hover:text-[var(--cf-orange)] transition-colors duration-150" %> /
+                  <%= link_to "delete", idea, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %>
                 </td>
               </tr>
             <% end %>
