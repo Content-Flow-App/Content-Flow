@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_04_085358) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_04_084328) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -66,13 +66,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_04_085358) do
   create_table "generated_ideas", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
-    t.bigint "idea_id"
     t.string "title"
     t.string "topic"
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
-    t.index ["idea_id"], name: "index_generated_ideas_on_idea_id"
-    t.index ["user_id"], name: "index_generated_ideas_on_user_id"
   end
 
   create_table "ideas", force: :cascade do |t|
@@ -322,8 +318,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_04_085358) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "chats", "models"
   add_foreign_key "creators", "users"
-  add_foreign_key "generated_ideas", "ideas"
-  add_foreign_key "generated_ideas", "users"
   add_foreign_key "ideas", "users"
   add_foreign_key "linkedin_posts", "scripts"
   add_foreign_key "messages", "chats"
