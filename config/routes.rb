@@ -28,11 +28,9 @@ Rails.application.routes.draw do
   resources :generated_ideas
   
   resources :ideas do
-    resources :scripts, shallow: true
-  end
-  
-  resources :scripts do
-    resource :linkedin_post, only: [:show, :new, :create, :edit, :update, :destroy]
+    resources :scripts, shallow: true do
+      resource :linkedin_post, only: [:show, :new, :create, :edit, :update, :destroy]
+    end
   end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

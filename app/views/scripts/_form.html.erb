@@ -1,0 +1,36 @@
+<%= form_with model: script, url: url do |f| %>
+  <% if script.errors.any? %>
+    <ul>
+      <% script.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <div>
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div>
+
+  <div>
+    <%= f.label :style %>
+    <%= f.text_field :style, placeholder: "e.g. Educational, Storytelling, How-to" %>
+  </div>
+
+  <div>
+    <%= f.label :length %>
+    <%= f.text_field :length, placeholder: "e.g. Short, Medium, Long" %>
+  </div>
+
+  <div>
+    <%= f.label :description %>
+    <%= f.text_area :description, rows: 4 %>
+  </div>
+
+  <div>
+    <%= f.label :system_prompt %>
+    <%= f.text_area :system_prompt, rows: 6, placeholder: "AI system prompt for this script..." %>
+  </div>
+
+  <%= f.submit %>
+<% end %>

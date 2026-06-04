@@ -1,0 +1,5 @@
+<h1>New Script for: <%= @idea.title %></h1>
+
+<%= render "form", script: @script, url: idea_scripts_path(@idea) %>
+
+<%= link_to "Cancel", idea_path(@idea) %>

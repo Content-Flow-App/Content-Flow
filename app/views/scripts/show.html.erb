@@ -1,0 +1,21 @@
+<p>
+  <%= link_to "Ideas", ideas_path %> &rsaquo;
+  <%= link_to @idea.title, idea_path(@idea) %> /
+  Scripts &rsaquo;
+  <%= @script.title %>
+</p>
+
+<h1><%= @script.title %></h1>
+
+<p><strong>Style:</strong> <%= @script.style %></p>
+<p><strong>Length:</strong> <%= @script.length %></p>
+<p><strong>Description:</strong> <%= @script.description %></p>
+<p><strong>System Prompt:</strong> <%= @script.system_prompt %></p>
+
+<%= link_to "Edit", edit_script_path(@script) %> |
+<%= link_to "Delete", script_path(@script), data: { turbo_method: :delete, turbo_confirm: "Delete this script?" } %> |
+<%= link_to "Back to idea", idea_path(@idea) %>
+
+<hr>
+
+<%= link_to "Turn this into a LinkedIn post", new_script_linkedin_post_path(@script) %>

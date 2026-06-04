@@ -1,0 +1,13 @@
+<h1>Scripts for: <%= @idea.title %></h1>
+
+<%= link_to "Back to idea", idea_path(@idea) %>
+
+<ul>
+  <% @scripts.each do |script| %>
+    <li>
+      <%= render "script", script: script %>
+    </li>
+  <% end %>
+</ul>
+
+<%= link_to "New script", new_idea_script_path(@idea) %>
