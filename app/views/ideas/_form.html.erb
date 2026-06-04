@@ -1,0 +1,51 @@
+<%#
+  form_with model: idea infers whether to POST /ideas (create) or PATCH /ideas/:id (update)
+  by checking idea.persisted?:
+    - new record  → not persisted → POST   /ideas        → ideas#create
+    - saved record → persisted    → PATCH  /ideas/:id    → ideas#update
+  Equivalent explicit code: form_with url: idea.persisted? ? idea_path(idea) : ideas_path,
+                                       method: idea.persisted? ? :patch : :post
+  One partial, two actions.
+%>
+<%= form_with model: idea, class: "space-y-6" do |f| %>
+  <% if idea.errors.any? %>
+    <div class="border-l-4 border-[var(--cf-orange)] pl-4 py-2">
+      <ul class="cf-meta space-y-1">
+        <% idea.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :title, "title", class: "block cf-label mb-2" %>
+    <%= f.text_field :title,
+          class: "w-full bg-[var(--cf-field-bg)] border border-[var(--cf-gray-line)] rounded-[var(--cf-radius)] px-4 h-12 cf-body focus:outline-none focus:border-[var(--cf-orange)]",
+          placeholder: "your idea title..." %>
+  </div>
+
+  <div>
+    <%= f.label :topic, "topic", class: "block cf-label mb-2" %>
+    <%= f.text_field :topic,
+          class: "w-full bg-[var(--cf-field-bg)] border border-[var(--cf-gray-line)] rounded-[var(--cf-radius)] px-4 h-12 cf-body focus:outline-none focus:border-[var(--cf-orange)]",
+          placeholder: "e.g. AI & productivity, fitness...",
+          list: "topic-suggestions" %>
+    <% if current_user.creator&.topic.present? %>
+      <datalist id="topic-suggestions">
+        <option value="<%= current_user.creator.topic %>"></option>
+      </datalist>
+    <% end %>
+  </div>
+
+  <div>
+    <%= f.label :description, "description", class: "block cf-label mb-2" %>
+    <%= f.text_area :description,
+          rows: 4,
+          class: "w-full bg-[var(--cf-field-bg)] border border-[var(--cf-gray-line)] rounded-[var(--cf-radius)] px-4 py-3 cf-body focus:outline-none focus:border-[var(--cf-orange)] resize-none",
+          placeholder: "what's this idea about..." %>
+  </div>
+
+  <%= f.submit idea.persisted? ? "save changes" : "save idea",
+        class: "bg-[var(--cf-orange)] text-[var(--cf-cream)] cf-label rounded-[var(--cf-radius)] px-8 h-12 cursor-pointer hover:bg-[var(--cf-orange-press)] active:translate-y-px transition-colors duration-150" %>
+<% end %>

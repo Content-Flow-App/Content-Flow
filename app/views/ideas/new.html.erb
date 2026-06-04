@@ -1,0 +1,17 @@
+<% content_for :title, "New Idea" %>
+
+<div class="min-h-screen bg-[var(--cf-bg)]">
+  <div class="px-7 pt-3 pb-14">
+    <nav class="mb-8 cf-meta">
+      <%= link_to "ideas", ideas_path, class: "hover:text-[var(--cf-ink)] transition-colors duration-150 ease-in-out" %>
+      <span class="mx-2">›</span>
+      <span>new idea</span>
+    </nav>
+
+    <h1 class="cf-headline text-[clamp(48px,8vw,120px)] mb-16">NEW IDEA</h1>
+
+    <div class="max-w-2xl">
+      <%= render "form", idea: @idea %>
+    </div>
+  </div>
+</div>

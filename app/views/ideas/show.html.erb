@@ -1,0 +1,47 @@
+<% content_for :title, @idea.title %>
+
+<div class="min-h-screen bg-[var(--cf-bg)]">
+  <div class="px-7 pt-8">
+    <div class="mb-2 cf-meta">
+      <%= link_to "ideas", ideas_path, class: "hover:text-[var(--cf-ink)] transition-colors duration-150" %>
+      <span class="mx-2">›</span>
+      <span><%= @idea.title %></span>
+    </div>
+
+    <div class="flex justify-between items-start gap-4 mb-10">
+      <h1 class="cf-headline text-[clamp(48px,8vw,120px)]"><%= @idea.title.upcase %></h1>
+      <div class="flex gap-6 shrink-0 pt-2">
+        <%= link_to "edit", edit_idea_path(@idea), class: "cf-action hover:text-[var(--cf-orange)] transition-colors duration-150" %>
+        <%= link_to "delete", @idea,
+              data: { turbo_method: :delete, turbo_confirm: "Delete this idea?" },
+              class: "cf-action text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %>
+      </div>
+    </div>
+
+    <% if @idea.topic.present? %>
+      <p class="cf-meta mb-4"><%= @idea.topic %></p>
+    <% end %>
+
+    <% if @idea.description.present? %>
+      <p class="cf-body mb-10 max-w-2xl"><%= @idea.description %></p>
+    <% end %>
+
+    <div class="cf-rule mb-0"></div>
+
+    <div class="flex justify-between items-center pt-6 mb-4">
+      <h2 class="cf-h2 font-normal">scripts</h2>
+      <%= link_to "write a script", new_idea_script_path(@idea), class: "cf-action hover:text-[var(--cf-orange)] transition-colors duration-150" %>
+    </div>
+
+    <% if @idea.scripts.any? %>
+      <% @idea.scripts.each do |script| %>
+        <div class="py-[18px] border-b border-[var(--cf-gray-line)]">
+          <%= link_to script.title.presence || "untitled script", script_path(script),
+                class: "cf-label font-normal hover:text-[var(--cf-orange)] transition-colors duration-150" %>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="cf-meta py-10">No scripts yet.</p>
+    <% end %>
+  </div>
+</div>

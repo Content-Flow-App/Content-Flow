@@ -1,0 +1,12 @@
+<div class="shrink-0 w-56 bg-[var(--cf-white)] border border-[var(--cf-gray-line)] rounded-[var(--cf-radius)] p-4 snap-start">
+  <% if idea.topic.present? %>
+    <span class="inline-block cf-meta text-xs bg-[var(--cf-orange)] text-[var(--cf-cream)] px-2 py-0.5 rounded-full mb-2">
+      <%= idea.topic %>
+    </span>
+  <% end %>
+  <p class="cf-label font-normal mb-3 line-clamp-2"><%= idea.title %></p>
+  <div class="flex gap-3">
+    <%= link_to "view", idea, class: "cf-meta hover:text-[var(--cf-ink)] transition-colors duration-150" %>
+    <%= link_to "script", new_idea_script_path(idea), class: "cf-meta text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %>
+  </div>
+</div>

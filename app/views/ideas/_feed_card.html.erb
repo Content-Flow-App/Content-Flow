@@ -1,0 +1,52 @@
+<div class="bg-[var(--cf-white)] border border-[var(--cf-gray-line)] rounded-[var(--cf-radius)] overflow-hidden hover:border-[var(--cf-orange)] transition-colors duration-150">
+  <%# Top band: thumbnail if available, otherwise solid orange accent %>
+  <% if card[:thumbnail_url].present? %>
+    <img src="<%= card[:thumbnail_url] %>" alt="" class="w-full aspect-video object-cover">
+  <% else %>
+    <div class="w-full h-20 bg-[var(--cf-orange)] flex items-center px-4">
+      <% if card[:topic].present? %>
+        <span class="cf-meta text-[var(--cf-cream)] truncate"><%= card[:topic] %></span>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="p-4">
+    <%# Source badge %>
+    <% badge = case card[:source]
+               when "youtube" then ["youtube", "bg-red-100 text-red-700"]
+               when "ai_seed" then ["ai generated", "bg-violet-100 text-violet-700"]
+               else                ["saved", "bg-[var(--cf-wave-faint)] text-[var(--cf-orange)]"]
+               end %>
+    <span class="inline-block cf-meta text-xs px-2 py-0.5 rounded-full mb-2 <%= badge[1] %>">
+      <%= badge[0] %>
+    </span>
+
+    <p class="cf-label font-normal mb-2 line-clamp-2"><%= card[:title] %></p>
+
+    <% if card[:description].present? %>
+      <p class="cf-meta mb-3 line-clamp-3"><%= card[:description] %></p>
+    <% end %>
+
+    <% if card[:channel_name].present? %>
+      <p class="cf-meta text-xs mb-3">by <%= card[:channel_name] %></p>
+    <% end %>
+
+    <%# Actions %>
+    <div class="flex gap-3 pt-2 border-t border-[var(--cf-gray-line)]">
+      <%# "Save Idea" posts to feed_ideas_path, creating a GeneratedIdea with no parent idea %>
+      <%= form_with url: feed_ideas_path, method: :post, class: "inline" do |f| %>
+        <%= f.hidden_field :generated_idea, value: "" %>
+        <%= tag.input type: "hidden", name: "generated_idea[title]",       value: card[:title] %>
+        <%= tag.input type: "hidden", name: "generated_idea[description]", value: card[:description] %>
+        <%= tag.input type: "hidden", name: "generated_idea[topic]",       value: card[:topic] %>
+        <%= f.submit "save idea",
+              class: "cf-meta text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] cursor-pointer transition-colors duration-150" %>
+      <% end %>
+
+      <%# "Use as Idea" links to the new idea form with fields prefilled via query params %>
+      <%= link_to "use as idea",
+            new_idea_path(title: card[:title], description: card[:description], topic: card[:topic]),
+            class: "cf-meta hover:text-[var(--cf-ink)] transition-colors duration-150" %>
+    </div>
+  </div>
+</div>
