@@ -3,9 +3,11 @@ class CreatorsController < ApplicationController
   skip_before_action :check_creator_exist, only: [ :new, :create ]
 
   def show
+    render :edit
   end
 
   def new
+    return redirect_to edit_creator_path if current_user.creator.present?
     @creator = current_user.build_creator
   end
 

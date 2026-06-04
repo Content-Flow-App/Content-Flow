@@ -1,0 +1,27 @@
+<%= render "shared/errors", record: creator %>
+
+<%= form_with model: creator, id: "creator-form", class: "flex flex-col gap-4" do |f| %>
+  <div class="group relative pb-2">
+    <%= f.label :name, "name", class: "cf-h2 font-normal" %>
+    <%= f.text_field :name, readonly: true, class: "cf-input border-0 rounded-none bg-transparent px-0 outline-none cursor-default", placeholder: "your name...", data: { form_reveal_target: "input" } %>
+    <span data-form-reveal-target="line" class="absolute bottom-0 left-0 h-px w-0 bg-black transition-all duration-700 ease-in-out"></span>
+  </div>
+
+  <div class="group relative pb-2">
+    <%= f.label :topic, "what do you create content about?", class: "cf-h2 font-normal" %>
+    <%= f.text_field :topic, readonly: true, class: "cf-input border-0 rounded-none bg-transparent px-0 outline-none cursor-default", placeholder: "e.g. fitness, cooking, tech...", data: { form_reveal_target: "input" } %>
+    <span data-form-reveal-target="line" class="absolute bottom-0 left-0 h-px w-0 bg-black transition-all duration-700 ease-in-out"></span>
+  </div>
+
+  <div class="group relative pb-2">
+    <%= f.label :goal, "what is your content goal?", class: "cf-h2 font-normal" %>
+    <%= f.text_field :goal, readonly: true, class: "cf-input border-0 rounded-none bg-transparent px-0 outline-none cursor-default", placeholder: "e.g. grow my audience, land clients...", data: { form_reveal_target: "input" } %>
+    <span data-form-reveal-target="line" class="absolute bottom-0 left-0 h-px w-0 bg-black transition-all duration-700 ease-in-out"></span>
+  </div>
+
+  <div class="group relative pb-2">
+    <%= f.label :audience, "who is your target audience?", class: "cf-h2 font-normal" %>
+    <%= f.text_field :audience, readonly: true, class: "cf-input border-0 rounded-none bg-transparent px-0 outline-none cursor-default", placeholder: "e.g. beginners, small business owners...", data: { form_reveal_target: "input" } %>
+    <span data-form-reveal-target="line" class="absolute bottom-0 left-0 h-px w-0 bg-black transition-all duration-700 ease-in-out"></span>
+  </div>
+<% end %>

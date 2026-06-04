@@ -1,37 +1,10 @@
-<div class="max-w-lg mx-auto mt-10 px-4">
-  <h1 class="text-2xl font-bold mb-6">Create your creator profile</h1>
-
-  <%= form_with model: @creator, url: creator_path do |f| %>
-    <% if @creator.errors.any? %>
-      <div class="bg-red-50 border border-red-200 text-red-700 rounded p-4 mb-6">
-        <ul class="list-disc list-inside text-sm">
-          <% @creator.errors.full_messages.each do |msg| %>
-            <li><%= msg %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
-
-    <div class="mb-4">
-      <%= f.label :name, class: "block text-sm font-medium mb-1" %>
-      <%= f.text_field :name, class: "w-full border rounded px-3 py-2" %>
+<div class="min-h-screen bg-[var(--cf-bg)]">
+  <div class="px-7 pt-8">
+    <h1 class="cf-headline text-[clamp(72px,13vw,120px)] mb-8">
+      CREATE<br>YOUR PROFILE
+    </h1>
+    <div class="max-w-lg">
+      <%= render "form", creator: @creator %>
     </div>
-
-    <div class="mb-4">
-      <%= f.label :topic, "What do you create content about?", class: "block text-sm font-medium mb-1" %>
-      <%= f.text_field :topic, class: "w-full border rounded px-3 py-2" %>
-    </div>
-
-    <div class="mb-4">
-      <%= f.label :goal, "What is your content goal?", class: "block text-sm font-medium mb-1" %>
-      <%= f.text_field :goal, class: "w-full border rounded px-3 py-2" %>
-    </div>
-
-    <div class="mb-4">
-      <%= f.label :audience, "Who is your target audience?", class: "block text-sm font-medium mb-1" %>
-      <%= f.text_field :audience, class: "w-full border rounded px-3 py-2" %>
-    </div>
-
-    <%= f.submit "Create profile", class: "bg-black text-white rounded px-5 py-2 hover:bg-gray-800 cursor-pointer" %>
-  <% end %>
+  </div>
 </div>

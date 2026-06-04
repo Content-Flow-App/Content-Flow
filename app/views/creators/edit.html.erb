@@ -1,40 +1,22 @@
-<div class="max-w-lg mx-auto mt-10 px-4">
-  <div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-bold">Edit your creator profile</h1>
-    <%= link_to "Back", creator_path, class: "text-sm border rounded px-4 py-2 hover:bg-gray-50" %>
-  </div>
-
-  <%= form_with model: @creator, url: creator_path do |f| %>
-    <% if @creator.errors.any? %>
-      <div class="bg-red-50 border border-red-200 text-red-700 rounded p-4 mb-6">
-        <ul class="list-disc list-inside text-sm">
-          <% @creator.errors.full_messages.each do |msg| %>
-            <li><%= msg %></li>
-          <% end %>
-        </ul>
+<div class="h-[calc(100vh-64px)] overflow-hidden bg-[var(--cf-bg)]" data-controller="form-reveal">
+  <div class="px-7 pt-8 h-full flex flex-col">
+    <div class="flex justify-between items-end gap-4 mb-10">
+      <h1 class="cf-headline text-[clamp(72px,13vw,120px)]">
+        YOUR<br>PROFILE
+      </h1>
+      <button type="button" data-action="form-reveal#reveal" class="shrink-0 hover:opacity-70 transition-opacity duration-150 ease-in-out flex items-end">
+        <div class="flex flex-col items-center">
+          <%= image_tag "pen_edit.svg", class: "w-16 h-16 md:w-28 md:h-28", alt: "edit" %>
+          <%= image_tag "pen_line.svg", class: "w-16 md:w-28 mt-1 h-1", alt: "" %>
+        </div>
+        <span class="cf-action font-normal ml-2">edit</span>
+      </button>
+    </div>
+    <div class="flex items-end justify-between">
+      <div class="max-w-lg">
+        <%= render "form", creator: @creator %>
       </div>
-    <% end %>
-
-    <div class="mb-4">
-      <%= f.label :name, class: "block text-sm font-medium mb-1" %>
-      <%= f.text_field :name, class: "w-full border rounded px-3 py-2" %>
+      <button type="button" data-form-reveal-target="submit" data-action="form-reveal#submit" class="shrink-0 opacity-0 pointer-events-none rounded-[10px] border-2 border-[var(--cf-ink)] bg-transparent text-[var(--cf-ink)] px-8 py-3.5 cf-action font-normal cursor-pointer transition-all duration-300 ease-in-out hover:bg-[var(--cf-accent)] hover:border-[var(--cf-accent)] hover:text-[var(--cf-cream)]">update</button>
     </div>
-
-    <div class="mb-4">
-      <%= f.label :topic, "What do you create content about?", class: "block text-sm font-medium mb-1" %>
-      <%= f.text_field :topic, class: "w-full border rounded px-3 py-2" %>
-    </div>
-
-    <div class="mb-4">
-      <%= f.label :goal, "What is your content goal?", class: "block text-sm font-medium mb-1" %>
-      <%= f.text_field :goal, class: "w-full border rounded px-3 py-2" %>
-    </div>
-
-    <div class="mb-4">
-      <%= f.label :audience, "Who is your target audience?", class: "block text-sm font-medium mb-1" %>
-      <%= f.text_field :audience, class: "w-full border rounded px-3 py-2" %>
-    </div>
-
-    <%= f.submit "Save changes", class: "bg-black text-white rounded px-5 py-2 hover:bg-gray-800 cursor-pointer" %>
-  <% end %>
+  </div>
 </div>
