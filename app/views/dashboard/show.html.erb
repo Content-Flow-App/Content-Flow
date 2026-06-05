@@ -9,7 +9,52 @@
 
     <p class="cf-body mt-8">
       Welcome back<% if current_user.creator&.name.present? %>, <%= current_user.creator.name %><% end %>.
-      Your workspace lives here — placeholder for now.
+      Your workspace lives here
     </p>
+
+    <% if @ideas.any? %>
+      <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% @ideas.each do |idea| %>
+          <div class="bg-[var(--cf-white)] rounded-[var(--cf-radius)] overflow-hidden border border-[var(--cf-gray-line)]">
+            <%# Orange header band %>
+            <div class="bg-[var(--cf-orange)] px-5 py-4">
+              <%= link_to idea_path(idea), class: "group" do %>
+                <p class="cf-h2 text-[var(--cf-cream)] group-hover:opacity-80 transition-opacity duration-150 leading-tight">
+                  <%= idea.title %>
+                </p>
+              <% end %>
+              <% if idea.topic.present? %>
+                <p class="cf-meta text-[var(--cf-cream)] opacity-70 mt-1"><%= idea.topic %></p>
+              <% end %>
+            </div>
+
+            <%# Scripts list %>
+            <div class="px-5 py-4">
+              <% if idea.scripts.any? %>
+                <p class="cf-meta mb-3">scripts</p>
+                <ul>
+                  <% idea.scripts.each_with_index do |script, i| %>
+                    <li class="<%= i > 0 ? "border-t border-[var(--cf-gray-line)]" : "" %> py-3">
+                      <%= link_to script_path(script), class: "cf-label font-normal hover:text-[var(--cf-orange)] transition-colors duration-150 block" do %>
+                        <%= script.title.presence || "untitled script" %>
+                      <% end %>
+                      <% if script.style.present? || script.length.present? %>
+                        <p class="cf-meta mt-0.5">
+                          <%= [script.style, script.length].compact.join(" · ") %>
+                        </p>
+                      <% end %>
+                    </li>
+                  <% end %>
+                </ul>
+              <% else %>
+                <p class="cf-meta py-2">no scripts yet.</p>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="cf-meta py-10 text-center">No ideas yet. <%= link_to "Create your first one.", new_idea_path, class: "text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %></p>
+    <% end %>
   </div>
 </div>

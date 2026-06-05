@@ -5,19 +5,18 @@ class DashboardController < ApplicationController
   # the logged-in counterpart to the public `pages#home` landing.
 
   def show
+    # `includes(:scripts)` eager-loads each idea's scripts in one extra SQL
+    # query rather than N queries (one per idea) — the N+1 equivalent would be:
+    #
+    #   current_user.ideas.each { |i| i.scripts }  # hits DB once per idea
+    #
+    # With includes Rails runs exactly two queries total:
+    #   SELECT * FROM ideas WHERE user_id = ?
+    #   SELECT * FROM scripts WHERE idea_id IN (...)
+    @ideas = current_user.ideas.includes(:scripts).order(created_at: :desc)
+
     # Implicit template lookup (Rails "magic"):
-    # This action has no explicit `render` call. When an action finishes
-    # without rendering, Rails renders the template whose path matches the
-    # controller and action names by convention:
-    #
-    #   controller "dashboard" + action "show"
-    #     -> app/views/dashboard/show.html.erb
-    #
-    # So this is exactly equivalent to writing:
-    #
-    #   render "dashboard/show"   # or simply: render :show
-    #
-    # Rails also picks the format/handler from the request + filename
-    # (.html.erb for an HTML request). Placeholder for now — no data yet.
+    # No explicit `render` call → Rails finds the template by convention:
+    #   controller "dashboard" + action "show" → app/views/dashboard/show.html.erb
   end
 end
