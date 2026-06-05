@@ -6,7 +6,7 @@
       <%= image_tag "arrow.svg", style: "width: 20px; height: 20px; transform: rotate(180deg); pointer-events: none;", alt: "" %>
       <span style="pointer-events: none;">go back to ideas</span>
     <% end %>
-    <div class="flex justify-between items-start mb-10 relative z-10 bg-[var(--cf-bg)]">
+    <div data-idea-edit-target="header" class="flex justify-between items-start mb-10 relative z-10 bg-[var(--cf-bg)]">
       <h1 class="cf-headline text-[clamp(72px,13vw,120px)]" data-idea-edit-target="showTitle"><%= @idea.title.upcase %></h1>
       <div class="shrink-0 pt-2">
         <button type="button" data-idea-edit-target="pen" data-action="idea-edit#toggle" class="hover:opacity-70 transition-opacity duration-150 flex flex-col items-center">
@@ -71,7 +71,7 @@
     </div>
 
     <%# ---- Edit form (hidden until pen click) ---- %>
-    <div data-idea-edit-target="form" class="hidden opacity-0 overflow-hidden flex flex-col justify-end" style="min-height: calc(100vh - 350px);">
+    <div data-idea-edit-target="form" class="hidden opacity-0 overflow-hidden flex flex-col justify-end" style="min-height: calc(100vh - 250px);">
       <div class="flex items-end justify-between">
         <div class="max-w-lg">
           <%= form_with model: @idea, class: "flex flex-col gap-4" do |f| %>

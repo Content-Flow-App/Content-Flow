@@ -167,7 +167,10 @@ export default class extends Controller {
         this.showTitleTarget.contentEditable = "true"
         this.showTitleTarget.style.cursor = "text"
         this.showTitleTarget.style.outline = "none"
-        this.showTitleTarget.focus()
+
+        const titleInput = this.inputTargets[0]
+        titleInput.focus()
+        titleInput.setSelectionRange(titleInput.value.length, titleInput.value.length)
 
         this.submitTarget.style.display = ""
         this.submitTarget.classList.remove("opacity-0", "pointer-events-none")
