@@ -1,37 +1,44 @@
-<% content_for :title, "Showing chat" %>
+<% content_for :title, "Chat" %>
 
 <%= turbo_stream_from "chat_#{@chat.id}" %>
 
-<div class="md:w-2/3 w-full">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
-  <% end %>
+<div class="min-h-screen bg-[var(--cf-bg)]">
+  <div class="px-7 pt-8">
 
-  <h1 class="font-bold text-4xl">Showing chat #<%= @chat.id %></h1>
-
-  <div class="my-5">
-    <strong class="block font-medium mb-1">Model:</strong>
-    <%= @chat.model&.label || default_model_display_name %>
-  </div>
-
-  <div id="messages" class="min-w-full divide-y divide-gray-200 space-y-5 my-5">
-    <% @chat.messages.where.not(id: nil).each do |message| %>
-      <%= render message %>
+    <%= link_to chats_path,
+          class: "cf-meta inline-flex items-center gap-2 hover:text-[var(--cf-orange)] transition-colors duration-150" do %>
+      ← go back to chats
     <% end %>
+
+    <% if notice.present? %>
+      <p class="cf-meta py-2 px-4 mb-4 border-l-4 border-[var(--cf-orange)] inline-block" id="notice">
+        <%= notice %>
+      </p>
+    <% end %>
+
+    <%#
+      `<%==` outputs HTML without escaping — equivalent to `<%= raw ... %>`.
+      Safe here because the string comes from a hardcoded hash, never from
+      user input.
+    %>
+    <%
+      headline_html = {
+        "generate_idea"          => "GENERATE<br>AN IDEA",
+        "generate_script"        => "GENERATE<br>A SCRIPT",
+        "generate_linkedin_post" => "GENERATE<br>A POST"
+      }[@chat.purpose] || "CHAT"
+    %>
+    <h1 class="cf-headline text-[clamp(72px,13vw,120px)] mt-2 mb-10"><%== headline_html %></h1>
+
+    <div id="messages" class="space-y-4 mb-8">
+      <% @chat.messages.where.not(id: nil).each do |message| %>
+        <%= render message %>
+      <% end %>
+    </div>
+
+    <%= render "messages/form", chat: @chat, message: @message %>
+
+    <%= render "generation_action" %>
+
   </div>
-
-  <%= render "messages/form", chat: @chat, message: @message %>
-
-  <%# TEMPORARY (F-2 verification aid). Shows only on a generate chat that has an
-      owner and at least one real message. F-5 replaces this with the designed
-      "save as …" button and proper gating. %>
-  <% if @chat.purpose.present? && @chat.chattable_id.present? &&
-        @chat.messages.where(role: %w[user assistant]).where.not(content: [nil, ""]).exists? %>
-    <% save_label = { "generate_idea" => "idea", "generate_script" => "script",
-                      "generate_linkedin_post" => "linkedin post" }[@chat.purpose] %>
-    <%= button_to "save as #{save_label}", chat_generation_path(@chat),
-          class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-orange-600 hover:bg-orange-500 text-white inline-block font-medium cursor-pointer mt-2" %>
-  <% end %>
-
-  <%= link_to "Back to chats", chats_path, class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
 </div>

@@ -1,14 +1,8 @@
 <% assistant ||= local_assigns[:message] %>
-<div id="message_<%= assistant.id %>" class="w-full sm:w-auto my-5 space-y-3 rounded-md px-3 py-2 bg-green-50">
-  <div>
-    <span class="inline-block rounded px-2 py-0.5 text-xs font-medium bg-green-100 text-green-700">
-      Assistant
-    </span>
+<div id="message_<%= assistant.id %>" class="bg-[var(--cf-white)] border-l-4 border-[var(--cf-orange)] rounded-r-[var(--cf-radius)] px-5 py-4">
+  <div class="flex justify-between items-baseline gap-4 mb-2">
+    <span class="cf-meta text-[var(--cf-orange)]">ai</span>
+    <span class="cf-meta"><%= assistant.created_at&.strftime("%I:%M %p") %></span>
   </div>
-
-  <div id="message_<%= assistant.id %>_content" class="whitespace-pre-wrap"><%= assistant.content %></div>
-
-  <div>
-    <span class="text-sm text-gray-600"><%= assistant.created_at&.strftime("%I:%M %p") %></span>
-  </div>
+  <div id="message_<%= assistant.id %>_content" class="cf-body whitespace-pre-wrap"><%= assistant.content %></div>
 </div>

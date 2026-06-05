@@ -1,0 +1,28 @@
+<%#
+  Teaching note:
+  `button_to` generates a <form method="post"> with a submit button — unlike
+  `link_to`, which is a plain <a> (GET). Because there is no Active Record
+  model to derive the URL from, we pass the URL as the second positional
+  argument explicitly: `button_to label, url`.
+
+  The `form:` key passes HTML options down to the generated <form> element
+  (separate from the `<button>`'s own options). We wire Stimulus there so the
+  controller receives the form's `submit` event; the target lives on the
+  button itself so the controller knows which element to disable.
+%>
+<% save_label = {
+     "generate_idea"          => "save as idea",
+     "generate_script"        => "save as script",
+     "generate_linkedin_post" => "save as linkedin post"
+   }[@chat.purpose] %>
+
+<% if save_label &&
+      @chat.messages.where(role: "assistant").where.not(content: [nil, ""]).exists? %>
+  <div class="mt-8 pt-6 border-t border-[var(--cf-gray-line)]">
+    <%= button_to save_label, chat_generation_path(@chat),
+          class: "cf-btn-primary",
+          form: { data: { controller: "submit-once",
+                          action: "submit->submit-once#submit" } },
+          data: { submit_once_target: "button" } %>
+  </div>
+<% end %>

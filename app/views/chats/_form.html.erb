@@ -6,11 +6,10 @@
   <%= form.hidden_field :purpose, value: @purpose %>
   <%= form.hidden_field :chattable_type, value: chat.chattable_type %>
   <%= form.hidden_field :chattable_id, value: chat.chattable_id %>
-  <% if chat.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
-      <h2><%= pluralize(chat.errors.count, "error") %> prohibited this chat from being saved:</h2>
 
-      <ul class="list-disc ml-6">
+  <% if chat.errors.any? %>
+    <div class="cf-errors mb-6">
+      <ul>
         <% chat.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -18,21 +17,24 @@
     </div>
   <% end %>
 
-  <div class="my-5">
-    <%= form.label :model, "Select AI model:" %>
+  <div class="mb-6">
+    <%= form.label :model, "model", class: "cf-form-label" %>
     <%= form.select :model,
-        options_for_select(@chat_models.map { |model| [model.label, model.id] }.unshift([default_model_display_name, nil]), @selected_model),
-        {},
-        class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": chat.errors[:model].none?, "border-red-400 focus:outline-red-600": chat.errors[:model].any?}] %>
+          options_for_select(
+            @chat_models.map { |m| [m.label, m.id] }.unshift([default_model_display_name, nil]),
+            @selected_model
+          ),
+          {},
+          class: "cf-select mt-2" %>
   </div>
 
-  <div class="my-5">
-    <%= form.label :prompt, "Prompt" %>
-    <%= form.text_area :prompt, rows: 4, placeholder: "What would you like to discuss?", autofocus: true,
-        class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": chat.errors[:prompt].none?, "border-red-400 focus:outline-red-600": chat.errors[:prompt].any?}] %>
+  <div class="mb-8">
+    <%= form.label :prompt, "prompt", class: "cf-form-label" %>
+    <%= form.text_area :prompt, rows: 4,
+          placeholder: "what would you like to discuss?",
+          autofocus: true,
+          class: "cf-textarea mt-2" %>
   </div>
 
-  <div class="inline">
-    <%= form.submit "Start new chat", class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
-  </div>
+  <%= form.button "start chat", class: "cf-btn-primary" %>
 <% end %>
