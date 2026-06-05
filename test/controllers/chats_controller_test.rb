@@ -35,6 +35,14 @@ class ChatsControllerTest < ActionDispatch::IntegrationTest
     assert_includes system_message.content, "Ship faster"
   end
 
+  test "create persists the user's prompt synchronously so it renders without the stream" do
+    post chats_path, params: { chat: { prompt: "make it punchier" } }
+
+    user_message = Chat.last.messages.find_by(role: "user")
+    assert user_message.present?, "expected the prompt persisted as a user message before the job runs"
+    assert_equal "make it punchier", user_message.content
+  end
+
   test "create without a chattable leaves a standalone chat and no system message" do
     post chats_path, params: { chat: { prompt: "hello" } }
 
@@ -72,6 +80,23 @@ class ChatsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "input[type=hidden][name='chat[purpose]'][value=generate_idea]"
+  end
+
+  test "new seeds the chattable from the generate redirect's top-level params" do
+    get new_chat_path(purpose: "generate_script", chattable_type: "Idea", chattable_id: @idea.id)
+
+    assert_response :success
+    assert_select "input[type=hidden][name='chat[chattable_type]'][value=Idea]"
+    assert_select "input[type=hidden][name='chat[chattable_id]'][value=?]", @idea.id.to_s
+  end
+
+  test "create persists the chattable submitted via the form's hidden fields" do
+    post chats_path, params: {
+      chat: { prompt: "hi", purpose: "generate_script",
+              chattable_type: "Idea", chattable_id: @idea.id }
+    }
+
+    assert_equal @idea, Chat.last.chattable
   end
 
   test "new ignores an unknown purpose (hidden field stays empty)" do

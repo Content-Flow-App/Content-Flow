@@ -12,8 +12,12 @@ class ScriptsController < ApplicationController
   def show
   end
 
+  # Repurposed as a redirect (see IdeasController#new). @idea is loaded by the
+  # set_idea before_action, so the generation chat is owned by — and gets its
+  # context from — the parent idea.
   def new
-    @script = @idea.scripts.build
+    redirect_to new_chat_path(purpose: "generate_script",
+                              chattable_type: "Idea", chattable_id: @idea.id)
   end
 
   def create
@@ -30,9 +34,15 @@ class ScriptsController < ApplicationController
 
   def update
     if @script.update(script_params)
-      redirect_to script_path(@script), notice: "Script updated."
+      respond_to do |format|
+        format.html { redirect_to script_path(@script), notice: "Script updated." }
+        format.json { head :ok }
+      end
     else
-      render :edit, status: :unprocessable_entity
+      respond_to do |format|
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @script.errors, status: :unprocessable_entity }
+      end
     end
   end
 

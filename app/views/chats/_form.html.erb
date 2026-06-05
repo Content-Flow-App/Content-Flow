@@ -1,7 +1,11 @@
 <%= form_with(model: chat, url: chats_path, class: "contents") do |form| %>
-  <%# Carries the chat's purpose through to #create. Renders nothing for a plain
-      free-form chat (@purpose is nil), so that flow is unchanged. %>
+  <%# Carries the chat's purpose + owner through to #create. All three render
+      empty for a plain free-form chat (no purpose/chattable), so that flow is
+      unchanged. The chattable fields are seeded by #new from the generate
+      redirect's params so the created chat keeps its owner (and its context). %>
   <%= form.hidden_field :purpose, value: @purpose %>
+  <%= form.hidden_field :chattable_type, value: chat.chattable_type %>
+  <%= form.hidden_field :chattable_id, value: chat.chattable_id %>
   <% if chat.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
       <h2><%= pluralize(chat.errors.count, "error") %> prohibited this chat from being saved:</h2>

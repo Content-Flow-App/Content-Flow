@@ -1,6 +1,14 @@
 Rails.application.routes.draw do
   resources :chats do
     resources :messages, only: [ :create ]
+
+    # Singular nested resource — like `resource :creator`, it generates NO :id
+    # segment because a chat has at most one generation action:
+    #   POST /chats/:chat_id/generation  ->  GenerationsController#create
+    #     (named `chat_generation_path(chat)`)
+    # only: [:create] keeps it to that single route; the chat_id comes from the
+    # nesting, so the controller reads params[:chat_id].
+    resource :generation, only: [ :create ]
   end
   resources :models, only: [ :index, :show ] do
     collection do

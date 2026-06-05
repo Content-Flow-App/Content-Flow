@@ -4,7 +4,7 @@
   <div class="px-7 pt-8">
     <div class="flex justify-between items-end gap-4">
       <h1 class="cf-headline text-[clamp(72px,13vw,120px)]">
-        HERE ARE<br>YOUR IDEAS
+        HERE ARE<br>YOUR <span class="relative inline-block"><span>IDEAS</span><%= image_tag "wavy_underline.svg", class: "absolute left-0 w-full pointer-events-none", style: "bottom: -0.25em; height: 0.3em;", alt: "" %></span>
       </h1>
       <%= link_to new_idea_path, class: "shrink-0 flex items-end" do %>
         <%= image_tag "big_plus.svg", class: "w-16 h-16 md:w-28 md:h-28", alt: "New idea" %>

@@ -22,5 +22,16 @@
 
   <%= render "messages/form", chat: @chat, message: @message %>
 
+  <%# TEMPORARY (F-2 verification aid). Shows only on a generate chat that has an
+      owner and at least one real message. F-5 replaces this with the designed
+      "save as …" button and proper gating. %>
+  <% if @chat.purpose.present? && @chat.chattable_id.present? &&
+        @chat.messages.where(role: %w[user assistant]).where.not(content: [nil, ""]).exists? %>
+    <% save_label = { "generate_idea" => "idea", "generate_script" => "script",
+                      "generate_linkedin_post" => "linkedin post" }[@chat.purpose] %>
+    <%= button_to "save as #{save_label}", chat_generation_path(@chat),
+          class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-orange-600 hover:bg-orange-500 text-white inline-block font-medium cursor-pointer mt-2" %>
+  <% end %>
+
   <%= link_to "Back to chats", chats_path, class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
 </div>

@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["show", "showPart", "form", "field", "pen", "penIcon", "penLine", "editLabel", "header", "line", "input", "submit", "showTitle", "showTopic", "showDescription"]
+  static targets = ["show", "showPart", "form", "field", "pen", "penIcon", "penLine", "editLabel", "header", "line", "input", "submit", "showTitle", "showStyle", "showLength", "showDescription", "showSystemPrompt"]
 
   connect() {
     this.editing = false
@@ -105,6 +105,7 @@ export default class extends Controller {
     this.headerTarget.style.transition = "margin-bottom 1.4s cubic-bezier(0.22, 0.61, 0.36, 1)"
     this.headerTarget.style.marginBottom = "-80px"
 
+
     const penLine = this.penLineTarget
     penLine.style.width = "0"
 
@@ -142,15 +143,15 @@ export default class extends Controller {
         }, index * 200)
       })
 
-      const fieldsLanded = this.fieldTargets.length * 200 + 800
+      const fieldsLanded = this.fieldTargets.length * 200 + 400
 
       this.lineTargets.forEach((line, index) => {
         setTimeout(() => {
           line.classList.add("w-full")
-        }, fieldsLanded + index * 350)
+        }, fieldsLanded + index * 150)
       })
 
-      const totalLineTime = fieldsLanded + this.lineTargets.length * 350 + 700
+      const totalLineTime = fieldsLanded + this.lineTargets.length * 150 + 400
 
       setTimeout(() => {
         this.lineTargets.forEach((line) => {
@@ -189,14 +190,19 @@ export default class extends Controller {
     const form = this.element.querySelector("form")
     const formData = new FormData(form)
 
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
     fetch(form.action, {
-      method: form.method || "PATCH",
+      method: "POST",
       body: formData,
-      headers: { "Accept": "application/json" }
+      headers: {
+        "Accept": "application/json",
+        "X-CSRF-Token": csrfToken
+      }
     })
-
-    this.showTopicTarget.textContent = this.inputTargets[1].value
-    this.showDescriptionTarget.textContent = this.inputTargets[2].value
+    if (this.hasShowStyleTarget) this.showStyleTarget.textContent = this.inputTargets[1].value
+    if (this.hasShowLengthTarget) this.showLengthTarget.textContent = this.inputTargets[2].value
+    if (this.hasShowDescriptionTarget) this.showDescriptionTarget.textContent = this.inputTargets[3].value
+    if (this.hasShowSystemPromptTarget) this.showSystemPromptTarget.textContent = this.inputTargets[4].value
 
     this.submitTarget.style.display = "none"
 

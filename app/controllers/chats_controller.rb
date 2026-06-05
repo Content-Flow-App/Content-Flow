@@ -23,13 +23,18 @@ class ChatsController < ApplicationController
       )
 
       # Persist the creator-aware system prompt as a role: :system message
-      # before the job runs. ChatResponseJob's chat.ask then streams with the
-      # context already in place. A standalone chat (no chattable) yields nil
-      # instructions, leaving the plain /chats flow untouched.
+      # before the job runs, so the assistant streams with the context already in
+      # place. A standalone chat (no chattable) yields nil instructions, leaving
+      # the plain /chats flow untouched.
       instructions = LlmContext.for(@chat.chattable)
       @chat.with_instructions(instructions) if instructions.present?
 
-      ChatResponseJob.perform_later(@chat.id, prompt)
+      # Persist the user's message synchronously, before enqueuing the job, so the
+      # chat page renders it on load. The job then only streams the assistant
+      # reply — avoiding the race where the job's broadcast fires before the
+      # browser has subscribed to the chat's Turbo Stream.
+      @chat.create_user_message(prompt)
+      ChatResponseJob.perform_later(@chat.id)
 
       redirect_to @chat, notice: "Chat was successfully created."
     end
@@ -50,18 +55,20 @@ class ChatsController < ApplicationController
     @chat = Chat.find(params[:id])
   end
 
-  # Resolves an optional chat owner from the submitted params. F2 wires the
-  # idea/script/post chat entry points to submit chattable_type/chattable_id;
-  # until then (and for the standalone /chats form) these are absent and we
-  # return nil — an ownerless chat, which is valid (optional: true).
+  # Resolves an optional chat owner from the params. It arrives two ways, like
+  # `purpose`: as top-level query params on the generate redirect from a content
+  # `new` action (/chats/new?chattable_type=Idea&chattable_id=7), and as the
+  # form's hidden chat[chattable_type]/chat[chattable_id] fields on #create. One
+  # helper reads both; absent (the standalone /chats form) → nil, an ownerless
+  # chat, which is valid (optional: true).
   #
   # The type is allowlisted before constantize so a request can never coerce
   # an arbitrary class name into a model load.
   CHATTABLE_TYPES = %w[User Idea Script LinkedinPost].freeze
 
   def chattable
-    type = params.dig(:chat, :chattable_type).presence
-    id   = params.dig(:chat, :chattable_id).presence
+    type = (params[:chattable_type] || params.dig(:chat, :chattable_type)).presence
+    id   = (params[:chattable_id]   || params.dig(:chat, :chattable_id)).presence
     return unless type && id && CHATTABLE_TYPES.include?(type)
 
     type.constantize.find(id)
