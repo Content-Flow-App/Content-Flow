@@ -8,14 +8,13 @@ class LinkedinPostsController < ApplicationController
   def show
   end
 
+  # Repurposed as a redirect (see IdeasController#new). @script is loaded by the
+  # set_script before_action. The old "post already exists? → edit" guard is gone:
+  # in the generation flow the create-vs-update decision moves to the generation
+  # engine (F-2), which updates an existing post or builds a new one.
   def new
-    # If a post already exists for this script, go straight to edit
-    if @script.linkedin_post.present?
-      redirect_to edit_script_linkedin_post_path(@script) and return
-    end
-    # build_linkedin_post builds a new in-memory LinkedinPost associated with @script,
-    # but does NOT save it — equivalent to: LinkedinPost.new(script: @script)
-    @linkedin_post = @script.build_linkedin_post
+    redirect_to new_chat_path(purpose: "generate_linkedin_post",
+                              chattable_type: "Script", chattable_id: @script.id)
   end
 
   def create

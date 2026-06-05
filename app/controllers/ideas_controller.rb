@@ -9,12 +9,15 @@ class IdeasController < ApplicationController
   def show
   end
 
+  # Conventionally `new` renders `ideas/new.html.erb` (implicit template lookup)
+  # to show a blank form. In the chat-driven generation flow we repurpose it as a
+  # `redirect_to`: an idea is born from a conversation, so `new` hands off to the
+  # chat composer carrying the purpose + owner. No template is rendered here.
+  # (`create` and `new.html.erb` stay — `create` re-renders `new` on a validation
+  # error, e.g. when the generation engine's payload fails validation.)
   def new
-    @idea = current_user.ideas.build(
-      title: params[:title],
-      description: params[:description],
-      topic: params[:topic]
-    )
+    redirect_to new_chat_path(purpose: "generate_idea",
+                              chattable_type: "User", chattable_id: current_user.id)
   end
 
   def create
