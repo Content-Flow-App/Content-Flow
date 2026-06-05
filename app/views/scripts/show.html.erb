@@ -1,47 +1,121 @@
 <% content_for :title, @script.title %>
 
-<div class="min-h-screen bg-[var(--cf-bg)]">
-  <div class="px-7 pt-8 pb-14">
-    <nav class="mb-2 cf-meta">
-      <%= link_to "ideas", ideas_path, class: "hover:text-[var(--cf-ink)] transition-colors duration-150" %>
-      <span class="mx-2">›</span>
-      <%= link_to @idea.title, idea_path(@idea), class: "hover:text-[var(--cf-ink)] transition-colors duration-150" %>
-      <span class="mx-2">›</span>
-      <span><%= @script.title %></span>
-    </nav>
+<div class="min-h-screen bg-[var(--cf-bg)]" data-controller="script-edit">
+  <div class="px-7 pt-2 pb-14">
+    <%= link_to idea_path(@idea), class: "cf-meta inline-flex items-center gap-2 hover:text-[var(--cf-orange)] transition-colors duration-150", style: "position: relative; z-index: 20; cursor: pointer;" do %>
+      <%= image_tag "arrow.svg", style: "width: 20px; height: 20px; transform: rotate(180deg); pointer-events: none;", alt: "" %>
+      <span style="pointer-events: none;">go back</span>
+    <% end %>
 
-    <div class="flex justify-between items-start gap-4 mb-10">
-      <h1 class="cf-headline text-[clamp(48px,8vw,120px)]"><%= @script.title.upcase %></h1>
-      <div class="flex gap-6 shrink-0 pt-2">
-        <%= link_to "edit", edit_script_path(@script), class: "cf-action hover:text-[var(--cf-orange)] transition-colors duration-150" %>
-        <%= link_to "delete", script_path(@script),
-              data: { turbo_method: :delete, turbo_confirm: "Delete this script?" },
-              class: "cf-action text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %>
+    <div data-script-edit-target="header" class="flex justify-between items-start mb-10 relative z-10 bg-[var(--cf-bg)]">
+      <h1 class="cf-headline text-[clamp(72px,13vw,120px)]" data-script-edit-target="showTitle"><%= @script.title.upcase %></h1>
+      <div class="shrink-0 pt-2">
+        <button type="button" data-script-edit-target="pen" data-action="script-edit#toggle" class="hover:opacity-70 transition-opacity duration-150 flex flex-col items-center">
+          <div data-script-edit-target="penIcon">
+            <%= image_tag "pen_edit.svg", class: "w-14 h-14", alt: "Edit script" %>
+          </div>
+          <div data-script-edit-target="penLine" class="w-14 mt-1 h-0.5 overflow-hidden transition-all duration-500 ease-in-out">
+            <%= image_tag "pen_line.svg", class: "w-14 h-0.5", alt: "" %>
+          </div>
+          <span data-script-edit-target="editLabel" class="cf-meta mt-1 w-14 text-center tracking-[0.3em] transition-opacity duration-300">edit</span>
+        </button>
       </div>
     </div>
 
-    <div class="flex gap-6 cf-meta mb-8">
-      <% if @script.style.present? %><span><%= @script.style %></span><% end %>
-      <% if @script.length.present? %><span><%= @script.length %></span><% end %>
+    <%# ---- Show content ---- %>
+    <div class="overflow-hidden">
+    <div data-script-edit-target="show">
+      <div data-script-edit-target="showPart" class="flex gap-6 cf-meta mb-8">
+        <% if @script.style.present? %><span data-script-edit-target="showStyle"><%= @script.style %></span><% end %>
+        <% if @script.length.present? %><span data-script-edit-target="showLength"><%= @script.length %></span><% end %>
+      </div>
+
+      <% if @script.description.present? %>
+        <div data-script-edit-target="showPart" class="max-w-2xl mb-10">
+          <p class="cf-h2 font-normal mb-2">description</p>
+          <p class="cf-body" data-script-edit-target="showDescription"><%= @script.description %></p>
+        </div>
+      <% end %>
+
+      <% if @script.system_prompt.present? %>
+        <div data-script-edit-target="showPart" class="max-w-2xl mb-10">
+          <p class="cf-h2 font-normal mb-2">system prompt</p>
+          <p class="cf-body whitespace-pre-wrap" data-script-edit-target="showSystemPrompt"><%= @script.system_prompt %></p>
+        </div>
+      <% end %>
+
+      <div data-script-edit-target="showPart">
+        <div class="cf-rule mb-6"></div>
+        <%= link_to "turn this into a linkedin post →", new_script_linkedin_post_path(@script),
+              class: "cf-h2 font-normal hover:text-[var(--cf-orange)] transition-colors duration-150" %>
+      </div>
+    </div>
     </div>
 
-    <% if @script.description.present? %>
-      <div class="max-w-2xl mb-10">
-        <p class="cf-label mb-2">description</p>
-        <p class="cf-body"><%= @script.description %></p>
+    <%# ---- Edit form (hidden until pen click) ---- %>
+    <div data-script-edit-target="form" class="hidden opacity-0 overflow-hidden flex flex-col justify-end">
+      <div class="flex items-end justify-between">
+        <div class="max-w-lg">
+          <%= form_with model: @script, url: script_path(@script), class: "flex flex-col gap-1" do |f| %>
+            <div class="group relative pb-2" data-script-edit-target="field">
+              <%= f.label :title, "title", class: "cf-h2 font-normal" %>
+              <%= f.text_field :title,
+                readonly: true,
+                class: "cf-input border-0 rounded-none bg-transparent px-0 outline-none cursor-default",
+                placeholder: "script title...",
+                data: { script_edit_target: "input" } %>
+              <span data-script-edit-target="line" class="absolute bottom-0 left-0 h-px w-0 bg-black transition-all duration-700 ease-in-out"></span>
+            </div>
+
+            <div class="group relative pb-2" data-script-edit-target="field">
+              <%= f.label :style, "style", class: "cf-h2 font-normal" %>
+              <%= f.text_field :style,
+                readonly: true,
+                class: "cf-input border-0 rounded-none bg-transparent px-0 outline-none cursor-default",
+                placeholder: "e.g. educational, storytelling...",
+                data: { script_edit_target: "input" } %>
+              <span data-script-edit-target="line" class="absolute bottom-0 left-0 h-px w-0 bg-black transition-all duration-700 ease-in-out"></span>
+            </div>
+
+            <div class="group relative pb-2" data-script-edit-target="field">
+              <%= f.label :length, "length", class: "cf-h2 font-normal" %>
+              <%= f.text_field :length,
+                readonly: true,
+                class: "cf-input border-0 rounded-none bg-transparent px-0 outline-none cursor-default",
+                placeholder: "e.g. short, medium, long...",
+                data: { script_edit_target: "input" } %>
+              <span data-script-edit-target="line" class="absolute bottom-0 left-0 h-px w-0 bg-black transition-all duration-700 ease-in-out"></span>
+            </div>
+
+            <div class="group relative pb-2" data-script-edit-target="field">
+              <%= f.label :description, "description", class: "cf-h2 font-normal" %>
+              <%= f.text_area :description,
+                readonly: true,
+                rows: 1,
+                class: "cf-input border-0 rounded-none bg-transparent px-0 outline-none cursor-default h-auto py-3 resize-none overflow-hidden",
+                placeholder: "what is this script about...",
+                style: "field-sizing: content; min-height: 46px;",
+                data: { script_edit_target: "input" } %>
+              <span data-script-edit-target="line" class="absolute bottom-0 left-0 h-px w-0 bg-black transition-all duration-700 ease-in-out"></span>
+            </div>
+
+            <div class="group relative pb-2" data-script-edit-target="field">
+              <%= f.label :system_prompt, "system prompt", class: "cf-h2 font-normal" %>
+              <%= f.text_area :system_prompt,
+                readonly: true,
+                rows: 1,
+                class: "cf-input border-0 rounded-none bg-transparent px-0 outline-none cursor-default h-auto py-3 resize-none overflow-hidden",
+                placeholder: "ai instructions for generating this script...",
+                style: "field-sizing: content; min-height: 46px;",
+                data: { script_edit_target: "input" } %>
+              <span data-script-edit-target="line" class="absolute bottom-0 left-0 h-px w-0 bg-black transition-all duration-700 ease-in-out"></span>
+            </div>
+          <% end %>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button type="button" data-script-edit-target="submit" data-action="script-edit#submit" class="opacity-0 pointer-events-none rounded-[10px] border-2 border-[var(--cf-ink)] bg-transparent text-[var(--cf-ink)] px-8 py-3.5 cf-action font-normal cursor-pointer transition-all duration-300 ease-in-out hover:bg-[var(--cf-accent)] hover:border-[var(--cf-accent)] hover:text-[var(--cf-cream)]">update</button>
+        </div>
       </div>
-    <% end %>
-
-    <% if @script.system_prompt.present? %>
-      <div class="max-w-2xl mb-10">
-        <p class="cf-label mb-2">system prompt</p>
-        <p class="cf-body whitespace-pre-wrap"><%= @script.system_prompt %></p>
-      </div>
-    <% end %>
-
-    <div class="cf-rule mb-6"></div>
-
-    <%= link_to "turn this into a linkedin post →", new_script_linkedin_post_path(@script),
-          class: "cf-action hover:text-[var(--cf-orange)] transition-colors duration-150" %>
+    </div>
   </div>
 </div>

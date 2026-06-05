@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["show", "showPart", "form", "field", "pen", "penIcon", "penLine", "editLabel", "line", "input", "submit", "showTitle", "showTopic", "showDescription"]
+  static targets = ["show", "showPart", "form", "field", "pen", "penIcon", "penLine", "editLabel", "header", "line", "input", "submit", "showTitle", "showStyle", "showLength", "showDescription", "showSystemPrompt"]
 
   connect() {
     this.editing = false
@@ -56,10 +56,55 @@ export default class extends Controller {
     })
   }
 
+  resetStyles() {
+    this.clearDropStyles([...this.showPartTargets])
+    this.clearDropStyles([...this.fieldTargets])
+    this.showTarget.style.display = ""
+    this.showTarget.style.zIndex = ""
+    this.showTarget.style.position = ""
+    this.formTarget.classList.add("hidden")
+    this.formTarget.style.opacity = "0"
+    this.penIconTarget.style.transition = ""
+    this.penIconTarget.style.transform = ""
+    this.penLineTarget.style.width = ""
+    this.submitTarget.style.display = ""
+    this.submitTarget.classList.add("opacity-0", "pointer-events-none")
+    this.submitTarget.classList.remove("opacity-100")
+    this.showTitleTarget.style.transition = ""
+    this.showTitleTarget.style.transform = ""
+    this.headerTarget.style.transition = ""
+    this.headerTarget.style.marginBottom = ""
+    this.headerTarget.style.backgroundColor = ""
+    this.headerTarget.style.zIndex = ""
+    this.lineTargets.forEach(line => {
+      line.classList.remove("w-full")
+      line.style.backgroundColor = ""
+    })
+    this.inputTargets.forEach(input => {
+      input.setAttribute("readonly", true)
+      input.classList.add("cursor-default")
+      input.classList.remove("cursor-text")
+    })
+    this.showTitleTarget.contentEditable = "false"
+    this.showTitleTarget.style.cursor = ""
+    this.showTitleTarget.style.outline = ""
+  }
+
   reveal() {
+    this.resetStyles()
     this.editing = true
 
     this.editLabelTarget.style.opacity = "0"
+
+    this.showTitleTarget.style.transformOrigin = "top left"
+    this.showTitleTarget.style.transition = "transform 1.4s cubic-bezier(0.22, 0.61, 0.36, 1)"
+    this.showTitleTarget.style.transform = "scale(0.45)"
+
+    this.headerTarget.style.backgroundColor = "transparent"
+    this.headerTarget.style.zIndex = "0"
+    this.headerTarget.style.transition = "margin-bottom 1.4s cubic-bezier(0.22, 0.61, 0.36, 1)"
+    this.headerTarget.style.marginBottom = "-80px"
+
 
     const penLine = this.penLineTarget
     penLine.style.width = "0"
@@ -98,15 +143,15 @@ export default class extends Controller {
         }, index * 200)
       })
 
-      const fieldsLanded = this.fieldTargets.length * 200 + 800
+      const fieldsLanded = this.fieldTargets.length * 200 + 400
 
       this.lineTargets.forEach((line, index) => {
         setTimeout(() => {
           line.classList.add("w-full")
-        }, fieldsLanded + index * 350)
+        }, fieldsLanded + index * 150)
       })
 
-      const totalLineTime = fieldsLanded + this.lineTargets.length * 350 + 700
+      const totalLineTime = fieldsLanded + this.lineTargets.length * 150 + 400
 
       setTimeout(() => {
         this.lineTargets.forEach((line) => {
@@ -119,10 +164,12 @@ export default class extends Controller {
           input.classList.add("cursor-text")
         })
 
-        const titleInput = this.inputTargets[0]
-        titleInput.focus()
-        titleInput.setSelectionRange(titleInput.value.length, titleInput.value.length)
+        this.showTitleTarget.contentEditable = "true"
+        this.showTitleTarget.style.cursor = "text"
+        this.showTitleTarget.style.outline = "none"
+        this.showTitleTarget.focus()
 
+        this.submitTarget.style.display = ""
         this.submitTarget.classList.remove("opacity-0", "pointer-events-none")
         this.submitTarget.classList.add("opacity-100")
       }, totalLineTime)
@@ -130,21 +177,31 @@ export default class extends Controller {
   }
 
   submit() {
+    const newTitle = this.showTitleTarget.textContent.trim()
+    this.inputTargets[0].value = newTitle.toLowerCase()
+
+    this.showTitleTarget.contentEditable = "false"
+    this.showTitleTarget.style.cursor = ""
+    this.showTitleTarget.textContent = newTitle.toUpperCase()
+
     const form = this.element.querySelector("form")
     const formData = new FormData(form)
 
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
     fetch(form.action, {
-      method: form.method || "PATCH",
+      method: "POST",
       body: formData,
-      headers: { "Accept": "application/json" }
+      headers: {
+        "Accept": "application/json",
+        "X-CSRF-Token": csrfToken
+      }
     })
+    if (this.hasShowStyleTarget) this.showStyleTarget.textContent = this.inputTargets[1].value
+    if (this.hasShowLengthTarget) this.showLengthTarget.textContent = this.inputTargets[2].value
+    if (this.hasShowDescriptionTarget) this.showDescriptionTarget.textContent = this.inputTargets[3].value
+    if (this.hasShowSystemPromptTarget) this.showSystemPromptTarget.textContent = this.inputTargets[4].value
 
-    this.showTitleTarget.textContent = this.inputTargets[0].value.toUpperCase()
-    this.showTopicTarget.textContent = this.inputTargets[1].value
-    this.showDescriptionTarget.textContent = this.inputTargets[2].value
-
-    this.submitTarget.classList.add("opacity-0", "pointer-events-none")
-    this.submitTarget.classList.remove("opacity-100")
+    this.submitTarget.style.display = "none"
 
     const fields = [...this.fieldTargets].reverse()
     this.clearDropStyles(fields)
@@ -152,11 +209,19 @@ export default class extends Controller {
     requestAnimationFrame(() => {
       const fieldsGone = this.dropElements(fields)
 
-      const showStart = fieldsGone - 700
-
       setTimeout(() => {
         this.formTarget.classList.add("hidden")
       }, fieldsGone)
+
+      setTimeout(() => {
+        this.showTitleTarget.style.transition = "transform 1.4s cubic-bezier(0.22, 0.61, 0.36, 1)"
+        this.showTitleTarget.style.transform = "scale(1)"
+        this.headerTarget.style.zIndex = "0"
+        this.headerTarget.style.transition = "margin-bottom 1.4s cubic-bezier(0.22, 0.61, 0.36, 1)"
+        this.headerTarget.style.marginBottom = ""
+      }, fieldsGone)
+
+      const showContentStart = fieldsGone
 
       setTimeout(() => {
         const show = this.showTarget
@@ -203,10 +268,12 @@ export default class extends Controller {
           setTimeout(() => {
             penLine.style.width = ""
             this.editLabelTarget.style.opacity = "1"
+            this.headerTarget.style.zIndex = ""
+            this.headerTarget.style.backgroundColor = ""
             this.editing = false
           }, 800)
         }, allPartsLanded)
-      }, showStart)
+      }, showContentStart)
     })
   }
 }

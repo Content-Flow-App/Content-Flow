@@ -30,9 +30,15 @@ class ScriptsController < ApplicationController
 
   def update
     if @script.update(script_params)
-      redirect_to script_path(@script), notice: "Script updated."
+      respond_to do |format|
+        format.html { redirect_to script_path(@script), notice: "Script updated." }
+        format.json { head :ok }
+      end
     else
-      render :edit, status: :unprocessable_entity
+      respond_to do |format|
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @script.errors, status: :unprocessable_entity }
+      end
     end
   end
 

@@ -1,7 +1,11 @@
 <% content_for :title, @idea.title %>
 
 <div class="min-h-screen bg-[var(--cf-bg)]" data-controller="idea-edit">
-  <div class="px-7 pt-8">
+  <div class="px-7 pt-2">
+    <%= link_to ideas_path, class: "cf-meta inline-flex items-center gap-2 hover:text-[var(--cf-orange)] transition-colors duration-150", style: "position: relative; z-index: 20; cursor: pointer;" do %>
+      <%= image_tag "arrow.svg", style: "width: 20px; height: 20px; transform: rotate(180deg); pointer-events: none;", alt: "" %>
+      <span style="pointer-events: none;">go back to ideas</span>
+    <% end %>
     <div class="flex justify-between items-start mb-10 relative z-10 bg-[var(--cf-bg)]">
       <h1 class="cf-headline text-[clamp(72px,13vw,120px)]" data-idea-edit-target="showTitle"><%= @idea.title.upcase %></h1>
       <div class="shrink-0 pt-2">
@@ -12,6 +16,7 @@
           <div data-idea-edit-target="penLine" class="w-14 mt-1 h-0.5 overflow-hidden transition-all duration-500 ease-in-out">
             <%= image_tag "pen_line.svg", class: "w-14 h-0.5", alt: "" %>
           </div>
+          <span data-idea-edit-target="editLabel" class="cf-meta mt-1 w-14 text-center tracking-[0.3em] transition-opacity duration-300">edit</span>
         </button>
       </div>
     </div>
@@ -19,7 +24,7 @@
     <%# ---- Show content ---- %>
     <div class="overflow-hidden">
     <div data-idea-edit-target="show">
-      <p class="cf-meta mb-4" data-idea-edit-target="showPart showTopic"><%= @idea.topic %></p>
+      <p class="cf-h2 font-normal mb-4" data-idea-edit-target="showPart showTopic"><%= @idea.topic %></p>
       <p class="cf-body mb-10 max-w-2xl" data-idea-edit-target="showPart showDescription"><%= @idea.description %></p>
 
       <div data-idea-edit-target="showPart" class="overflow-x-auto">
