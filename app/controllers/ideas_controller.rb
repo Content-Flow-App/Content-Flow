@@ -34,9 +34,15 @@ class IdeasController < ApplicationController
 
   def update
     if @idea.update(idea_params)
-      redirect_to idea_path(@idea), notice: "Idea updated."
+      respond_to do |format|
+        format.html { redirect_to idea_path(@idea) }
+        format.json { head :ok }
+      end
     else
-      render :edit, status: :unprocessable_entity
+      respond_to do |format|
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @idea.errors, status: :unprocessable_entity }
+      end
     end
   end
 

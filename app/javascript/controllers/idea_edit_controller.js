@@ -28,7 +28,6 @@ export default class extends Controller {
       el.style.width = `${rect.width}px`
       el.style.height = `${rect.height}px`
       el.style.zIndex = String(100 - index)
-      el.style.backgroundColor = "var(--cf-bg)"
 
       setTimeout(() => {
         el.style.transition = `transform ${duration}s cubic-bezier(0.33, 0, 1, 0.33)`
@@ -193,7 +192,7 @@ export default class extends Controller {
       method: form.method || "PATCH",
       body: formData,
       headers: { "Accept": "application/json" }
-    })
+    }).then(() => this.dispatch('saved'))
 
     this.showTopicTarget.textContent = this.inputTargets[1].value
     this.showDescriptionTarget.textContent = this.inputTargets[2].value
@@ -264,7 +263,7 @@ export default class extends Controller {
 
           setTimeout(() => {
             penLine.style.width = ""
-            this.editLabelTarget.style.opacity = "1"
+            this.editLabelTarget.style.opacity = ""
             this.headerTarget.style.zIndex = ""
             this.headerTarget.style.backgroundColor = ""
             this.editing = false

@@ -28,7 +28,6 @@ export default class extends Controller {
       el.style.width = `${rect.width}px`
       el.style.height = `${rect.height}px`
       el.style.zIndex = String(100 - index)
-      el.style.backgroundColor = "var(--cf-bg)"
 
       setTimeout(() => {
         el.style.transition = `transform ${duration}s cubic-bezier(0.33, 0, 1, 0.33)`
@@ -198,7 +197,7 @@ export default class extends Controller {
         "Accept": "application/json",
         "X-CSRF-Token": csrfToken
       }
-    })
+    }).then(() => this.dispatch('saved'))
     if (this.hasShowStyleTarget) this.showStyleTarget.textContent = this.inputTargets[1].value
     if (this.hasShowLengthTarget) this.showLengthTarget.textContent = this.inputTargets[2].value
     if (this.hasShowDescriptionTarget) this.showDescriptionTarget.textContent = this.inputTargets[3].value
@@ -270,7 +269,7 @@ export default class extends Controller {
 
           setTimeout(() => {
             penLine.style.width = ""
-            this.editLabelTarget.style.opacity = "1"
+            this.editLabelTarget.style.opacity = ""
             this.headerTarget.style.zIndex = ""
             this.headerTarget.style.backgroundColor = ""
             this.editing = false

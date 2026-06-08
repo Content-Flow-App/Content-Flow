@@ -27,10 +27,13 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-[var(--cf-bg)] <%= content_for(:body_class) %>">
-    <%= render "shared/nav" %>
-    <%= render "shared/flashes" %>
+  <body class="bg-[var(--cf-bg)] <%= content_for(:body_class) %>" data-controller="success-check" data-action="idea-edit:saved->success-check#show script-edit:saved->success-check#show">
+    <div class="fixed inset-0 pointer-events-none" style="background-image: url('<%= asset_path 'Gooey@1x-10.0s-1276px-1387px.svg' %>'); background-size: cover; background-position: center; opacity: 0.08; z-index: 0;"></div>
+    <div class="relative" style="z-index: 1;">
+      <%= render "shared/nav" %>
+      <%= render "shared/flashes" %>
 
-    <%= yield %>
+      <%= yield %>
+    </div>
   </body>
 </html>
