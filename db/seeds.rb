@@ -35,7 +35,7 @@ puts "  Done. Tables are clean.\n\n"
 # ------------------------------------------------------------------------------
 # One entry per creator. Each creator owns a user account and 3 ideas; every
 # idea carries exactly one script, and every script carries exactly one
-# LinkedIn post. Looping over this structure keeclps the creation logic in one
+# LinkedIn post. Looping over this structure keeps the creation logic in one
 # place instead of repeating `create!` calls 50+ times.
 SEED_DATA = [
   {
