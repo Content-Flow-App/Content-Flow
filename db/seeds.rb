@@ -594,67 +594,130 @@ puts "  Created standalone chat (no owner) with #{standalone.messages.count} mes
 puts ""
 
 # ------------------------------------------------------------------------------
-# 5. Sample Substack feed (idea-feed source + cached posts)
+# 5. Sample Substack feed (idea-feed sources + cached posts)
 # ------------------------------------------------------------------------------
 # The fetch pipeline reads live RSS over the network, so seeding real sources
 # would make `db:seed` slow and flaky (and dependent on a feed staying online).
-# Instead we insert one source plus a few cached posts *directly*, bypassing
-# SubstackFetchService — enough to exercise the feed UI and the "use as
-# inspiration" → generate_idea chat flow completely offline.
+# Instead we insert a few well-known publications plus cached posts *directly*,
+# bypassing SubstackFetchService — enough to exercise the feed UI and the
+# "use as inspiration" → generate_idea chat flow completely offline.
 #
-# fetched_at is stamped to "now" so the source isn't stale: a Refresh won't try
-# to re-fetch it over the network and overwrite this demo data.
+# fetched_at is stamped to "now" so the sources aren't stale: a Refresh won't
+# try to re-fetch them over the network and overwrite this demo data.
 #
 # No explicit cleanup is needed — User.destroy_all above cascades through
 # `has_many :substack_sources, dependent: :destroy` (and on to posts).
 puts "Seeding sample Substack feed..."
 
 demo_user = User.find_by!(email: "demo@contentflow.com")
-substack_source = demo_user.substack_sources.create!(
-  feed_url:   "https://www.lennysnewsletter.com/feed",
-  name:       "Lenny's Newsletter",
-  handle:     "lennysnewsletter",
-  fetched_at: Time.current
-)
 
-SUBSTACK_POSTS = [
+SUBSTACK_FEED_DATA = [
   {
-    title:   "How the best product teams cut scope",
-    author:  "Lenny Rachitsky",
-    summary: "Shipping the right slice beats shipping everything. A look at how high-performing teams ruthlessly trim scope without losing the plot.",
-    published_at: 2.days.ago
+    source: {
+      feed_url: "https://www.lennysnewsletter.com/feed",
+      name:     "Lenny's Newsletter",
+      handle:   "lennysnewsletter"
+    },
+    posts: [
+      {
+        title:   "How the best product teams cut scope",
+        author:  "Lenny Rachitsky",
+        summary: "Shipping the right slice beats shipping everything. A look at how high-performing teams ruthlessly trim scope without losing the plot.",
+        published_at: 2.days.ago
+      },
+      {
+        title:   "The hidden cost of context switching",
+        author:  "Lenny Rachitsky",
+        summary: "Every tab, ping, and 'quick question' has a price. Why protecting deep-work blocks is the highest-leverage habit for makers.",
+        published_at: 6.days.ago
+      },
+      {
+        title:   "What great onboarding actually looks like",
+        author:  "Lenny Rachitsky",
+        summary: "First impressions compound. A teardown of onboarding flows that turn signups into habitual users.",
+        published_at: 13.days.ago
+      },
+      {
+        title:   "Pricing is a product decision, not a finance one",
+        author:  "Lenny Rachitsky",
+        summary: "Why your pricing page deserves the same care as your core feature work, and a simple framework for getting it right.",
+        published_at: 25.days.ago
+      }
+    ]
   },
   {
-    title:   "The hidden cost of context switching",
-    author:  "Lenny Rachitsky",
-    summary: "Every tab, ping, and 'quick question' has a price. Why protecting deep-work blocks is the highest-leverage habit for makers.",
-    published_at: 6.days.ago
+    source: {
+      feed_url: "https://stratechery.com/feed",
+      name:     "Stratechery",
+      handle:   "stratechery"
+    },
+    posts: [
+      {
+        title:   "Why bundling always wins eventually",
+        author:  "Ben Thompson",
+        summary: "Unbundled products win the early skirmishes, but history keeps rewarding whoever reassembles the bundle. A framework for spotting which side you're on.",
+        published_at: 3.days.ago
+      },
+      {
+        title:   "The aggregator's dilemma",
+        author:  "Ben Thompson",
+        summary: "Platforms grow by serving users better than suppliers can themselves — until the day suppliers start asking what they're owed.",
+        published_at: 9.days.ago
+      },
+      {
+        title:   "Regulation as a moat",
+        author:  "Ben Thompson",
+        summary: "Compliance costs that look like a burden from the outside can be the strongest competitive advantage from the inside.",
+        published_at: 18.days.ago
+      }
+    ]
   },
   {
-    title:   "What great onboarding actually looks like",
-    author:  "Lenny Rachitsky",
-    summary: "First impressions compound. A teardown of onboarding flows that turn signups into habitual users.",
-    published_at: 13.days.ago
-  },
-  {
-    title:   "Pricing is a product decision, not a finance one",
-    author:  "Lenny Rachitsky",
-    summary: "Why your pricing page deserves the same care as your core feature work, and a simple framework for getting it right.",
-    published_at: 25.days.ago
+    source: {
+      feed_url: "https://newsletter.pragmaticengineer.com/feed",
+      name:     "The Pragmatic Engineer",
+      handle:   "pragmaticengineer"
+    },
+    posts: [
+      {
+        title:   "What separates senior engineers from the rest",
+        author:  "Gergely Orosz",
+        summary: "It's rarely about writing more code faster. A look at the judgment calls, communication habits, and ownership that actually move the needle.",
+        published_at: 1.day.ago
+      },
+      {
+        title:   "Inside a real on-call rotation",
+        author:  "Gergely Orosz",
+        summary: "What actually happens when the pager goes off at 3am — and how the best teams turn incidents into better systems instead of better excuses.",
+        published_at: 8.days.ago
+      },
+      {
+        title:   "The return of the in-person interview",
+        author:  "Gergely Orosz",
+        summary: "After years of fully remote hiring loops, more companies are bringing candidates back on-site. What's driving the shift, and what it means for you.",
+        published_at: 16.days.ago
+      }
+    ]
   }
-]
+].freeze
 
-SUBSTACK_POSTS.each_with_index do |post_data, i|
-  substack_source.substack_posts.create!(
-    guid:         "seed-substack-#{i}",
-    url:          "https://www.lennysnewsletter.com/p/seed-#{i}",
-    title:        post_data[:title],
-    author:       post_data[:author],
-    summary:      post_data[:summary],
-    published_at: post_data[:published_at]
-  )
+SUBSTACK_FEED_DATA.each do |feed_data|
+  source   = demo_user.substack_sources.create!(feed_data[:source].merge(fetched_at: Time.current))
+  base_url = source.feed_url.delete_suffix("/feed")
+
+  feed_data[:posts].each_with_index do |post_data, i|
+    source.substack_posts.create!(
+      guid:         "seed-#{source.handle}-#{i}",
+      url:          "#{base_url}/p/seed-#{i}",
+      title:        post_data[:title],
+      author:       post_data[:author],
+      summary:      post_data[:summary],
+      published_at: post_data[:published_at]
+    )
+  end
+
+  puts "  Created source '#{source.name}' with #{source.substack_posts.count} cached posts"
 end
-puts "  Created source '#{substack_source.name}' with #{substack_source.substack_posts.count} cached posts"
 
 puts ""
 
