@@ -16,6 +16,14 @@ class GenerationSchemasTest < ActiveSupport::TestCase
     assert_equal %i[title hook body], LinkedinPostSchema.properties.keys
   end
 
+  test "TwitterPostSchema declares exactly the TwitterPost generation fields" do
+    assert_equal %i[title hook body], TwitterPostSchema.properties.keys
+  end
+
+  test "InstagramPostSchema declares exactly the InstagramPost generation fields" do
+    assert_equal %i[title hook body], InstagramPostSchema.properties.keys
+  end
+
   test "schema fields mirror real columns on their model" do
     assert (IdeaSchema.properties.keys.map(&:to_s) - Idea.column_names).empty?,
            "IdeaSchema declares a field with no matching Idea column"
@@ -23,6 +31,10 @@ class GenerationSchemasTest < ActiveSupport::TestCase
            "ScriptSchema declares a field with no matching Script column"
     assert (LinkedinPostSchema.properties.keys.map(&:to_s) - LinkedinPost.column_names).empty?,
            "LinkedinPostSchema declares a field with no matching LinkedinPost column"
+    assert (TwitterPostSchema.properties.keys.map(&:to_s) - TwitterPost.column_names).empty?,
+           "TwitterPostSchema declares a field with no matching TwitterPost column"
+    assert (InstagramPostSchema.properties.keys.map(&:to_s) - InstagramPost.column_names).empty?,
+           "InstagramPostSchema declares a field with no matching InstagramPost column"
   end
 
   test "to_json_schema renders typed string properties the model can fill" do
