@@ -22,6 +22,8 @@
 puts "Destroying existing records..."
 
 Chat.destroy_all
+TwitterPost.destroy_all
+InstagramPost.destroy_all
 LinkedinPost.destroy_all
 Script.destroy_all
 Idea.destroy_all
@@ -58,7 +60,7 @@ SEED_DATA = [
           description: "A short educational script covering the top AI tools transforming content creation.",
           system_prompt: "You are a knowledgeable tech content creator. Write engaging, concise scripts."
         },
-        post: {
+        linkedin_post: {
           title: "AI tools that actually work",
           hook: "I spent 30 days testing every AI content tool on the market. Here's what actually works:",
           body: <<~BODY
@@ -74,6 +76,40 @@ SEED_DATA = [
 
             What AI tools are you using for content creation?
           BODY
+        },
+        twitter_post: {
+          title: "AI tools thread",
+          hook: "I tested every AI content tool so you don't have to. Here's the honest verdict 🧵",
+          body: <<~BODY
+            1/ ChatGPT: best for first drafts. Plan on rewriting half of it — but half a draft beats a blank page.
+
+            2/ Midjourney: genuinely impressive. The gap between AI visuals and stock photos is closing fast.
+
+            3/ Descript: cuts video editing time in half. If you're on camera at all, try this.
+
+            Bottom line: use AI as a thinking partner, not a ghostwriter.
+
+            What's in your stack?
+          BODY
+        },
+        instagram_post: {
+          title: "AI content tools that actually work",
+          hook: "30 days. Every AI content tool on the market. Here's what made the cut ↓",
+          body: <<~BODY
+            I've been deep in the AI tool rabbit hole so you don't have to be.
+
+            The ones worth your time:
+
+            ✦ ChatGPT — first drafts in minutes (edit heavily)
+            ✦ Midjourney — visuals that stop the scroll
+            ✦ Descript — video editing without the pain
+
+            The mindset shift that changed everything: AI as a creative collaborator, not a replacement.
+
+            Save this for the next time someone asks what tools you use 🔖
+
+            Which of these have you tried?
+          BODY
         }
       },
       {
@@ -87,7 +123,7 @@ SEED_DATA = [
           description: "A conversational script challenging popular productivity advice.",
           system_prompt: "You are a productivity coach. Write practical, myth-busting scripts."
         },
-        post: {
+        linkedin_post: {
           title: "The 2-hour workday myth",
           hook: "Everyone's selling you a 2-hour workday. Here's why that's the wrong goal:",
           body: <<~BODY
@@ -105,6 +141,41 @@ SEED_DATA = [
 
             What's your one non-negotiable work habit?
           BODY
+        },
+        twitter_post: {
+          title: "2-hour workday myth",
+          hook: "Hot take: the 2-hour workday is a distraction. Here's what actually matters 🧵",
+          body: <<~BODY
+            1/ Working fewer hours isn't the goal. Doing fewer *wrong* things is.
+
+            2/ My non-negotiables:
+            → Deep work block before email opens
+            → A hard stop time (constraints create focus)
+            → No "quick calls" that aren't quick
+
+            3/ The metric to optimise: did meaningful work get done today?
+
+            Hours are vanity. Output is sanity.
+          BODY
+        },
+        instagram_post: {
+          title: "The productivity myth nobody talks about",
+          hook: "The 2-hour workday gurus aren't lying. They're just optimising for the wrong thing.",
+          body: <<~BODY
+            Productivity culture sold you a fantasy.
+
+            Fewer hours ≠ better life if the hours you have are filled with noise.
+
+            What actually works:
+
+            ✦ One protected deep-work block — before Slack, before email
+            ✦ A real end time — deadlines you make for yourself
+            ✦ Fewer meetings, full stop
+
+            You don't need a shorter workday. You need a fuller one.
+
+            Drop your one non-negotiable work habit below 👇
+          BODY
         }
       },
       {
@@ -118,7 +189,7 @@ SEED_DATA = [
           description: "A detailed walkthrough of pairing note-taking with AI retrieval.",
           system_prompt: "You are a knowledge-management expert. Write thorough, structured scripts."
         },
-        post: {
+        linkedin_post: {
           title: "Build a second brain",
           hook: "I haven't lost a good idea in 2 years. Here's the system:",
           body: <<~BODY
@@ -133,6 +204,43 @@ SEED_DATA = [
             The result? Ideas compound instead of evaporating.
 
             Where do your best ideas go to die?
+          BODY
+        },
+        twitter_post: {
+          title: "Second brain with AI",
+          hook: "I haven't lost a good idea in 2 years. The system is embarrassingly simple 🧵",
+          body: <<~BODY
+            1/ Your brain is terrible at storing ideas. It's great at generating them. Stop asking it to do both.
+
+            2/ The setup:
+            → One capture inbox (doesn't matter which app)
+            → Tags over folders — ideas live in many contexts
+            → AI to resurface what you forgot you knew
+
+            3/ The real win: ideas start connecting across topics you never linked manually.
+
+            What do you use to capture ideas?
+          BODY
+        },
+        instagram_post: {
+          title: "Build a second brain with AI",
+          hook: "2 years. Zero lost ideas. Here's the system that made it happen ↓",
+          body: <<~BODY
+            Your brain is a generator, not a hard drive.
+
+            Stop treating it like one.
+
+            My second brain setup:
+
+            ✦ One inbox — capture everything, judge nothing
+            ✦ Tags over folders — ideas belong to multiple projects
+            ✦ AI as a connection engine — it finds links you'd never spot
+
+            The result isn't just fewer lost ideas. It's ideas that compound.
+
+            Save this and build yours this week 🔖
+
+            What's your note-taking app of choice?
           BODY
         }
       }
@@ -158,7 +266,7 @@ SEED_DATA = [
           description: "A personal-finance story script about a successful debt payoff journey.",
           system_prompt: "You are a relatable finance creator. Write warm, honest scripts."
         },
-        post: {
+        linkedin_post: {
           title: "The debt snowball",
           hook: "I paid off $42k in 19 months on an average salary. No side hustle. Here's how:",
           body: <<~BODY
@@ -174,6 +282,43 @@ SEED_DATA = [
 
             Momentum beats math when you're starting out.
           BODY
+        },
+        twitter_post: {
+          title: "Debt snowball story",
+          hook: "$42k gone in 19 months. Average salary. No side hustle. Here's the exact method 🧵",
+          body: <<~BODY
+            1/ Everyone said I needed to earn more. I didn't. I needed a system I'd actually stick to.
+
+            2/ The debt snowball:
+            → List debts smallest to largest (ignore interest rate)
+            → Attack the smallest with every spare dollar
+            → Roll that payment into the next debt when it's gone
+
+            3/ The psychology is the point. Small wins early = motivation to keep going.
+
+            Momentum beats math.
+          BODY
+        },
+        instagram_post: {
+          title: "How I paid off $42k",
+          hook: "$42,000 of debt. 19 months. Average salary. No side hustle. Here's what worked ↓",
+          body: <<~BODY
+            I used to think I needed to earn more to get out of debt.
+
+            Turns out I needed a system — not a raise.
+
+            The debt snowball method:
+
+            ✦ List every debt smallest to largest
+            ✦ Throw everything extra at the smallest
+            ✦ Roll each cleared payment into the next
+
+            The math isn't optimal. The psychology is.
+
+            Early wins kept me going when it felt impossible.
+
+            Have you ever tried the snowball method? 👇
+          BODY
         }
       },
       {
@@ -187,7 +332,7 @@ SEED_DATA = [
           description: "A short, jargon-free explainer on index fund investing.",
           system_prompt: "You are a finance educator. Write clear, beginner-friendly scripts."
         },
-        post: {
+        linkedin_post: {
           title: "Index funds explained",
           hook: "If I could teach my younger self one money lesson, it'd be this:",
           body: <<~BODY
@@ -203,6 +348,43 @@ SEED_DATA = [
 
             Boring? Yes. Effective? Also yes.
           BODY
+        },
+        twitter_post: {
+          title: "Index funds in 60 seconds",
+          hook: "The investing advice I wish I'd gotten at 22: you don't need to pick stocks 🧵",
+          body: <<~BODY
+            1/ An index fund doesn't try to beat the market. It *is* the market.
+
+            2/ What that means practically:
+            → Owns tiny slices of hundreds of companies
+            → Fees near zero (0.03–0.10% is normal)
+            → Compounds quietly for decades
+
+            3/ Most professional fund managers underperform index funds over 10+ years.
+
+            Boring beats clever. Every time.
+          BODY
+        },
+        instagram_post: {
+          title: "Index funds, explained simply",
+          hook: "The one investing concept I'd teach every 20-something. It takes 60 seconds to understand ↓",
+          body: <<~BODY
+            You don't need to find the next Apple.
+
+            You just need to own a little bit of everything.
+
+            That's literally what an index fund does:
+
+            ✦ Buys tiny slices of hundreds of companies
+            ✦ Near-zero fees (think 0.03%)
+            ✦ Compounds silently for decades
+
+            Boring? Completely. Effective? Undeniably.
+
+            The best investment strategy is the one you can set and forget.
+
+            Are you investing in index funds? 👇
+          BODY
         }
       },
       {
@@ -216,7 +398,7 @@ SEED_DATA = [
           description: "A relaxed take on the 50/30/20 budgeting rule.",
           system_prompt: "You are a friendly finance coach. Write low-pressure, practical scripts."
         },
-        post: {
+        linkedin_post: {
           title: "The 50/30/20 budget",
           hook: "I tracked every expense for a year. Then I quit and did this instead:",
           body: <<~BODY
@@ -231,6 +413,43 @@ SEED_DATA = [
             That's it. No 40-row spreadsheet.
 
             The best budget is the one you'll actually keep.
+          BODY
+        },
+        twitter_post: {
+          title: "50/30/20 budget rule",
+          hook: "I spent a year tracking every coffee and grocery item. Then I found a better way 🧵",
+          body: <<~BODY
+            1/ Detailed budgets fail because they're exhausting to maintain. You miss one week and the whole system collapses.
+
+            2/ The 50/30/20 rule instead:
+            → 50% → needs (rent, food, bills)
+            → 30% → wants (fun, treats, life)
+            → 20% → future you (savings, investments, debt)
+
+            3/ It's not perfect. It's sustainable. And sustainable wins.
+
+            What budgeting method do you actually stick to?
+          BODY
+        },
+        instagram_post: {
+          title: "Budget without the spreadsheet",
+          hook: "I quit tracking every expense and my finances got better. Here's what I switched to ↓",
+          body: <<~BODY
+            Detailed budgets make you feel organised for about a week.
+
+            Then life happens and the spreadsheet dies.
+
+            The 50/30/20 rule is different:
+
+            ✦ 50% → needs (rent, utilities, groceries)
+            ✦ 30% → wants (whatever makes life enjoyable)
+            ✦ 20% → future you (savings, investing, debt)
+
+            No categories. No guilt. No 47-row spreadsheet.
+
+            The best budget is the one you'll actually keep. 📌
+
+            Which budgeting method works for you?
           BODY
         }
       }
@@ -256,7 +475,7 @@ SEED_DATA = [
           description: "A script making the case for efficient, time-boxed training.",
           system_prompt: "You are a fitness coach. Write motivating, no-nonsense scripts."
         },
-        post: {
+        linkedin_post: {
           title: "The 20-minute workout",
           hook: "You don't need 90 minutes in the gym. You need 20 minutes, 4x a week.",
           body: <<~BODY
@@ -272,6 +491,45 @@ SEED_DATA = [
 
             Twenty focused minutes you'll repeat > two hours you'll dread.
           BODY
+        },
+        twitter_post: {
+          title: "20-minute workout case",
+          hook: "The \"go hard or go home\" mentality is keeping you out of the gym 🧵",
+          body: <<~BODY
+            1/ You're not skipping workouts because you're lazy. You're skipping because 90-minute sessions aren't sustainable.
+
+            2/ My weekly template:
+            → 2 strength sessions (20 min)
+            → 2 conditioning days (20 min)
+            → Daily walk (non-negotiable)
+
+            3/ The math: 20 focused minutes × 4 = 80 minutes/week. That's it.
+
+            A workout you'll actually do beats a perfect one you keep postponing.
+          BODY
+        },
+        instagram_post: {
+          title: "The 20-minute workout",
+          hook: "Stop waiting for the 90-minute window that never comes. You only need 20 minutes.",
+          body: <<~BODY
+            Real talk: most people don't skip the gym because they're lazy.
+
+            They skip because the bar is too high.
+
+            My sustainable weekly template:
+
+            ✦ Monday — 20 min strength
+            ✦ Wednesday — 20 min conditioning
+            ✦ Friday — 20 min strength
+            ✦ Saturday — 20 min conditioning
+            ✦ Every day — walk
+
+            That's 80 minutes of intentional training per week.
+
+            Consistency > intensity. Every single time. 💪
+
+            What's your go-to short workout?
+          BODY
         }
       },
       {
@@ -285,7 +543,7 @@ SEED_DATA = [
           description: "A script on the underrated role of sleep in fitness results.",
           system_prompt: "You are a wellness coach. Write evidence-based, calming scripts."
         },
-        post: {
+        linkedin_post: {
           title: "Sleep is the cheat code",
           hook: "I wasted years on supplements. The real cheat code was free:",
           body: <<~BODY
@@ -301,6 +559,41 @@ SEED_DATA = [
 
             How many hours did you get last night?
           BODY
+        },
+        twitter_post: {
+          title: "Sleep beats supplements",
+          hook: "I spent years optimising everything except the thing that matters most 🧵",
+          body: <<~BODY
+            1/ Pre-workout, creatine, protein timing — I tried all of it. Nothing moved the needle like fixing my sleep.
+
+            2/ What changed when I started protecting 7–8 hours:
+            → Muscle recovery visibly faster
+            → Food cravings down significantly
+            → Every session felt better
+
+            3/ Sleep is free. It's available tonight. And it outperforms most of your supplement stack.
+
+            How many hours did you get last night?
+          BODY
+        },
+        instagram_post: {
+          title: "Sleep is your best supplement",
+          hook: "I used to spend $200/month on supplements. The best performance upgrade was free.",
+          body: <<~BODY
+            Hot take: your sleep schedule matters more than your stack.
+
+            When I went from 5–6 hours to a protected 8:
+
+            ✦ Recovery got noticeably faster
+            ✦ Cravings dropped (no more 10pm raids)
+            ✦ PRs started moving again
+
+            Sleep is the foundation that everything else sits on.
+
+            Train hard. Eat well. But protect your sleep like it's your job.
+
+            How many hours are you averaging right now? 👇
+          BODY
         }
       },
       {
@@ -314,7 +607,7 @@ SEED_DATA = [
           description: "A practical script on varied, high-protein eating.",
           system_prompt: "You are a nutrition coach. Write simple, actionable scripts."
         },
-        post: {
+        linkedin_post: {
           title: "Protein without boredom",
           hook: "Hitting your protein goal doesn't mean eating chicken and rice 5x a day.",
           body: <<~BODY
@@ -329,6 +622,41 @@ SEED_DATA = [
             Variety is what makes a diet stick.
 
             What's your go-to high-protein meal?
+          BODY
+        },
+        twitter_post: {
+          title: "High protein without boredom",
+          hook: "You're not failing to hit your protein goal because of willpower. It's because it's boring 🧵",
+          body: <<~BODY
+            1/ Chicken breast + rice is a fine meal. The 5th time. Not the 35th.
+
+            2/ Easy protein swaps that don't feel like a chore:
+            → Greek yogurt instead of cereal (18–20g, done)
+            → Eggs on everything (lunch, dinner, snacks)
+            → Protein shake as a default snack, not a post-workout ritual
+
+            3/ Variety is the real protocol. If you can't sustain it, it doesn't work.
+
+            What's your go-to high-protein meal?
+          BODY
+        },
+        instagram_post: {
+          title: "Hit your protein without the boredom",
+          hook: "Chicken and rice every day is not a personality. Here's how to hit your protein without losing your mind.",
+          body: <<~BODY
+            Most people undereat protein because the \"healthy\" options feel like punishment.
+
+            Easy swaps that actually stick:
+
+            ✦ Greek yogurt at breakfast — ~20g before you've even started
+            ✦ Eggs on everything — lunch, dinner, whatever
+            ✦ Protein shake as a snack — not just post-workout
+
+            You don't need a perfect meal plan. You need options you'll keep reaching for.
+
+            Variety is what makes a diet sustainable. 🥚
+
+            What's your favourite high-protein meal?
           BODY
         }
       }
@@ -354,7 +682,7 @@ SEED_DATA = [
           description: "A script explaining the real differences between experience levels.",
           system_prompt: "You are a senior engineer and mentor. Write candid, helpful scripts."
         },
-        post: {
+        linkedin_post: {
           title: "Junior vs senior engineers",
           hook: "Senior engineers aren't just better coders. The real gap is somewhere else:",
           body: <<~BODY
@@ -370,6 +698,43 @@ SEED_DATA = [
 
             Code is the easy part. Decisions are the job.
           BODY
+        },
+        twitter_post: {
+          title: "Junior vs senior gap",
+          hook: "The gap between junior and senior isn't technical skill. It's something harder to teach 🧵",
+          body: <<~BODY
+            1/ Junior me thought seniority meant knowing more syntax. I was wrong.
+
+            2/ The real gaps:
+            → "Should we build this?" before "How do we build this?"
+            → Writing code your team can change or delete without fear
+            → Shrinking scope instead of expanding it
+
+            3/ Technical skill gets you in the room. Judgement gets you promoted.
+
+            What was your biggest mindset shift going from junior to senior?
+          BODY
+        },
+        instagram_post: {
+          title: "What makes a senior engineer",
+          hook: "Senior engineers aren't faster coders. The real difference is something else entirely ↓",
+          body: <<~BODY
+            When I was a junior engineer, I thought seniority was about speed and syntax.
+
+            It's not.
+
+            The real shift happens when you start asking different questions:
+
+            ✦ "Should we build this?" before "How do we?"
+            ✦ "Will my team be able to change this in a year?"
+            ✦ "What can we cut?" instead of what can we add?
+
+            Code is the easy part. Decisions are the actual job.
+
+            Save this for your next career conversation 💾
+
+            What was your biggest mindset shift as an engineer?
+          BODY
         }
       },
       {
@@ -383,7 +748,7 @@ SEED_DATA = [
           description: "A detailed script on strategies for understanding large codebases.",
           system_prompt: "You are an experienced engineer. Write structured, practical scripts."
         },
-        post: {
+        linkedin_post: {
           title: "Reading a giant codebase",
           hook: "Dropped into a 500k-line codebase? Don't read it top to bottom. Do this:",
           body: <<~BODY
@@ -396,6 +761,47 @@ SEED_DATA = [
             3. Ignore everything not on that path
 
             Understand one slice deeply before going wide.
+          BODY
+        },
+        twitter_post: {
+          title: "Reading a giant codebase",
+          hook: "First week in a 500k-line codebase? Please don't start at line 1 🧵",
+          body: <<~BODY
+            1/ The instinct is to read everything. That's why new engineers feel lost for months.
+
+            2/ What actually works:
+            → Pick one real feature or request
+            → Follow it end to end through the code
+            → Set breakpoints, watch the data move
+            → Ignore every file not on that path
+
+            3/ Understand one slice deeply. Then another. The map builds itself.
+
+            What's your strategy for a new codebase?
+          BODY
+        },
+        instagram_post: {
+          title: "How to read a massive codebase",
+          hook: "500,000 lines of code. First day on the job. Here's how to not drown ↓",
+          body: <<~BODY
+            New engineers try to read the whole thing.
+
+            That's why it takes so long to feel productive.
+
+            The approach that actually works:
+
+            ✦ Pick one feature — something real, something users touch
+            ✦ Follow it end to end through the stack
+            ✦ Set breakpoints, watch data transform
+            ✦ Ignore every file not on that path
+
+            You don't need to understand everything. You need to understand one thing deeply.
+
+            Then another. Then another.
+
+            The mental map builds itself. 🗺️
+
+            What helped you most when joining a new codebase?
           BODY
         }
       },
@@ -410,7 +816,7 @@ SEED_DATA = [
           description: "A script on the underrated value of writing for engineers.",
           system_prompt: "You are a tech lead. Write reflective, encouraging scripts."
         },
-        post: {
+        linkedin_post: {
           title: "Engineers who write win",
           hook: "The best career move I made as an engineer had nothing to do with code:",
           body: <<~BODY
@@ -425,6 +831,43 @@ SEED_DATA = [
             Writing is thinking made visible.
 
             Invest in it earlier than you think you need to.
+          BODY
+        },
+        twitter_post: {
+          title: "Engineers should write",
+          hook: "The highest-leverage career skill for engineers isn't a programming language 🧵",
+          body: <<~BODY
+            1/ I spent years thinking career growth was about technical depth. It matters, but it's not the differentiator.
+
+            2/ When I started writing clearly:
+            → RFCs got read and approved
+            → PRs got reviewed in hours, not days
+            → Leadership started trusting my judgement on things outside my scope
+
+            3/ Writing is thinking made visible. If you can't write it, you haven't thought it through.
+
+            Start a technical blog. Write design docs nobody asked for. Just write.
+          BODY
+        },
+        instagram_post: {
+          title: "Why engineers who write get promoted",
+          hook: "The career move that changed everything for me had zero lines of code in it.",
+          body: <<~BODY
+            I learned to write clearly.
+
+            Not prose. Not essays. Just: clear, concise technical communication.
+
+            What changed immediately:
+
+            ✦ Proposals got approved without back-and-forth
+            ✦ PRs got reviewed faster (reviewers knew what they were looking at)
+            ✦ Stakeholders trusted my judgement beyond my immediate team
+
+            Writing is thinking made visible. If your writing is muddy, so is your thinking.
+
+            Start earlier than you think you need to. The compounding is real. 📝
+
+            Do you write about engineering outside of work?
           BODY
         }
       }
@@ -450,7 +893,7 @@ SEED_DATA = [
           description: "A script reframing sustainability as small, sustainable habits.",
           system_prompt: "You are a sustainability advocate. Write warm, non-judgemental scripts."
         },
-        post: {
+        linkedin_post: {
           title: "Sustainability without guilt",
           hook: "You don't need a zero-waste pantry to make a difference. Start here:",
           body: <<~BODY
@@ -466,6 +909,43 @@ SEED_DATA = [
 
             A million people doing it imperfectly beats a handful doing it perfectly.
           BODY
+        },
+        twitter_post: {
+          title: "Sustainability without perfectionism",
+          hook: "Perfectionism is the enemy of actually helping the planet 🧵",
+          body: <<~BODY
+            1/ The all-or-nothing approach to sustainability has convinced millions of people that they can't start until they're ready to go all in. They never start.
+
+            2/ What works instead:
+            → One habit changed, for real
+            → Using what you already own (no new "eco" purchases)
+            → Celebrating progress without scorekeeping
+
+            3/ A million people doing it imperfectly > a handful doing it perfectly.
+
+            What's the one sustainable habit you've actually kept?
+          BODY
+        },
+        instagram_post: {
+          title: "Sustainability without the guilt trip",
+          hook: "You don't need a zero-waste pantry, a capsule wardrobe, and a composting system to start. You just need to start.",
+          body: <<~BODY
+            Sustainability perfectionism is a trap.
+
+            It makes people feel like they can't do anything unless they can do everything.
+
+            The approach that actually works:
+
+            ✦ Change one thing at a time — and actually change it
+            ✦ Use what you already own before buying "eco" alternatives
+            ✦ Celebrate the small wins without comparing
+
+            A million people making imperfect choices beats a handful living perfectly.
+
+            Progress over perfection. Always. 🌱
+
+            What's one sustainable swap you've actually stuck with?
+          BODY
         }
       },
       {
@@ -479,7 +959,7 @@ SEED_DATA = [
           description: "A script unpacking the hidden costs of fast fashion.",
           system_prompt: "You are an ethical-living educator. Write informative, balanced scripts."
         },
-        post: {
+        linkedin_post: {
           title: "The cost of fast fashion",
           hook: "That $5 t-shirt isn't cheap. Someone else is paying for it.",
           body: <<~BODY
@@ -495,6 +975,45 @@ SEED_DATA = [
 
             When did you last repair instead of replace?
           BODY
+        },
+        twitter_post: {
+          title: "Real cost of fast fashion",
+          hook: "The $5 t-shirt isn't cheap. The cost just shows up somewhere else 🧵",
+          body: <<~BODY
+            1/ Fast fashion externalized its costs so well that consumers stopped seeing them.
+
+            2/ Where the price actually goes:
+            → Garment workers paid below a living wage
+            → Landfills filling faster than they empty
+            → Clothes designed to last one season
+
+            3/ You don't have to buy expensive. You have to buy less.
+
+            Buy less. Buy better. Wear it longer.
+
+            When did you last repair something instead of replacing it?
+          BODY
+        },
+        instagram_post: {
+          title: "The real cost of a $5 t-shirt",
+          hook: "That $5 t-shirt isn't cheap. You just can't see who paid the difference.",
+          body: <<~BODY
+            Fast fashion makes you feel like you're getting a deal.
+
+            You're not. The cost gets transferred.
+
+            Where the real price goes:
+
+            ✦ Garment workers — underpaid in unsafe conditions
+            ✦ The environment — landfills, water pollution, CO2
+            ✦ Your wardrobe — clothes designed to fall apart in a season
+
+            The fix isn't buying expensive. It's buying less.
+
+            Buy less. Buy better. Wear it until it dies. Then repair it.
+
+            When did you last repair instead of replace? 🧵
+          BODY
         }
       },
       {
@@ -508,7 +1027,7 @@ SEED_DATA = [
           description: "A how-to script on composting in limited living spaces.",
           system_prompt: "You are a zero-waste coach. Write practical, encouraging scripts."
         },
-        post: {
+        linkedin_post: {
           title: "Composting in an apartment",
           hook: "No backyard? You can still compost. I've done it in a studio flat for 3 years.",
           body: <<~BODY
@@ -521,6 +1040,43 @@ SEED_DATA = [
             3. Bokashi for the truly tiny kitchen
 
             A third of household waste is organic. This is the easiest win there is.
+          BODY
+        },
+        twitter_post: {
+          title: "Apartment composting",
+          hook: "\"I'd compost if I had a garden.\" You don't need one. 3 years in a studio flat 🧵",
+          body: <<~BODY
+            1/ The space excuse is real. But there are options that fit any kitchen.
+
+            2/ What works without a garden:
+            → Sealed countertop bin — no smell, no fuss
+            → Local drop-off point or community garden (most cities have them)
+            → Bokashi fermentation — works in the tiniest spaces, no odour
+
+            3/ ~30% of household waste is organic. Composting is the highest-impact kitchen habit there is.
+
+            No garden required.
+          BODY
+        },
+        instagram_post: {
+          title: "Composting without a garden",
+          hook: "\"I'd compost if I had a backyard.\" I've been composting in a studio flat for 3 years. You have options.",
+          body: <<~BODY
+            The "I need a garden" excuse is the most common one I hear.
+
+            It's also the easiest to solve.
+
+            Apartment composting options that actually work:
+
+            ✦ Sealed countertop bin — zero smell, surprisingly compact
+            ✦ Local drop-off or community garden — most cities have them (check your council)
+            ✦ Bokashi system — fermentation, not decomposition, works in the tiniest kitchen
+
+            About a third of what goes in your bin is organic waste.
+
+            Composting is one of the highest-impact habits you can build at home. 🌿
+
+            Have you tried composting? What stopped you?
           BODY
         }
       }
@@ -563,8 +1119,16 @@ SEED_DATA.each do |data|
     puts "      Created script: #{script.title}"
 
     # One LinkedIn post per script.
-    post = LinkedinPost.create!(idea_data[:post].merge(script: script))
-    puts "      Created LinkedIn post: #{post.title}"
+    linkedin_post = LinkedinPost.create!(idea_data[:linkedin_post].merge(script: script))
+    puts "      Created LinkedIn post: #{linkedin_post.title}"
+
+    # One Twitter post per script.
+    twitter_post = TwitterPost.create!(idea_data[:twitter_post].merge(script: script))
+    puts "      Created Twitter post: #{twitter_post.title}"
+
+    # One Instagram post per script.
+    instagram_post = InstagramPost.create!(idea_data[:instagram_post].merge(script: script))
+    puts "      Created Instagram post: #{instagram_post.title}"
   end
 
   puts ""
@@ -725,12 +1289,14 @@ puts ""
 # 6. Summary
 # ------------------------------------------------------------------------------
 puts "Seeding complete!"
-puts "  Users:           #{User.count}"
-puts "  Creators:        #{Creator.count}"
-puts "  Ideas:           #{Idea.count}"
-puts "  Scripts:         #{Script.count}"
-puts "  LinkedIn posts:  #{LinkedinPost.count}"
-puts "  Chats:           #{Chat.count} (#{Chat.where.not(chattable_id: nil).count} owned, #{Chat.where(chattable_id: nil).count} standalone)"
-puts "  Messages:        #{Message.count}"
+puts "  Users:            #{User.count}"
+puts "  Creators:         #{Creator.count}"
+puts "  Ideas:            #{Idea.count}"
+puts "  Scripts:          #{Script.count}"
+puts "  LinkedIn posts:   #{LinkedinPost.count}"
+puts "  Twitter posts:    #{TwitterPost.count}"
+puts "  Instagram posts:  #{InstagramPost.count}"
+puts "  Chats:            #{Chat.count} (#{Chat.where.not(chattable_id: nil).count} owned, #{Chat.where(chattable_id: nil).count} standalone)"
+puts "  Messages:         #{Message.count}"
 puts "  Substack sources: #{SubstackSource.count}"
 puts "  Substack posts:   #{SubstackPost.count}"

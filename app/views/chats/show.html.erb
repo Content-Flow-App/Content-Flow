@@ -12,7 +12,7 @@
 
 <%= turbo_stream_from "chat_#{@chat.id}" %>
 
-<div class="min-h-screen bg-[var(--cf-bg)]">
+<div class="min-h-screen">
   <div class="px-7 pt-8">
 
     <%= link_to chats_path,
@@ -48,7 +48,7 @@
 
     <%= render "messages/form", chat: @chat, message: @message %>
 
-    <%= render "generation_action" %>
+    <%= render "generation_action", chat: @chat %>
 
   </div>
 </div>

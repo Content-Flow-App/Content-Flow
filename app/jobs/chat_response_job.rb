@@ -38,7 +38,7 @@ class ChatResponseJob < ApplicationJob
       "chat_#{chat_id}",
       target: "generation-action",
       partial: "chats/generation_action",
-      assigns: { chat: chat }
+      locals: { chat: chat }
     )
   end
 end

@@ -1,12 +1,14 @@
 <% if notice %>
-  <div data-controller="flash" class="flex items-center gap-3 px-4 py-3 m-2 rounded-lg bg-blue-50 text-blue-800 text-sm" role="alert">
-    <span class="flex-1"><%= notice %></span>
-    <button type="button" data-action="click->flash#dismiss" class="text-blue-500 hover:text-blue-700 font-bold" aria-label="Close">&times;</button>
+  <div data-controller="flash" data-flash-delay-value="1200" class="fixed inset-0 z-50 flex items-center justify-center pointer-events-none" style="animation: fade-overlay 1.2s ease forwards;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--cf-orange)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 160px; height: 160px; background: rgba(200,200,200,0.5); border-radius: 50%; padding: 30px;">
+      <polyline points="4 12 9 17 20 6" style="stroke-dasharray: 30; stroke-dashoffset: 30; animation: draw-check 0.5s ease forwards 0.2s;"/>
+    </svg>
   </div>
 <% end %>
 <% if alert %>
-  <div data-controller="flash" class="flex items-center gap-3 px-4 py-3 m-2 rounded-lg bg-yellow-50 text-yellow-800 text-sm" role="alert">
-    <span class="flex-1"><%= alert %></span>
-    <button type="button" data-action="click->flash#dismiss" class="text-yellow-500 hover:text-yellow-700 font-bold" aria-label="Close">&times;</button>
+  <div data-controller="flash" data-flash-delay-value="1200" class="fixed inset-0 z-50 flex items-center justify-center pointer-events-none" style="animation: fade-overlay 1.2s ease forwards;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--cf-orange)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 160px; height: 160px; background: rgba(200,200,200,0.5); border-radius: 50%; padding: 30px;">
+      <polyline points="4 12 9 17 20 6" style="stroke-dasharray: 30; stroke-dashoffset: 30; animation: draw-check 0.5s ease forwards 0.2s;"/>
+    </svg>
   </div>
 <% end %>
