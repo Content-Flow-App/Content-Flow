@@ -1,0 +1,19 @@
+<%# Implicit template lookup: SubstackSourcesController#new renders this file
+    because Rails looks for app/views/<controller_name>/<action_name>.html.erb
+    → app/views/substack_sources/new.html.erb. No explicit render call needed. %>
+<% content_for :title, "Add Substack source" %>
+
+<div class="min-h-screen bg-[var(--cf-bg)]">
+  <div class="px-7 pt-8">
+    <div class="flex justify-between items-end gap-4 mb-16">
+      <h1 class="cf-headline text-[clamp(72px,13vw,120px)]">
+        ADD<br>SOURCE
+      </h1>
+      <%= link_to substack_sources_path, class: "shrink-0 cf-action font-normal hover:text-[var(--cf-orange)] transition-colors duration-150" do %>
+        ← sources
+      <% end %>
+    </div>
+
+    <%= render "form", source: @source %>
+  </div>
+</div>

@@ -1,0 +1,115 @@
+<%# Implicit template lookup: SubstackPostsController#index renders this file.
+    Rails resolves app/views/substack_posts/index.html.erb automatically. %>
+<% content_for :title, "Idea feed" %>
+
+<div class="min-h-screen bg-[var(--cf-bg)]">
+  <div class="px-7 pt-8">
+
+    <%# Page header: big headline left, refresh + manage sources right. %>
+    <div class="flex justify-between items-end gap-4">
+      <h1 class="cf-headline text-[clamp(72px,13vw,120px)]">
+        IDEA<br>FEED
+      </h1>
+
+      <div class="shrink-0 flex flex-col items-end gap-3 pb-2">
+        <%# Refresh is a POST to the collection route /substack_posts/refresh.
+            We use form_with (not link_to) because it must be a POST, not a GET.
+            The Stimulus "refresh" controller swaps the button label on click
+            to give immediate feedback while the page reloads.
+            data-controller goes on the form; data-action + data-target go on the submit. %>
+        <%= form_with url: refresh_substack_posts_path, method: :post,
+              data: { controller: "refresh" } do |f| %>
+          <%= f.submit "refresh",
+                data: { refresh_target: "button", action: "click->refresh#spin" },
+                class: "cf-action font-normal bg-transparent border-0 cursor-pointer hover:text-[var(--cf-orange)] transition-colors duration-150" %>
+        <% end %>
+
+        <%= link_to "manage sources", substack_sources_path,
+              class: "cf-meta hover:text-black transition-colors duration-150" %>
+      </div>
+    </div>
+
+    <% if @sources.empty? %>
+      <%# Empty state — no sources added yet. %>
+      <p class="cf-meta py-10 text-center">
+        no sources yet —
+        <%= link_to "add a substack publication", new_substack_source_path,
+              class: "text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %>
+        to start your feed.
+      </p>
+    <% elsif @posts.empty? %>
+      <%# Sources exist but no posts to show. Three distinct cases:
+          1. a source failed to fetch  → show why + link to manage it
+          2. a source hasn't been fetched yet (async job pending) → "fetching…"
+          3. everything fetched but genuinely empty → "no posts". %>
+      <% if (failed = @sources.select { |s| s.fetch_error.present? }).any? %>
+        <div class="cf-meta py-10 text-center">
+          <p class="text-[var(--cf-orange)]">couldn't fetch <%= pluralize(failed.size, "source") %>:</p>
+          <% failed.each do |s| %>
+            <p class="mt-1"><%= s.name.presence || s.handle || s.feed_url %> — <%= s.fetch_error %></p>
+          <% end %>
+          <p class="mt-3">
+            <%= link_to "manage sources", substack_sources_path,
+                  class: "text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %>
+          </p>
+        </div>
+      <% elsif @sources.any? { |s| s.fetched_at.nil? } %>
+        <p class="cf-meta py-10 text-center">
+          fetching your posts — refresh in a moment.
+        </p>
+      <% else %>
+        <p class="cf-meta py-10 text-center">
+          no posts yet — hit refresh to fetch your sources.
+        </p>
+      <% end %>
+    <% else %>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse min-w-[600px]">
+          <thead>
+            <tr class="text-left">
+              <th class="pt-12 pb-3 cf-h2 font-normal">post</th>
+              <th class="pt-12 pb-3 cf-h2 font-normal">source</th>
+              <th class="pt-12 pb-3 cf-h2 font-normal">published</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tr><td colspan="4"><div class="cf-rule"></div></td></tr>
+          <tbody>
+            <% @posts.each do |post| %>
+              <tr class="cf-row">
+                <td class="py-[18px] cf-label font-normal max-w-xs">
+                  <a href="<%= post.url %>" target="_blank" rel="noopener noreferrer"
+                     class="hover:text-[var(--cf-orange)] transition-colors duration-150">
+                    <%= post.title %>
+                  </a>
+                  <% if post.summary.present? %>
+                    <p class="cf-meta mt-1 font-normal leading-snug line-clamp-2"><%= post.summary %></p>
+                  <% end %>
+                </td>
+                <td class="py-[18px] cf-label font-normal cf-meta whitespace-nowrap">
+                  <%= post.substack_source.name.presence ||
+                      post.substack_source.handle&.concat(".substack.com") ||
+                      "substack" %>
+                </td>
+                <td class="py-[18px] cf-label font-normal cf-meta whitespace-nowrap">
+                  <%= post.published_at ? post.published_at.strftime("%b %d, %Y") : "—" %>
+                </td>
+                <td class="py-[18px] pr-px cf-label font-normal text-right whitespace-nowrap">
+                  <%# "Use as inspiration" → seeds the generate_idea chat flow.
+                      We pass substack_post_id so ChatsController#new can pre-fill
+                      the opening prompt with this post's title and summary. %>
+                  <%= link_to "use as inspiration",
+                        new_chat_path(
+                          purpose: "generate_idea",
+                          substack_post_id: post.id
+                        ),
+                        class: "text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+  </div>
+</div>

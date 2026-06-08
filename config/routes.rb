@@ -34,7 +34,30 @@ Rails.application.routes.draw do
   resource  :creator, only: [ :show, :create, :update ]
   
   resources :generated_ideas
-  
+
+  # Substack idea feed.
+  #
+  # `resources :substack_sources, only: [...]` generates exactly these four routes:
+  #   GET    /substack_sources          → SubstackSourcesController#index
+  #   GET    /substack_sources/new      → SubstackSourcesController#new
+  #   POST   /substack_sources          → SubstackSourcesController#create
+  #   DELETE /substack_sources/:id      → SubstackSourcesController#destroy
+  # No show/edit/update — we don't need them for this MVP.
+  resources :substack_sources, only: [ :index, :new, :create, :destroy ]
+
+  # The feed is a flat list of posts across all sources.
+  # `resources :substack_posts, only: [:index]` gives us:
+  #   GET /substack_posts → SubstackPostsController#index
+  # The `collection do` block adds a route that acts on the whole group (no :id):
+  #   POST /substack_posts/refresh → SubstackPostsController#refresh
+  # If we used `member do` instead it would add an :id segment — wrong here because
+  # refresh fires jobs for *all* sources, not one specific post.
+  resources :substack_posts, only: [ :index ] do
+    collection do
+      post :refresh
+    end
+  end
+
   resources :ideas do
     resources :scripts, shallow: true do
       resource :linkedin_post, only: [:show, :new, :create, :edit, :update, :destroy]

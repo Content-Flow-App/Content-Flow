@@ -1,0 +1,69 @@
+<%# Implicit template lookup: SubstackSourcesController#index renders this file.
+    Rails resolves app/views/substack_sources/index.html.erb automatically. %>
+<% content_for :title, "Substack sources" %>
+
+<div class="min-h-screen bg-[var(--cf-bg)]">
+  <div class="px-7 pt-8">
+    <div class="flex justify-between items-end gap-4">
+      <h1 class="cf-headline text-[clamp(72px,13vw,120px)]">
+        YOUR<br>SOURCES
+      </h1>
+      <%= link_to new_substack_source_path, class: "shrink-0 flex items-end" do %>
+        <%= image_tag "big_plus.svg", class: "w-16 h-16 md:w-28 md:h-28", alt: "Add source" %>
+        <span class="cf-action -ml-10 font-normal">add source</span>
+      <% end %>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full border-collapse min-w-[500px]">
+        <thead>
+          <tr class="text-left">
+            <th class="pt-12 pb-3 cf-h2 font-normal">publication</th>
+            <th class="pt-12 pb-3 cf-h2 font-normal">handle</th>
+            <th class="pt-12 pb-3 cf-h2 font-normal">last fetched</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tr><td colspan="4"><div class="cf-rule"></div></td></tr>
+        <tbody>
+          <% if @sources.any? %>
+            <% @sources.each do |source| %>
+              <tr class="cf-row">
+                <td class="py-[18px] cf-label font-normal">
+                  <%= source.name.presence || source.handle || "unnamed" %>
+                  <% if source.fetch_error.present? %>
+                    <p class="cf-meta mt-1 font-normal leading-snug text-[var(--cf-orange)]">
+                      <%= source.fetch_error %>
+                    </p>
+                  <% end %>
+                </td>
+                <td class="py-[18px] cf-label font-normal cf-meta">
+                  <%= source.handle ? "#{source.handle}.substack.com" : source.feed_url %>
+                </td>
+                <td class="py-[18px] cf-label font-normal cf-meta">
+                  <%= source.fetched_at ? source.fetched_at.strftime("%b %d, %Y %H:%M") : "never" %>
+                </td>
+                <td class="py-[18px] pr-px cf-label font-normal text-right whitespace-nowrap">
+                  <%= link_to "remove", substack_source_path(source),
+                        data: { turbo_method: :delete, turbo_confirm: "Remove this source and all its cached posts?" },
+                        class: "text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="4" class="py-10 text-center cf-meta">
+                no sources yet — add one to start your feed.
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-10">
+      <%= link_to "view feed →", substack_posts_path,
+            class: "cf-action font-normal hover:text-[var(--cf-orange)] transition-colors duration-150" %>
+    </div>
+  </div>
+</div>

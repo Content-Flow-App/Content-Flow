@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_05_084247) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_05_144720) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -290,6 +290,32 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_05_084247) do
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
+  create_table "substack_posts", force: :cascade do |t|
+    t.string "author"
+    t.datetime "created_at", null: false
+    t.string "guid", null: false
+    t.datetime "published_at"
+    t.bigint "substack_source_id", null: false
+    t.text "summary"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.string "url"
+    t.index ["substack_source_id", "guid"], name: "index_substack_posts_on_substack_source_id_and_guid", unique: true
+    t.index ["substack_source_id"], name: "index_substack_posts_on_substack_source_id"
+  end
+
+  create_table "substack_sources", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "feed_url", null: false
+    t.string "fetch_error"
+    t.datetime "fetched_at"
+    t.string "handle"
+    t.string "name"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_substack_sources_on_user_id"
+  end
+
   create_table "tool_calls", force: :cascade do |t|
     t.jsonb "arguments", default: {}
     t.datetime "created_at", null: false
@@ -331,5 +357,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_05_084247) do
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "substack_posts", "substack_sources"
+  add_foreign_key "substack_sources", "users"
   add_foreign_key "tool_calls", "messages"
 end

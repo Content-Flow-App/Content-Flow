@@ -6,6 +6,8 @@ class User < ApplicationRecord
 
   has_one :creator
   has_many :ideas, dependent: :destroy
+  has_many :substack_sources, dependent: :destroy
+  has_many :substack_posts, through: :substack_sources
 
   # as: :chattable tells Rails the foreign key lives in the polymorphic pair
   # chattable_type/chattable_id on chats (not a conventional user_id). The User

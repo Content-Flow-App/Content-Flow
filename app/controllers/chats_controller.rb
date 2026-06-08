@@ -10,6 +10,7 @@ class ChatsController < ApplicationController
     @chat = Chat.new(purpose: @purpose, chattable: default_chattable)
     @selected_model = params[:model]
     @chat_models = available_chat_models
+    @seed_prompt = substack_seed_prompt
   end
 
   def create
@@ -92,5 +93,28 @@ class ChatsController < ApplicationController
   # defaults to the current user; any explicitly-passed chattable wins.
   def default_chattable
     chattable || (current_user if purpose == "generate_idea")
+  end
+
+  # Builds a pre-filled prompt from a Substack post so the user can see and
+  # edit the seed text before sending. Always scoped through current_user so
+  # a user can only seed from their own cached posts.
+  def substack_seed_prompt
+    return unless params[:substack_post_id].present?
+
+    post = current_user.substack_posts.find_by(id: params[:substack_post_id])
+    return unless post
+
+    source_label = post.substack_source.name.presence ||
+                   post.substack_source.handle&.concat(".substack.com")
+
+    lines = [ "I want to create content inspired by this Substack post:" ]
+    lines << "Title: \"#{post.title}\""         if post.title.present?
+    lines << "Author: #{post.author}"            if post.author.present?
+    lines << "Source: #{source_label}"           if source_label.present?
+    lines << ""
+    lines << post.summary                        if post.summary.present?
+    lines << ""
+    lines << "Help me develop this into a content idea for my brand."
+    lines.join("\n")
   end
 end

@@ -1,0 +1,28 @@
+<%# form_with model: source infers create vs update from source.persisted?:
+    - new record (not persisted) → POST /substack_sources
+    - persisted record           → PATCH /substack_sources/:id
+    Since we only ever render this form for a new source, the POST path is used. %>
+<%= form_with model: source, class: "flex flex-col gap-8 max-w-lg" do |f| %>
+  <%= render "shared/errors", record: source %>
+
+  <div class="flex flex-col gap-2">
+    <%= f.label :feed_url, "substack url or handle", class: "cf-h2 font-normal" %>
+    <%= f.text_field :feed_url,
+          placeholder: "e.g. lennysnewsletter or lennysnewsletter.substack.com",
+          autofocus: true,
+          class: "cf-input mt-2" %>
+    <p class="cf-meta">paste a substack handle, url, or full feed url — we'll normalise it.</p>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <%= f.label :name, "publication name (optional)", class: "cf-h2 font-normal" %>
+    <%= f.text_field :name,
+          placeholder: "e.g. Lenny's Newsletter",
+          class: "cf-input mt-2" %>
+  </div>
+
+  <div>
+    <%= f.submit "add source",
+          class: "rounded-[10px] border-2 border-[var(--cf-ink)] bg-transparent text-[var(--cf-ink)] px-8 py-3.5 cf-action font-normal cursor-pointer transition-all duration-150 ease-in-out hover:bg-[var(--cf-ink)] hover:text-[var(--cf-cream)]" %>
+  </div>
+<% end %>

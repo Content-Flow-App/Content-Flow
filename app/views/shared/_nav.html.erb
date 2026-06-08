@@ -5,6 +5,7 @@
     <% if user_signed_in? %>
       <%= link_to "dashboard", dashboard_path, class: "cf-meta hover:text-black transition-colors duration-150 ease-in-out" %>
       <%= link_to "ideas", ideas_path, class: "cf-meta hover:text-black transition-colors duration-150 ease-in-out" %>
+      <%= link_to "feed", substack_posts_path, class: "cf-meta hover:text-black transition-colors duration-150 ease-in-out" %>
       <%= link_to "creator", creator_path, class: "cf-meta hover:text-black transition-colors duration-150 ease-in-out" %>
       <%= button_to "sign out", destroy_user_session_path, method: :delete, class: "cf-meta hover:text-black transition-colors duration-150 ease-in-out" %>
     <% elsif !current_page?(new_user_session_path) && !current_page?(new_user_registration_path) %>

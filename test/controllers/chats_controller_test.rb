@@ -105,4 +105,59 @@ class ChatsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "input[type=hidden][name='chat[purpose]'][value=bogus]", count: 0
   end
+
+  # --- Substack "use as inspiration" seed flow -----------------------------
+  # The Substack feed's "use as inspiration" link hits #new with
+  # `purpose=generate_idea` + `substack_post_id=…`. #new pre-fills the prompt
+  # textarea from that post so the user can edit it before sending. The
+  # substack_post_id is only used to seed #new — it is not carried into #create.
+
+  test "new pre-fills the prompt textarea from a substack post" do
+    source = @user.substack_sources.create!(
+      feed_url: "lennysnewsletter.substack.com/feed", name: "Lenny's Newsletter"
+    )
+    post = source.substack_posts.create!(
+      guid: "seed-1", title: "How to ship faster", author: "Lenny",
+      summary: "A deep dive on shipping velocity.", published_at: 1.day.ago
+    )
+
+    get new_chat_path(purpose: "generate_idea", substack_post_id: post.id)
+
+    assert_response :success
+    assert_select "textarea[name='chat[prompt]']" do |els|
+      body = els.first.text
+      assert_includes body, "How to ship faster"
+      assert_includes body, "Lenny's Newsletter"
+      assert_includes body, "A deep dive on shipping velocity."
+    end
+    # It is a generate_idea chat owned by the user (no explicit chattable param).
+    assert_select "input[type=hidden][name='chat[purpose]'][value=generate_idea]"
+    assert_select "input[type=hidden][name='chat[chattable_type]'][value=User]"
+  end
+
+  test "new cannot seed from another user's substack post" do
+    other = User.create!(email: "other-seed@cf.test", password: "password123")
+    Creator.create!(user: other, name: "X", topic: "X", goal: "X", audience: "X")
+    other_source = other.substack_sources.create!(feed_url: "another.substack.com/feed")
+    other_post = other_source.substack_posts.create!(
+      guid: "not-mine", title: "Private idea", summary: "secret", published_at: Time.current
+    )
+
+    get new_chat_path(purpose: "generate_idea", substack_post_id: other_post.id)
+
+    assert_response :success
+    # The textarea renders empty rather than leaking the other user's post.
+    assert_select "textarea[name='chat[prompt]']" do |els|
+      assert_not_includes els.first.text, "Private idea"
+    end
+  end
+
+  test "new without a substack_post_id leaves the prompt textarea empty" do
+    get new_chat_path(purpose: "generate_idea")
+
+    assert_response :success
+    assert_select "textarea[name='chat[prompt]']" do |els|
+      assert_equal "", els.first.text.strip
+    end
+  end
 end

@@ -594,13 +594,80 @@ puts "  Created standalone chat (no owner) with #{standalone.messages.count} mes
 puts ""
 
 # ------------------------------------------------------------------------------
-# 5. Summary
+# 5. Sample Substack feed (idea-feed source + cached posts)
+# ------------------------------------------------------------------------------
+# The fetch pipeline reads live RSS over the network, so seeding real sources
+# would make `db:seed` slow and flaky (and dependent on a feed staying online).
+# Instead we insert one source plus a few cached posts *directly*, bypassing
+# SubstackFetchService — enough to exercise the feed UI and the "use as
+# inspiration" → generate_idea chat flow completely offline.
+#
+# fetched_at is stamped to "now" so the source isn't stale: a Refresh won't try
+# to re-fetch it over the network and overwrite this demo data.
+#
+# No explicit cleanup is needed — User.destroy_all above cascades through
+# `has_many :substack_sources, dependent: :destroy` (and on to posts).
+puts "Seeding sample Substack feed..."
+
+demo_user = User.find_by!(email: "demo@contentflow.com")
+substack_source = demo_user.substack_sources.create!(
+  feed_url:   "https://www.lennysnewsletter.com/feed",
+  name:       "Lenny's Newsletter",
+  handle:     "lennysnewsletter",
+  fetched_at: Time.current
+)
+
+SUBSTACK_POSTS = [
+  {
+    title:   "How the best product teams cut scope",
+    author:  "Lenny Rachitsky",
+    summary: "Shipping the right slice beats shipping everything. A look at how high-performing teams ruthlessly trim scope without losing the plot.",
+    published_at: 2.days.ago
+  },
+  {
+    title:   "The hidden cost of context switching",
+    author:  "Lenny Rachitsky",
+    summary: "Every tab, ping, and 'quick question' has a price. Why protecting deep-work blocks is the highest-leverage habit for makers.",
+    published_at: 6.days.ago
+  },
+  {
+    title:   "What great onboarding actually looks like",
+    author:  "Lenny Rachitsky",
+    summary: "First impressions compound. A teardown of onboarding flows that turn signups into habitual users.",
+    published_at: 13.days.ago
+  },
+  {
+    title:   "Pricing is a product decision, not a finance one",
+    author:  "Lenny Rachitsky",
+    summary: "Why your pricing page deserves the same care as your core feature work, and a simple framework for getting it right.",
+    published_at: 25.days.ago
+  }
+]
+
+SUBSTACK_POSTS.each_with_index do |post_data, i|
+  substack_source.substack_posts.create!(
+    guid:         "seed-substack-#{i}",
+    url:          "https://www.lennysnewsletter.com/p/seed-#{i}",
+    title:        post_data[:title],
+    author:       post_data[:author],
+    summary:      post_data[:summary],
+    published_at: post_data[:published_at]
+  )
+end
+puts "  Created source '#{substack_source.name}' with #{substack_source.substack_posts.count} cached posts"
+
+puts ""
+
+# ------------------------------------------------------------------------------
+# 6. Summary
 # ------------------------------------------------------------------------------
 puts "Seeding complete!"
-puts "  Users:          #{User.count}"
-puts "  Creators:       #{Creator.count}"
-puts "  Ideas:          #{Idea.count}"
-puts "  Scripts:        #{Script.count}"
-puts "  LinkedIn posts: #{LinkedinPost.count}"
-puts "  Chats:          #{Chat.count} (#{Chat.where.not(chattable_id: nil).count} owned, #{Chat.where(chattable_id: nil).count} standalone)"
-puts "  Messages:       #{Message.count}"
+puts "  Users:           #{User.count}"
+puts "  Creators:        #{Creator.count}"
+puts "  Ideas:           #{Idea.count}"
+puts "  Scripts:         #{Script.count}"
+puts "  LinkedIn posts:  #{LinkedinPost.count}"
+puts "  Chats:           #{Chat.count} (#{Chat.where.not(chattable_id: nil).count} owned, #{Chat.where(chattable_id: nil).count} standalone)"
+puts "  Messages:        #{Message.count}"
+puts "  Substack sources: #{SubstackSource.count}"
+puts "  Substack posts:   #{SubstackPost.count}"
