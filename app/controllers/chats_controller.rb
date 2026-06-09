@@ -26,7 +26,7 @@ class ChatsController < ApplicationController
       # before the job runs, so the assistant streams with the context already in
       # place. A standalone chat (no chattable) yields nil instructions, leaving
       # the plain /chats flow untouched.
-      instructions = LlmContext.for(@chat.chattable)
+      instructions = LlmContext.for(@chat.chattable, purpose: @chat.purpose)
       @chat.with_instructions(instructions) if instructions.present?
 
       # Persist the user's message synchronously, before enqueuing the job, so the

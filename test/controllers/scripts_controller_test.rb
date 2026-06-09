@@ -18,4 +18,14 @@ class ScriptsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_chat_path(purpose: "generate_script",
                                        chattable_type: "Idea", chattable_id: @idea.id)
   end
+
+  test "update persists custom_instructions (the renamed system-prompt field)" do
+    script = @idea.scripts.create!(title: "Hook them", style: "educational",
+                                   length: "short", description: "a punchy script")
+
+    patch script_path(script), params: { script: { custom_instructions: "Be concise and witty." } }
+
+    assert_redirected_to script_path(script)
+    assert_equal "Be concise and witty.", script.reload.custom_instructions
+  end
 end

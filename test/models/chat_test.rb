@@ -24,7 +24,7 @@ class ChatTest < ActiveSupport::TestCase
   test "ideas, scripts, and linkedin posts each own chats via chattable" do
     idea   = @user.ideas.create!(title: "t", topic: "ai", description: "d")
     script = Script.create!(idea: idea, title: "s", style: "educational",
-                            length: "short", description: "d", system_prompt: "p")
+                            length: "short", description: "d", custom_instructions: "p")
     post   = LinkedinPost.create!(script: script, title: "p", hook: "h", body: "b")
 
     [ idea, script, post ].each do |owner|

@@ -5,7 +5,7 @@ class TwitterPostTest < ActiveSupport::TestCase
     @user   = User.create!(email: "twitter-model@cf.test", password: "password123")
     @idea   = @user.ideas.create!(title: "Ship faster", topic: "AI", description: "tips")
     @script = @idea.scripts.create!(title: "s", style: "educational",
-                                    length: "short", description: "d", system_prompt: "p")
+                                    length: "short", description: "d", custom_instructions: "p")
   end
 
   test "valid with a title and a script" do
@@ -40,5 +40,21 @@ class TwitterPostTest < ActiveSupport::TestCase
   test "is destroyed with its script" do
     @script.create_twitter_post!(title: "Doomed")
     assert_difference("TwitterPost.count", -1) { @script.destroy }
+  end
+
+  test "owns chats via the polymorphic chattable association" do
+    post = @script.create_twitter_post!(title: "My thread")
+    chat = post.chats.create!
+
+    assert_equal post, chat.chattable
+    assert_equal "TwitterPost", chat.chattable_type
+    assert_includes post.chats, chat
+  end
+
+  test "its chats are destroyed with it" do
+    post = @script.create_twitter_post!(title: "Doomed")
+    post.chats.create!
+
+    assert_difference("Chat.count", -1) { post.destroy }
   end
 end
