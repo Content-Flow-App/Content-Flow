@@ -44,6 +44,9 @@
       <% @chat.messages.where.not(id: nil).each do |message| %>
         <%= render message %>
       <% end %>
+      <% if @chat.messages.where(role: %w[user assistant]).order(:id).last&.role.to_s == "user" %>
+        <%= render "messages/thinking" %>
+      <% end %>
     </div>
 
     <%= render "messages/form", chat: @chat, message: @message %>
