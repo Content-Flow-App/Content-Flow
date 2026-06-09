@@ -33,12 +33,40 @@ class ChatResponseJob < ApplicationJob
         locals: { message: assistant }
       )
     end
+  rescue RubyLLM::RateLimitError
+    broadcast_error(chat_id, "rate limit reached",
+      "The AI provider has hit its daily request limit. Please try again later.")
+  rescue RubyLLM::Error => e
+    broadcast_error(chat_id, "ai error", e.message)
+  rescue Faraday::TimeoutError
+    broadcast_error(chat_id, "request timed out",
+      "The AI provider did not respond in time. Please try again.")
+  ensure
+    # Always refresh generation-action so any loading state is cleared,
+    # whether the job succeeded or failed.
+    chat = Chat.find_by(id: chat_id)
+    return unless chat
 
     Turbo::StreamsChannel.broadcast_replace_to(
       "chat_#{chat_id}",
       target: "generation-action",
       partial: "chats/generation_action",
       locals: { chat: chat }
+    )
+  end
+
+  private
+
+  # Lightweight stand-in for the _error partial, which only needs id and created_at.
+  ErrorStub = Struct.new(:id, :created_at)
+
+  def broadcast_error(chat_id, title, body)
+    stub = ErrorStub.new("error_#{chat_id}", Time.current)
+    Turbo::StreamsChannel.broadcast_append_to(
+      "chat_#{chat_id}",
+      target: "messages",
+      partial: "messages/error",
+      locals: { message: stub, title: title, error_message: body }
     )
   end
 end

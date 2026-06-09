@@ -14,6 +14,9 @@ RubyLLM.configure do |config|
   config.openai_api_key = ENV.fetch("GITHUB_TOKEN", Rails.application.credentials.dig(:openai_api_key))
   config.openai_api_base = "https://models.inference.ai.azure.com"
   config.default_model = "gpt-4o-mini"
+  # Cap each API attempt at 30 s. With the default 3 retries the worst-case
+  # hang before an error fires is 4 × 30 s = 2 minutes instead of 20.
+  config.request_timeout = 30
   # Use the new association-based acts_as API (recommended)
   config.use_new_acts_as = true
 end

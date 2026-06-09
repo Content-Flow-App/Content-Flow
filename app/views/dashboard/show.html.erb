@@ -20,10 +20,10 @@
               <%= link_to idea_path(idea), class: "group" do %>
                 <p class="cf-h2 font-normal text-[var(--cf-cream)] group-hover:opacity-80 transition-opacity duration-150 leading-tight">
                   <%= idea.title %>
-                </p>
+                </h3>
               <% end %>
               <% if idea.topic.present? %>
-                <p class="cf-meta text-[var(--cf-cream)] opacity-70 mt-1"><%= idea.topic %></p>
+                <p class="cf-meta text-[var(--cf-gray)] mt-1"><%= idea.topic %></p>
               <% end %>
             </div>
 
