@@ -9,7 +9,7 @@ class LlmContextTest < ActiveSupport::TestCase
                                 description: "tips on shipping")
     @script = Script.create!(idea: @idea, title: "Hook them", style: "educational",
                              length: "short", description: "a punchy script",
-                             system_prompt: "Be concise and witty.")
+                             custom_instructions: "Be concise and witty.")
     @post = LinkedinPost.create!(script: @script, title: "Post one",
                                  hook: "Stop doing X", body: "Here is why...")
   end
@@ -72,11 +72,71 @@ class LlmContextTest < ActiveSupport::TestCase
     assert script_at < post_at,  "script before post"
   end
 
+  test "twitter post context layers the whole ancestry chain in order" do
+    twitter_post = TwitterPost.create!(script: @script, title: "Tweet one",
+                                       hook: "Hot take", body: "thread...")
+    text = LlmContext.for(twitter_post)
+
+    assert_includes text, "CREATOR PROFILE"
+    assert_includes text, "PARENT IDEA"
+    assert_includes text, "PARENT SCRIPT"
+    assert_includes text, "THIS TWITTER POST"
+    assert_includes text, "Hot take"
+    assert_operator text.index("PARENT SCRIPT"), :<, text.index("THIS TWITTER POST")
+  end
+
+  test "instagram post context layers the whole ancestry chain in order" do
+    instagram_post = InstagramPost.create!(script: @script, title: "Caption one",
+                                           hook: "Stop scrolling", body: "caption...")
+    text = LlmContext.for(instagram_post)
+
+    assert_includes text, "CREATOR PROFILE"
+    assert_includes text, "PARENT SCRIPT"
+    assert_includes text, "THIS INSTAGRAM POST"
+    assert_includes text, "Stop scrolling"
+    assert_operator text.index("PARENT SCRIPT"), :<, text.index("THIS INSTAGRAM POST")
+  end
+
   test "a script with no system_prompt omits the instructions block" do
-    @script.update!(system_prompt: nil)
+    @script.update!(custom_instructions: nil)
     text = LlmContext.for(@script)
 
     assert_includes text, "PARENT SCRIPT"
     refute_includes text, "SCRIPT INSTRUCTIONS"
+  end
+
+  test "generating an instagram post adds the instagram platform guidelines" do
+    text = LlmContext.for(@script, purpose: "generate_instagram_post")
+
+    assert_includes text, "PARENT SCRIPT"
+    assert_includes text, "PLATFORM GUIDELINES — INSTAGRAM"
+    assert_includes text, "hashtags"
+    refute_includes text, "PLATFORM GUIDELINES — TWITTER"
+
+    script_at = text.index("PARENT SCRIPT")
+    guidelines_at = text.index("PLATFORM GUIDELINES — INSTAGRAM")
+    assert script_at < guidelines_at, "platform guidelines come after the chattable's own layers"
+  end
+
+  test "generating a twitter post adds the twitter platform guidelines" do
+    text = LlmContext.for(@script, purpose: "generate_twitter_post")
+
+    assert_includes text, "PARENT SCRIPT"
+    assert_includes text, "PLATFORM GUIDELINES — TWITTER"
+    assert_includes text, "280 characters"
+    refute_includes text, "PLATFORM GUIDELINES — INSTAGRAM"
+  end
+
+  test "generating a linkedin post adds the linkedin platform guidelines" do
+    text = LlmContext.for(@script, purpose: "generate_linkedin_post")
+
+    assert_includes text, "PLATFORM GUIDELINES — LINKEDIN"
+    assert_includes text, "see more"
+    refute_includes text, "PLATFORM GUIDELINES — TWITTER"
+    refute_includes text, "PLATFORM GUIDELINES — INSTAGRAM"
+  end
+
+  test "a purpose with no chattable context yields no instructions" do
+    assert_nil LlmContext.for(nil, purpose: "generate_idea")
   end
 end

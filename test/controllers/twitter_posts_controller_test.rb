@@ -10,7 +10,7 @@ class TwitterPostsControllerTest < ActionDispatch::IntegrationTest
     @idea = @user.ideas.create!(title: "Ship faster", topic: "AI",
                                 description: "tips on shipping")
     @script = @idea.scripts.create!(title: "s", style: "educational",
-                                    length: "short", description: "d", system_prompt: "p")
+                                    length: "short", description: "d", custom_instructions: "p")
     sign_in @user
   end
 
@@ -63,7 +63,7 @@ class TwitterPostsControllerTest < ActionDispatch::IntegrationTest
     other = User.create!(email: "twitter-other@cf.test", password: "password123")
     other_idea = other.ideas.create!(title: "x", topic: "x", description: "x")
     other_script = other_idea.scripts.create!(title: "x", style: "x",
-                                              length: "x", description: "x", system_prompt: "x")
+                                              length: "x", description: "x", custom_instructions: "x")
 
     get new_script_twitter_post_path(other_script)
     assert_response :not_found

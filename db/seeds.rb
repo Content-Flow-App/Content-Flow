@@ -58,7 +58,7 @@ SEED_DATA = [
           style: "educational",
           length: "short",
           description: "A short educational script covering the top AI tools transforming content creation.",
-          system_prompt: "You are a knowledgeable tech content creator. Write engaging, concise scripts."
+          custom_instructions: "You are a knowledgeable tech content creator. Write engaging, concise scripts."
         },
         linkedin_post: {
           title: "AI tools that actually work",
@@ -121,7 +121,7 @@ SEED_DATA = [
           style: "conversational",
           length: "medium",
           description: "A conversational script challenging popular productivity advice.",
-          system_prompt: "You are a productivity coach. Write practical, myth-busting scripts."
+          custom_instructions: "You are a productivity coach. Write practical, myth-busting scripts."
         },
         linkedin_post: {
           title: "The 2-hour workday myth",
@@ -187,7 +187,7 @@ SEED_DATA = [
           style: "educational",
           length: "long",
           description: "A detailed walkthrough of pairing note-taking with AI retrieval.",
-          system_prompt: "You are a knowledge-management expert. Write thorough, structured scripts."
+          custom_instructions: "You are a knowledge-management expert. Write thorough, structured scripts."
         },
         linkedin_post: {
           title: "Build a second brain",
@@ -264,7 +264,7 @@ SEED_DATA = [
           style: "storytelling",
           length: "medium",
           description: "A personal-finance story script about a successful debt payoff journey.",
-          system_prompt: "You are a relatable finance creator. Write warm, honest scripts."
+          custom_instructions: "You are a relatable finance creator. Write warm, honest scripts."
         },
         linkedin_post: {
           title: "The debt snowball",
@@ -330,7 +330,7 @@ SEED_DATA = [
           style: "educational",
           length: "short",
           description: "A short, jargon-free explainer on index fund investing.",
-          system_prompt: "You are a finance educator. Write clear, beginner-friendly scripts."
+          custom_instructions: "You are a finance educator. Write clear, beginner-friendly scripts."
         },
         linkedin_post: {
           title: "Index funds explained",
@@ -396,7 +396,7 @@ SEED_DATA = [
           style: "conversational",
           length: "short",
           description: "A relaxed take on the 50/30/20 budgeting rule.",
-          system_prompt: "You are a friendly finance coach. Write low-pressure, practical scripts."
+          custom_instructions: "You are a friendly finance coach. Write low-pressure, practical scripts."
         },
         linkedin_post: {
           title: "The 50/30/20 budget",
@@ -473,7 +473,7 @@ SEED_DATA = [
           style: "educational",
           length: "short",
           description: "A script making the case for efficient, time-boxed training.",
-          system_prompt: "You are a fitness coach. Write motivating, no-nonsense scripts."
+          custom_instructions: "You are a fitness coach. Write motivating, no-nonsense scripts."
         },
         linkedin_post: {
           title: "The 20-minute workout",
@@ -541,7 +541,7 @@ SEED_DATA = [
           style: "conversational",
           length: "medium",
           description: "A script on the underrated role of sleep in fitness results.",
-          system_prompt: "You are a wellness coach. Write evidence-based, calming scripts."
+          custom_instructions: "You are a wellness coach. Write evidence-based, calming scripts."
         },
         linkedin_post: {
           title: "Sleep is the cheat code",
@@ -605,7 +605,7 @@ SEED_DATA = [
           style: "educational",
           length: "short",
           description: "A practical script on varied, high-protein eating.",
-          system_prompt: "You are a nutrition coach. Write simple, actionable scripts."
+          custom_instructions: "You are a nutrition coach. Write simple, actionable scripts."
         },
         linkedin_post: {
           title: "Protein without boredom",
@@ -680,7 +680,7 @@ SEED_DATA = [
           style: "educational",
           length: "medium",
           description: "A script explaining the real differences between experience levels.",
-          system_prompt: "You are a senior engineer and mentor. Write candid, helpful scripts."
+          custom_instructions: "You are a senior engineer and mentor. Write candid, helpful scripts."
         },
         linkedin_post: {
           title: "Junior vs senior engineers",
@@ -746,7 +746,7 @@ SEED_DATA = [
           style: "educational",
           length: "long",
           description: "A detailed script on strategies for understanding large codebases.",
-          system_prompt: "You are an experienced engineer. Write structured, practical scripts."
+          custom_instructions: "You are an experienced engineer. Write structured, practical scripts."
         },
         linkedin_post: {
           title: "Reading a giant codebase",
@@ -814,7 +814,7 @@ SEED_DATA = [
           style: "conversational",
           length: "short",
           description: "A script on the underrated value of writing for engineers.",
-          system_prompt: "You are a tech lead. Write reflective, encouraging scripts."
+          custom_instructions: "You are a tech lead. Write reflective, encouraging scripts."
         },
         linkedin_post: {
           title: "Engineers who write win",
@@ -891,7 +891,7 @@ SEED_DATA = [
           style: "conversational",
           length: "medium",
           description: "A script reframing sustainability as small, sustainable habits.",
-          system_prompt: "You are a sustainability advocate. Write warm, non-judgemental scripts."
+          custom_instructions: "You are a sustainability advocate. Write warm, non-judgemental scripts."
         },
         linkedin_post: {
           title: "Sustainability without guilt",
@@ -957,7 +957,7 @@ SEED_DATA = [
           style: "educational",
           length: "medium",
           description: "A script unpacking the hidden costs of fast fashion.",
-          system_prompt: "You are an ethical-living educator. Write informative, balanced scripts."
+          custom_instructions: "You are an ethical-living educator. Write informative, balanced scripts."
         },
         linkedin_post: {
           title: "The cost of fast fashion",
@@ -1025,7 +1025,7 @@ SEED_DATA = [
           style: "educational",
           length: "short",
           description: "A how-to script on composting in limited living spaces.",
-          system_prompt: "You are a zero-waste coach. Write practical, encouraging scripts."
+          custom_instructions: "You are a zero-waste coach. Write practical, encouraging scripts."
         },
         linkedin_post: {
           title: "Composting in an apartment",

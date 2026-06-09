@@ -10,7 +10,7 @@ class LinkedinPostsControllerTest < ActionDispatch::IntegrationTest
     @idea = @user.ideas.create!(title: "Ship faster", topic: "AI",
                                 description: "tips on shipping")
     @script = @idea.scripts.create!(title: "s", style: "educational",
-                                    length: "short", description: "d", system_prompt: "p")
+                                    length: "short", description: "d", custom_instructions: "p")
     sign_in @user
   end
 
