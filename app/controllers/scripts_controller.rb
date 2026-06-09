@@ -63,6 +63,6 @@ class ScriptsController < ApplicationController
   end
 
   def script_params
-    params.require(:script).permit(:title, :description, :length, :style, :system_prompt)
+    params.require(:script).permit(:title, :description, :length, :style, :custom_instructions)
   end
 end

@@ -37,10 +37,10 @@
         </div>
       <% end %>
 
-      <% if @script.system_prompt.present? %>
+      <% if @script.custom_instructions.present? %>
         <div data-script-edit-target="showPart" class="max-w-2xl mb-10">
           <p class="cf-h2 font-normal mb-2">system prompt</p>
-          <p class="cf-body whitespace-pre-wrap" data-script-edit-target="showSystemPrompt"><%= @script.system_prompt %></p>
+          <p class="cf-body whitespace-pre-wrap" data-script-edit-target="showSystemPrompt"><%= @script.custom_instructions %></p>
         </div>
       <% end %>
 
@@ -136,8 +136,8 @@
             </div>
 
             <div class="group relative pb-2" data-script-edit-target="field">
-              <%= f.label :system_prompt, "system prompt", class: "cf-h2 font-normal" %>
-              <%= f.text_area :system_prompt,
+              <%= f.label :custom_instructions, "system prompt", class: "cf-h2 font-normal" %>
+              <%= f.text_area :custom_instructions,
                 readonly: true,
                 rows: 1,
                 class: "cf-input border-0 rounded-none bg-transparent px-0 outline-none cursor-default h-auto py-3 resize-none overflow-hidden",

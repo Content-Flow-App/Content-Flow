@@ -15,6 +15,13 @@ class User < ApplicationRecord
   # creator. dependent: :destroy clears a user's chats when the user is removed.
   has_many :chats, as: :chattable, dependent: :destroy
 
+  # A User is the top-level chat node; its system-prompt layer is the creator
+  # profile, reached through the association. Returns nil when there is no
+  # creator yet, so LlmContext emits no instructions for a brand-less owner.
+  def system_prompt
+    creator&.system_prompt
+  end
+
   def onboarding_complete?
     next_onboarding_step == :done
   end

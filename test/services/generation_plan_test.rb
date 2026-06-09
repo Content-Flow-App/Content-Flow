@@ -37,7 +37,7 @@ class GenerationPlanTest < ActiveSupport::TestCase
       @user   = User.create!(email: "assign@cf.test", password: "password123")
       @idea   = @user.ideas.create!(title: "i", topic: "t", description: "d")
       @script = @idea.scripts.create!(title: "s", style: "x", length: "x",
-                                      description: "d", system_prompt: "p")
+                                      description: "d", custom_instructions: "p")
     end
 
     test "assign_twitter_post builds a new post when none exists" do
