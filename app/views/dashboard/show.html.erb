@@ -3,23 +3,22 @@
 <div class="min-h-screen">
   <div class="px-7 pt-8">
     <h1 class="cf-headline text-[clamp(72px,13vw,120px)]">
-      DASHBOARD
+      hey,<br><% if current_user.creator&.name.present? %><%= current_user.creator.name %><% end %>
     </h1>
-    <div class="cf-rule"></div>
 
-    <p class="cf-body mt-8">
-      Welcome back<% if current_user.creator&.name.present? %>, <%= current_user.creator.name %><% end %>.
-      Your workspace lives here
-    </p>
+    <div class="mt-16">
+      <p class="cf-h2 font-normal mb-4">your workspace lives here:</p>
+      <div class="cf-rule"></div>
+    </div>
 
     <% if @ideas.any? %>
-      <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <% @ideas.each do |idea| %>
-          <div class="bg-[var(--cf-white)] rounded-[var(--cf-radius)] overflow-hidden border border-[var(--cf-gray-line)]">
+          <div class="bg-[var(--cf-white)] overflow-hidden" style="border-radius: 48px; box-shadow: 16px 16px 0px 0px #000;">
             <%# Orange header band %>
-            <div class="bg-[var(--cf-orange)] px-5 py-4">
+            <div class="bg-[var(--cf-orange)]" style="padding: 32px 40px 24px 40px;">
               <%= link_to idea_path(idea), class: "group" do %>
-                <p class="cf-h2 text-[var(--cf-cream)] group-hover:opacity-80 transition-opacity duration-150 leading-tight">
+                <p class="cf-h2 font-normal text-[var(--cf-cream)] group-hover:opacity-80 transition-opacity duration-150 leading-tight">
                   <%= idea.title %>
                 </p>
               <% end %>
@@ -29,20 +28,35 @@
             </div>
 
             <%# Scripts list %>
-            <div class="px-5 py-4">
+            <div style="padding: 24px 40px 40px 40px;">
               <% if idea.scripts.any? %>
                 <p class="cf-meta mb-3">scripts</p>
                 <ul>
                   <% idea.scripts.each_with_index do |script, i| %>
                     <li class="<%= i > 0 ? "border-t border-[var(--cf-gray-line)]" : "" %> py-3">
-                      <%= link_to script_path(script), class: "cf-label font-normal hover:text-[var(--cf-orange)] transition-colors duration-150 block" do %>
-                        <%= script.title.presence || "untitled script" %>
-                      <% end %>
-                      <% if script.style.present? || script.length.present? %>
-                        <p class="cf-meta mt-0.5">
-                          <%= [script.style, script.length].compact.join(" · ") %>
-                        </p>
-                      <% end %>
+                      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
+                        <div style="flex: 1;">
+                          <%= link_to script_path(script), class: "cf-label font-normal hover:text-[var(--cf-orange)] transition-colors duration-150 block" do %>
+                            <%= script.title.presence || "untitled script" %>
+                          <% end %>
+                          <% if script.style.present? || script.length.present? %>
+                            <p class="cf-meta mt-0.5">
+                              <%= [script.style, script.length].compact.join(" · ") %>
+                            </p>
+                          <% end %>
+                        </div>
+                        <div style="display: flex; gap: 8px; flex-shrink: 0; padding-top: 2px; opacity: 0.6; margin-right: -24px;">
+                          <% if script.linkedin_post.present? %>
+                            <%= image_tag "linkedin.svg", alt: "LinkedIn", style: "width: 16px; height: 16px;" %>
+                          <% end %>
+                          <% if script.twitter_post.present? %>
+                            <%= image_tag "twitter.svg", alt: "Twitter", style: "width: 16px; height: 16px;" %>
+                          <% end %>
+                          <% if script.instagram_post.present? %>
+                            <%= image_tag "instagram.svg", alt: "Instagram", style: "width: 16px; height: 16px;" %>
+                          <% end %>
+                        </div>
+                      </div>
                     </li>
                   <% end %>
                 </ul>
