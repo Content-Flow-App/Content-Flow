@@ -1,7 +1,7 @@
 <% content_for :title, @script.title %>
 
 <div class="flex flex-col" style="height: calc(100vh - 64px);" data-controller="script-edit">
-  <div class="px-7 pt-2 flex flex-col flex-1 overflow-hidden min-h-0">
+  <div class="px-7 pt-2 pb-20 flex flex-col flex-1 overflow-hidden min-h-0 relative">
     <%= link_to idea_path(@idea), class: "cf-meta inline-flex items-center gap-2 hover:text-[var(--cf-orange)] transition-colors duration-150", style: "position: relative; z-index: 20; cursor: pointer;" do %>
       <%= image_tag "arrow.svg", style: "width: 20px; height: 20px; transform: rotate(180deg); pointer-events: none;", alt: "" %>
       <span style="pointer-events: none;">go back</span>
@@ -10,22 +10,29 @@
     <div data-script-edit-target="header" class="flex justify-between items-start mb-10 relative z-10">
       <h1 class="cf-headline text-[clamp(72px,13vw,120px)]" style="margin-top: 10px;" data-script-edit-target="showTitle"><%= @script.title.upcase %></h1>
       <div class="shrink-0 pt-2">
-        <button type="button" data-script-edit-target="pen" data-action="script-edit#toggle" class="edit-pen-btn hover:opacity-70 transition-opacity duration-150 flex flex-col items-center">
-          <div data-script-edit-target="penIcon">
-            <%= image_tag "pen_edit.svg", class: "w-14 h-14", alt: "Edit script" %>
+        <button type="button" data-script-edit-target="pen" data-action="script-edit#toggle" class="edit-pen-btn flex flex-col items-center">
+          <div data-script-edit-target="penIcon" class="w-14 h-14">
+            <svg class="pen-icon-svg w-full h-full" preserveAspectRatio="none" overflow="visible" style="display: block;" viewBox="0 0 808.169 808.169" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M404.085 261.319L546.851 404.085M47.1694 761V582.542L582.542 47.1694L761 225.627L225.627 761H47.1694Z" stroke="var(--stroke-0, black)" stroke-width="50" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
           <div data-script-edit-target="penLine" class="w-14 mt-1 h-0.5 overflow-hidden transition-all duration-500 ease-in-out">
-            <%= image_tag "pen_line.svg", class: "pen-line-inner w-14 h-0.5", alt: "" %>
+            <div class="pen-line-inner w-14 h-0.5">
+              <svg class="w-full h-full" preserveAspectRatio="none" overflow="visible" style="display: block;" viewBox="0 0 761 31.4463" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="15.7231" y1="15.7231" x2="745.277" y2="15.7231" stroke="var(--stroke-0, black)" stroke-width="31.4463" stroke-linecap="round"/>
+              </svg>
+            </div>
           </div>
           <span data-script-edit-target="editLabel" class="edit-label cf-meta mt-1 w-14 text-center tracking-[0.3em]">edit</span>
         </button>
       </div>
     </div>
 
-    <%# ---- Show content ---- %>
-    <div class="overflow-hidden" style="margin-top: 15px;">
-    <div data-script-edit-target="show" class="pb-8 relative flex-1 flex flex-col">
-      <div class="flex flex-col flex-1 overflow-y-auto pr-7 -mr-7 pb-32 pt-2">
+    <%# ---- Content Container ---- %>
+    <div class="overflow-hidden relative flex-1 flex flex-col min-h-0" style="margin-top: 15px;">
+      <%# ---- Show content ---- %>
+      <div data-script-edit-target="show" class="relative flex-1 flex flex-col w-full min-h-0">
+        <div class="flex flex-col flex-1 overflow-y-auto pr-7 -mr-7 pb-32 pt-2">
       <div data-script-edit-target="showPart" class="flex gap-6 cf-meta mb-8">
         <% if @script.style.present? %><span data-script-edit-target="showStyle"><%= @script.style %></span><% end %>
         <% if @script.length.present? %><span data-script-edit-target="showLength"><%= @script.length %></span><% end %>
@@ -67,29 +74,45 @@
             <% end %>
           </div>
         </div>
-        <div class="cf-rule mr-7 mt-2 mb-4"></div>
+        <div class="cf-rule mt-2 mb-0"></div>
         <% existing = [
              @script.linkedin_post && { post: @script.linkedin_post, icon: "linkedin.svg", label: "linkedin", path: script_linkedin_post_path(@script) },
              @script.twitter_post  && { post: @script.twitter_post,  icon: "twitter.svg",  label: "twitter",  path: script_twitter_post_path(@script) },
              @script.instagram_post && { post: @script.instagram_post, icon: "instagram.svg", label: "instagram", path: script_instagram_post_path(@script) }
            ].compact %>
         <% if existing.any? %>
-          <div class="flex flex-col">
-            <% existing.each do |entry| %>
-              <%= link_to entry[:path], class: "cf-row inline-flex items-center gap-3 py-[18px] cf-label font-normal hover:text-[var(--cf-orange)] transition-colors duration-150 relative" do %>
-                <%= image_tag entry[:icon], class: "w-5 h-5 shrink-0", alt: entry[:label] %>
-                <span><%= entry[:post].title %></span>
-              <% end %>
+          <div class="flex flex-col" data-controller="show-more-posts">
+            <%# Show first post %>
+            <%= link_to existing.first[:path], class: "cf-row inline-flex items-center gap-3 py-[18px] cf-label font-normal hover:text-[var(--cf-orange)] transition-colors duration-150 relative" do %>
+              <%= image_tag existing.first[:icon], class: "w-5 h-5 shrink-0", alt: existing.first[:label] %>
+              <span><%= existing.first[:post].title %></span>
+            <% end %>
+
+            <% if existing.size > 1 %>
+              <%# Wrap extra posts %>
+              <div data-show-more-posts-target="extra" class="hidden flex flex-col">
+                <% existing.drop(1).each do |entry| %>
+                  <%= link_to entry[:path], class: "cf-row inline-flex items-center gap-3 py-[18px] cf-label font-normal hover:text-[var(--cf-orange)] transition-colors duration-150 relative" do %>
+                    <%= image_tag entry[:icon], class: "w-5 h-5 shrink-0", alt: entry[:label] %>
+                    <span><%= entry[:post].title %></span>
+                  <% end %>
+                <% end %>
+              </div>
+
+              <%# See more button %>
+              <button type="button" data-action="click->show-more-posts#toggle" class="cf-meta hover:text-[var(--cf-orange)] mt-4 cursor-pointer bg-transparent border-none p-0 inline-flex items-center gap-2 self-center">
+                <span data-show-more-posts-target="buttonText">see more</span>
+                <%= image_tag "arrow.svg", style: "width: 16px; height: 16px; transform: rotate(90deg); transition: transform 0.3s ease;", data: { show_more_posts_target: "arrow" }, alt: "" %>
+              </button>
             <% end %>
           </div>
         <% end %>
       </div>
-    </div>
-    </div>
-    </div>
+        </div>
+      </div>
 
-    <%# ---- Edit form (hidden until pen click) ---- %>
-    <div data-script-edit-target="form" class="hidden opacity-0 flex flex-col flex-1 min-h-0 pr-7 overflow-y-auto pb-32 pt-4" style="transition: opacity 0.3s ease;">
+      <%# ---- Edit form (hidden until pen click) ---- %>
+      <div data-script-edit-target="form" class="hidden opacity-0 flex flex-col justify-end flex-1 min-h-0 pr-7 overflow-y-auto pt-4 w-full" style="padding-bottom: 28px; transition: opacity 0.3s ease;">
       <div class="flex items-end justify-between">
         <div class="max-w-lg w-full">
           <%= form_with model: @script, url: script_path(@script), class: "flex flex-col gap-1" do |f| %>
@@ -155,6 +178,7 @@
         <div class="flex justify-end mt-6">
           <button type="button" data-script-edit-target="submit" data-action="script-edit#submit" class="opacity-0 pointer-events-none rounded-[10px] border-2 border-[var(--cf-ink)] bg-transparent text-[var(--cf-ink)] px-8 py-3.5 cf-action font-normal cursor-pointer transition-all duration-300 ease-in-out hover:bg-[var(--cf-accent)] hover:border-[var(--cf-accent)] hover:text-[var(--cf-cream)]">update</button>
         </div>
+      </div>
       </div>
     </div>
   </div>

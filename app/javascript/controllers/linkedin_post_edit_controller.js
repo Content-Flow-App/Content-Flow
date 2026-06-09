@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["show", "showPart", "form", "field", "pen", "penIcon", "penLine", "editLabel", "header", "line", "input", "submit", "showTitle", "showStyle", "showLength", "showDescription", "showSystemPrompt"]
+  static targets = ["show", "showPart", "form", "field", "pen", "penIcon", "penLine", "editLabel", "header", "line", "input", "submit", "showTitle", "showHook", "showBody"]
 
   connect() {
     this.editing = false
@@ -112,7 +112,6 @@ export default class extends Controller {
     this.headerTarget.style.zIndex = "0"
     this.headerTarget.style.transition = "margin-bottom 1.4s cubic-bezier(0.22, 0.61, 0.36, 1)"
     this.headerTarget.style.marginBottom = "-80px"
-
 
     const penLine = this.penLineTarget
     penLine.style.width = "0"
@@ -232,10 +231,8 @@ export default class extends Controller {
         "X-CSRF-Token": csrfToken
       }
     }).then(() => this.dispatch('saved'))
-    if (this.hasShowStyleTarget) this.showStyleTarget.textContent = this.inputTargets[1].value
-    if (this.hasShowLengthTarget) this.showLengthTarget.textContent = this.inputTargets[2].value
-    if (this.hasShowDescriptionTarget) this.showDescriptionTarget.textContent = this.inputTargets[3].value
-    if (this.hasShowSystemPromptTarget) this.showSystemPromptTarget.textContent = this.inputTargets[4].value
+    if (this.hasShowHookTarget) this.showHookTarget.textContent = this.inputTargets[1].value
+    if (this.hasShowBodyTarget) this.showBodyTarget.textContent = this.inputTargets[2].value
 
     const fields = [...this.fieldTargets].reverse()
     const elementsToDrop = [this.submitTarget, ...fields]

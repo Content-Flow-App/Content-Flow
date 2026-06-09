@@ -1,49 +1,111 @@
 <% content_for :title, @linkedin_post.title %>
 
-<div class="min-h-screen">
-  <div class="px-7 pt-8 pb-14">
-    <nav class="mb-2 cf-meta">
-      <%= link_to "ideas", ideas_path, class: "hover:text-[var(--cf-ink)] transition-colors duration-150" %>
-      <span class="mx-2">›</span>
-      <%= link_to @script.idea.title, idea_path(@script.idea), class: "hover:text-[var(--cf-ink)] transition-colors duration-150" %>
-      <span class="mx-2">›</span>
-      <%= link_to @script.title, script_path(@script), class: "hover:text-[var(--cf-ink)] transition-colors duration-150" %>
-      <span class="mx-2">›</span>
-      <span>linkedin post</span>
-    </nav>
+<div class="flex flex-col" style="height: calc(100vh - 64px);" data-controller="linkedin-post-edit">
+  <div class="px-7 pt-2 pb-20 flex flex-col flex-1 overflow-hidden min-h-0 relative">
+    <%= link_to script_path(@script), class: "cf-meta inline-flex items-center gap-2 hover:text-[var(--cf-orange)] transition-colors duration-150", style: "position: relative; z-index: 20; cursor: pointer;" do %>
+      <%= image_tag "arrow.svg", style: "width: 20px; height: 20px; transform: rotate(180deg); pointer-events: none;", alt: "" %>
+      <span style="pointer-events: none;">go back to script</span>
+    <% end %>
 
-    <div class="flex justify-between items-start gap-4 mb-10">
-      <h1 class="cf-headline text-[clamp(48px,8vw,120px)]"><%= @linkedin_post.title.upcase %></h1>
-      <div class="flex gap-6 shrink-0 pt-2">
-        <%= link_to "edit", edit_script_linkedin_post_path(@script),
-              class: "cf-action hover:text-[var(--cf-orange)] transition-colors duration-150" %>
-        <%= link_to "delete", script_linkedin_post_path(@script),
-              data: { turbo_method: :delete, turbo_confirm: "Delete this LinkedIn post?" },
-              class: "cf-action text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %>
+    <div data-linkedin-post-edit-target="header" class="flex justify-between items-start mb-10 relative z-10">
+      <h1 class="cf-headline text-[clamp(72px,13vw,120px)]" style="margin-top: 10px;" data-linkedin-post-edit-target="showTitle"><%= @linkedin_post.title.upcase %></h1>
+      <div class="shrink-0 pt-2">
+        <button type="button" data-linkedin-post-edit-target="pen" data-action="linkedin-post-edit#toggle" class="edit-pen-btn flex flex-col items-center">
+          <div data-linkedin-post-edit-target="penIcon" class="w-14 h-14">
+            <svg class="pen-icon-svg w-full h-full" preserveAspectRatio="none" overflow="visible" style="display: block;" viewBox="0 0 808.169 808.169" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M404.085 261.319L546.851 404.085M47.1694 761V582.542L582.542 47.1694L761 225.627L225.627 761H47.1694Z" stroke="var(--stroke-0, black)" stroke-width="50" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div data-linkedin-post-edit-target="penLine" class="w-14 mt-1 h-0.5 overflow-hidden transition-all duration-500 ease-in-out">
+            <div class="pen-line-inner w-14 h-0.5">
+              <svg class="w-full h-full" preserveAspectRatio="none" overflow="visible" style="display: block;" viewBox="0 0 761 31.4463" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="15.7231" y1="15.7231" x2="745.277" y2="15.7231" stroke="var(--stroke-0, black)" stroke-width="31.4463" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+          <span data-linkedin-post-edit-target="editLabel" class="edit-label cf-meta mt-1 w-14 text-center tracking-[0.3em]">edit</span>
+        </button>
       </div>
     </div>
 
-    <% if @linkedin_post.hook.present? %>
-      <div class="max-w-2xl mb-8">
-        <p class="cf-label mb-2">hook</p>
-        <p class="cf-body whitespace-pre-wrap"><%= @linkedin_post.hook %></p>
+    <%# ---- Content Container ---- %>
+    <div class="overflow-hidden relative flex-1 flex flex-col min-h-0" style="margin-top: 15px;">
+      <%# ---- Show content ---- %>
+      <div data-linkedin-post-edit-target="show" class="relative flex-1 flex flex-col w-full min-h-0">
+        <div class="flex flex-col flex-1 overflow-y-auto pr-7 -mr-7 pb-32 pt-2">
+          <% if @linkedin_post.hook.present? %>
+            <div data-linkedin-post-edit-target="showPart" class="max-w-2xl mb-8">
+              <p class="cf-label mb-2">hook</p>
+              <p class="cf-body whitespace-pre-wrap" data-linkedin-post-edit-target="showHook"><%= @linkedin_post.hook %></p>
+            </div>
+          <% end %>
+
+          <% if @linkedin_post.body.present? %>
+            <div data-linkedin-post-edit-target="showPart" class="max-w-2xl mb-10">
+              <p class="cf-label mb-2">body</p>
+              <p class="cf-body whitespace-pre-wrap" data-linkedin-post-edit-target="showBody"><%= @linkedin_post.body %></p>
+            </div>
+          <% end %>
+
+        </div>
       </div>
-    <% end %>
 
-    <% if @linkedin_post.body.present? %>
-      <div class="max-w-2xl mb-10">
-        <p class="cf-label mb-2">body</p>
-        <p class="cf-body whitespace-pre-wrap"><%= @linkedin_post.body %></p>
+      <%# ---- Edit form (hidden until pen click) ---- %>
+      <div data-linkedin-post-edit-target="form" class="hidden opacity-0 flex flex-col justify-end flex-1 min-h-0 pr-7 overflow-y-auto pt-4 w-full" style="padding-bottom: 28px; transition: opacity 0.3s ease;">
+        <div class="flex items-end justify-between">
+          <div class="max-w-lg w-full">
+            <%= form_with model: @linkedin_post, url: script_linkedin_post_path(@script), class: "flex flex-col gap-1" do |f| %>
+              <div class="group relative pb-2" data-linkedin-post-edit-target="field">
+                <%= f.label :title, "title", class: "cf-h2 font-normal" %>
+                <%= f.text_field :title,
+                  readonly: true,
+                  class: "cf-input cf-input-transparent border-0 rounded-none px-0 outline-none cursor-default",
+                  placeholder: "post title...",
+                  data: { linkedin_post_edit_target: "input" } %>
+                <span data-linkedin-post-edit-target="line" class="absolute bottom-0 left-0 h-px w-0 bg-black transition-all duration-700 ease-in-out"></span>
+              </div>
+
+              <div class="group relative pb-2" data-linkedin-post-edit-target="field" data-controller="expand-textarea">
+                <%= f.label :hook, "hook", class: "cf-h2 font-normal" %>
+                <div class="relative w-full">
+                  <%= f.text_area :hook,
+                    readonly: true,
+                    class: "cf-input cf-input-transparent border-0 rounded-none pl-0 pr-24 outline-none cursor-default h-auto py-1 resize-none overflow-hidden",
+                    placeholder: "hook...",
+                    style: "field-sizing: fixed; height: 64px; min-height: 64px;",
+                    data: { linkedin_post_edit_target: "input", expand_textarea_target: "input", action: "input->expand-textarea#adjustHeight focus->expand-textarea#expand blur->expand-textarea#collapse" } %>
+                  <button type="button" data-expand-textarea-target="button" data-action="click->expand-textarea#toggle" class="absolute bottom-[10px] right-0 cursor-pointer bg-transparent border-none p-0 hidden z-10 group">
+                    <%= image_tag "arrow.svg", style: "width: 20px; height: 20px; transform: rotate(0deg);", class: "pointer-events-none transition-transform duration-300 group-hover:opacity-70", data: { expand_textarea_target: "icon" }, alt: "expand" %>
+                  </button>
+                </div>
+                <span data-linkedin-post-edit-target="line" class="absolute bottom-0 left-0 h-px w-0 bg-black transition-all duration-700 ease-in-out"></span>
+              </div>
+
+              <div class="group relative pb-2" data-linkedin-post-edit-target="field" data-controller="expand-textarea">
+                <%= f.label :body, "body", class: "cf-h2 font-normal" %>
+                <div class="relative w-full">
+                  <%= f.text_area :body,
+                    readonly: true,
+                    class: "cf-input cf-input-transparent border-0 rounded-none pl-0 pr-24 outline-none cursor-default h-auto py-1 resize-none overflow-hidden",
+                    placeholder: "body...",
+                    style: "field-sizing: fixed; height: 64px; min-height: 64px;",
+                    data: { linkedin_post_edit_target: "input", expand_textarea_target: "input", action: "input->expand-textarea#adjustHeight focus->expand-textarea#expand blur->expand-textarea#collapse" } %>
+                  <button type="button" data-expand-textarea-target="button" data-action="click->expand-textarea#toggle" class="absolute bottom-[10px] right-0 cursor-pointer bg-transparent border-none p-0 hidden z-10 group">
+                    <%= image_tag "arrow.svg", style: "width: 20px; height: 20px; transform: rotate(0deg);", class: "pointer-events-none transition-transform duration-300 group-hover:opacity-70", data: { expand_textarea_target: "icon" }, alt: "expand" %>
+                  </button>
+                </div>
+                <span data-linkedin-post-edit-target="line" class="absolute bottom-0 left-0 h-px w-0 bg-black transition-all duration-700 ease-in-out"></span>
+              </div>
+            <% end %>
+          </div>
+          <div data-linkedin-post-edit-target="submit" class="flex justify-end items-center gap-6 mt-6 opacity-0 pointer-events-none">
+            <%= link_to "delete post", script_linkedin_post_path(@script),
+                  data: { turbo_method: :delete, turbo_confirm: "Delete this LinkedIn post?" },
+                  class: "cf-action text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %>
+            <button type="button" data-action="linkedin-post-edit#submit" class="rounded-[10px] border-2 border-[var(--cf-ink)] bg-transparent text-[var(--cf-ink)] px-8 py-3.5 cf-action font-normal cursor-pointer transition-all duration-300 ease-in-out hover:bg-[var(--cf-accent)] hover:border-[var(--cf-accent)] hover:text-[var(--cf-cream)]">update</button>
+          </div>
+        </div>
       </div>
-    <% end %>
-
-    <div class="cf-rule mb-8"></div>
-
-    <div class="flex gap-8">
-      <%= link_to "go to dashboard", dashboard_path,
-            class: "bg-[var(--cf-orange)] text-[var(--cf-cream)] cf-label rounded-[var(--cf-radius)] px-8 h-12 inline-flex items-center hover:bg-[var(--cf-orange-press)] active:translate-y-px transition-colors duration-150" %>
-      <%= link_to "create another idea", new_idea_path,
-            class: "cf-action hover:text-[var(--cf-orange)] transition-colors duration-150 self-center" %>
     </div>
   </div>
 </div>

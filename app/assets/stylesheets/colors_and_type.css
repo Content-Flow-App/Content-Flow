@@ -346,10 +346,11 @@
 
   .edit-pen-btn .edit-label {
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.2s ease, color 0.2s ease;
   }
   .edit-pen-btn:hover .edit-label {
     opacity: 1;
+    color: var(--cf-orange);
   }
 
   .edit-pen-btn .pen-line-inner {
@@ -359,6 +360,40 @@
   .edit-pen-btn:hover .pen-line-inner {
     transform: translateX(0);
   }
+  .edit-pen-btn svg path,
+  .edit-pen-btn svg line {
+    transition: stroke 0.2s ease;
+  }
+  .edit-pen-btn:hover {
+    --stroke-0: var(--cf-orange);
+  }
+  .edit-pen-btn .pen-icon-svg {
+    transform-origin: 10% 90%;
+    animation: pen-nudge 3s ease-in-out infinite;
+  }
+  .edit-pen-btn:hover .pen-icon-svg {
+    transform-origin: 10% 90%;
+    animation: pen-jiggle 0.6s ease-in-out 1;
+  }
+}
+
+@keyframes pen-jiggle {
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(-5deg); }
+  40% { transform: rotate(4deg); }
+  60% { transform: rotate(-2.5deg); }
+  80% { transform: rotate(1.5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes pen-nudge {
+  0% { transform: rotate(0deg); }
+  4% { transform: rotate(-5deg); }
+  8% { transform: rotate(4deg); }
+  12% { transform: rotate(-2.5deg); }
+  16% { transform: rotate(1.5deg); }
+  20% { transform: rotate(0deg); }
+  100% { transform: rotate(0deg); }
 }
 
 @keyframes draw-check {

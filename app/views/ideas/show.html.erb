@@ -9,12 +9,18 @@
     <div data-idea-edit-target="header" class="flex justify-between items-start mb-10 relative z-10">
       <h1 class="cf-headline text-[clamp(72px,13vw,120px)]" style="margin-top: 10px;" data-idea-edit-target="showTitle"><%= @idea.title.upcase %></h1>
       <div class="shrink-0 pt-2">
-        <button type="button" data-idea-edit-target="pen" data-action="idea-edit#toggle" class="edit-pen-btn hover:opacity-70 transition-opacity duration-150 flex flex-col items-center">
-          <div data-idea-edit-target="penIcon">
-            <%= image_tag "pen_edit.svg", class: "w-14 h-14", alt: "Edit idea" %>
+        <button type="button" data-idea-edit-target="pen" data-action="idea-edit#toggle" class="edit-pen-btn flex flex-col items-center">
+          <div data-idea-edit-target="penIcon" class="w-14 h-14">
+            <svg class="pen-icon-svg w-full h-full" preserveAspectRatio="none" overflow="visible" style="display: block;" viewBox="0 0 808.169 808.169" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M404.085 261.319L546.851 404.085M47.1694 761V582.542L582.542 47.1694L761 225.627L225.627 761H47.1694Z" stroke="var(--stroke-0, black)" stroke-width="50" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
           <div data-idea-edit-target="penLine" class="w-14 mt-1 h-0.5 overflow-hidden transition-all duration-500 ease-in-out">
-            <%= image_tag "pen_line.svg", class: "pen-line-inner w-14 h-0.5", alt: "" %>
+            <div class="pen-line-inner w-14 h-0.5">
+              <svg class="w-full h-full" preserveAspectRatio="none" overflow="visible" style="display: block;" viewBox="0 0 761 31.4463" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="15.7231" y1="15.7231" x2="745.277" y2="15.7231" stroke="var(--stroke-0, black)" stroke-width="31.4463" stroke-linecap="round"/>
+              </svg>
+            </div>
           </div>
           <span data-idea-edit-target="editLabel" class="edit-label cf-meta mt-1 w-14 text-center tracking-[0.3em]">edit</span>
         </button>
@@ -51,7 +57,6 @@
                   <td class="py-[18px] cf-label font-normal"><%= script.style %></td>
                   <td class="py-[18px] cf-label font-normal"><%= script.created_at.strftime("%b %d, %Y") %></td>
                   <td class="py-[18px] pr-px cf-label font-normal text-right whitespace-nowrap">
-                    <%= link_to "edit", edit_script_path(script), class: "hover:text-[var(--cf-orange)] transition-colors duration-150" %> /
                     <%= link_to "delete", script_path(script),
                           data: { turbo_method: :delete, turbo_confirm: "Delete this script?" },
                           class: "text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %>

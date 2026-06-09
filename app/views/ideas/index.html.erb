@@ -61,7 +61,6 @@
                 <td class="py-[18px] cf-label font-normal"><%= idea.topic %></td>
                 <td class="py-[18px] cf-label font-normal"><%= idea.created_at.strftime("%b %d, %Y") %></td>
                 <td class="py-[18px] pr-px cf-label font-normal text-right whitespace-nowrap">
-                  <%= link_to "edit", edit_idea_path(idea), class: "hover:text-[var(--cf-orange)] transition-colors duration-150" %> /
                   <%= link_to "delete", idea, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %>
                 </td>
               </tr>
