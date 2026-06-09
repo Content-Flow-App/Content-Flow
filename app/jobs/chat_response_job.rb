@@ -24,6 +24,11 @@ class ChatResponseJob < ApplicationJob
       chat.complete
     end
 
+    Turbo::StreamsChannel.broadcast_remove_to(
+      "chat_#{chat_id}",
+      target: "thinking-indicator"
+    )
+
     assistant = chat.messages.where(role: "assistant").order(:id).last
     if assistant
       Turbo::StreamsChannel.broadcast_append_to(

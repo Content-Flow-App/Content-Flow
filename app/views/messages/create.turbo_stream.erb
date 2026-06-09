@@ -4,4 +4,8 @@
       chat: @chat,
       message: @chat.messages.build %>
   <% end %>
+
+  <%= turbo_stream.append "messages" do %>
+    <%= render "messages/thinking" %>
+  <% end %>
 <% end %>
