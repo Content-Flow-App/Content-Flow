@@ -40,6 +40,9 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 2.0"
 
+# S3-compatible object storage for Active Storage in production
+gem "aws-sdk-s3", require: false
+
 gem "devise"
 gem "feedjira"
 gem 'ruby_llm', '~> 1.16'
