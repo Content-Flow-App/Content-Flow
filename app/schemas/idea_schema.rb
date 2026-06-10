@@ -10,7 +10,7 @@
 # The three fields mirror the `ideas` table columns (title/description/topic) so
 # the parsed payload assigns cleanly onto the record.
 class IdeaSchema < RubyLLM::Schema
-  string :title, description: "A short, punchy title for the content idea."
+  string :title, max_length: 50, description: "A punchy title, maximum 4-5 words. No subtitles, no colons, no years. It will be displayed very large — keep it poster-short. Examples: \"AI Kills Your Job\", \"Stop Faking Productivity\", \"Your Attention Is Gone\"."
   string :description, description: "One or two sentences explaining the idea and the angle to take."
   string :topic, description: "The subject area or theme the idea sits under (e.g. \"AI tooling\", \"career growth\")."
 end
