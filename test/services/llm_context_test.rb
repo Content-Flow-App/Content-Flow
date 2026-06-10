@@ -109,12 +109,12 @@ class LlmContextTest < ActiveSupport::TestCase
     text = LlmContext.for(@script, purpose: "generate_instagram_post")
 
     assert_includes text, "PARENT SCRIPT"
-    assert_includes text, "PLATFORM GUIDELINES — INSTAGRAM"
+    assert_includes text, "CAPTION GUIDELINES — INSTAGRAM"
     assert_includes text, "hashtags"
     refute_includes text, "PLATFORM GUIDELINES — TWITTER"
 
     script_at = text.index("PARENT SCRIPT")
-    guidelines_at = text.index("PLATFORM GUIDELINES — INSTAGRAM")
+    guidelines_at = text.index("CAPTION GUIDELINES — INSTAGRAM")
     assert script_at < guidelines_at, "platform guidelines come after the chattable's own layers"
   end
 
@@ -124,7 +124,7 @@ class LlmContextTest < ActiveSupport::TestCase
     assert_includes text, "PARENT SCRIPT"
     assert_includes text, "PLATFORM GUIDELINES — TWITTER"
     assert_includes text, "280 characters"
-    refute_includes text, "PLATFORM GUIDELINES — INSTAGRAM"
+    refute_includes text, "CAPTION GUIDELINES — INSTAGRAM"
   end
 
   test "generating a linkedin post adds the linkedin platform guidelines" do
@@ -133,7 +133,7 @@ class LlmContextTest < ActiveSupport::TestCase
     assert_includes text, "PLATFORM GUIDELINES — LINKEDIN"
     assert_includes text, "see more"
     refute_includes text, "PLATFORM GUIDELINES — TWITTER"
-    refute_includes text, "PLATFORM GUIDELINES — INSTAGRAM"
+    refute_includes text, "CAPTION GUIDELINES — INSTAGRAM"
   end
 
   test "a purpose with no chattable context yields no instructions" do
