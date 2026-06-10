@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- SQL XML created by WWW SQL Designer, https://github.com/ondras/wwwsqldesigner/ -->
-<!-- Generated from db/schema.rb (version 2026_06_03_104040) — app-model tables only -->
+<!-- Generated from db/schema.rb (version 2026_06_10_144232) — app-model tables only -->
 <sql>
 <datatypes db="postgresql">
       <group label="Numeric" color="rgb(238,238,170)">
@@ -108,7 +108,43 @@
 <part>user_id</part>
 </key>
 </table>
-<table x="560" y="80" name="ideas">
+<table x="200" y="760" name="substack_sources">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="user_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="name" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="handle" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="feed_url" null="0" autoincrement="0">
+<datatype>VARCHAR</datatype>
+</row>
+<row name="fetch_error" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="fetched_at" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+<key type="INDEX" name="index_substack_sources_on_user_id">
+<part>user_id</part>
+</key>
+</table>
+<table x="580" y="80" name="ideas">
 <row name="id" null="0" autoincrement="1">
 <datatype>BIGINT</datatype>
 </row>
@@ -138,7 +174,7 @@
 <part>user_id</part>
 </key>
 </table>
-<table x="560" y="400" name="generated_ideas">
+<table x="580" y="420" name="generated_ideas">
 <row name="id" null="0" autoincrement="1">
 <datatype>BIGINT</datatype>
 </row>
@@ -161,7 +197,50 @@
 <part>id</part>
 </key>
 </table>
-<table x="920" y="80" name="scripts">
+<table x="580" y="760" name="substack_posts">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="substack_source_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="substack_sources" row="id" />
+</row>
+<row name="title" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="summary" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="author" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="url" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="guid" null="0" autoincrement="0">
+<datatype>VARCHAR</datatype>
+</row>
+<row name="published_at" null="1" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+<default>NULL</default></row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+<key type="UNIQUE" name="index_substack_posts_on_substack_source_id_and_guid">
+<part>substack_source_id</part>
+<part>guid</part>
+</key>
+<key type="INDEX" name="index_substack_posts_on_substack_source_id">
+<part>substack_source_id</part>
+</key>
+</table>
+<table x="960" y="80" name="scripts">
 <row name="id" null="0" autoincrement="1">
 <datatype>BIGINT</datatype>
 </row>
@@ -169,19 +248,19 @@
 <datatype>BIGINT</datatype>
 <relation table="ideas" row="id" />
 </row>
-<row name="length" null="1" autoincrement="0">
+<row name="title" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
 <row name="style" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
-<row name="title" null="1" autoincrement="0">
+<row name="length" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
 <default>NULL</default></row>
 <row name="description" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
 <default>NULL</default></row>
-<row name="system_prompt" null="1" autoincrement="0">
+<row name="custom_instructions" null="1" autoincrement="0">
 <datatype>TEXT</datatype>
 <default>NULL</default></row>
 <row name="created_at" null="0" autoincrement="0">
@@ -197,13 +276,51 @@
 <part>idea_id</part>
 </key>
 </table>
-<table x="1280" y="80" name="linkedin_posts">
+<table x="960" y="460" name="chats">
 <row name="id" null="0" autoincrement="1">
 <datatype>BIGINT</datatype>
 </row>
-<row name="script_id" null="0" autoincrement="0">
+<row name="chattable_type" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="chattable_id" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
-<relation table="scripts" row="id" />
+<default>NULL</default></row>
+<row name="purpose" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="model_id" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default><relation table="models" row="id" />
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+<key type="INDEX" name="index_chats_on_chattable">
+<part>chattable_type</part>
+<part>chattable_id</part>
+</key>
+<key type="INDEX" name="index_chats_on_model_id">
+<part>model_id</part>
+</key>
+</table>
+<table x="1340" y="80" name="linkedin_posts">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="script_id" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default><relation table="scripts" row="id" />
+</row>
+<row name="idea_id" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default><relation table="ideas" row="id" />
 </row>
 <row name="title" null="1" autoincrement="0">
 <datatype>VARCHAR</datatype>
@@ -226,15 +343,31 @@
 <key type="INDEX" name="index_linkedin_posts_on_script_id">
 <part>script_id</part>
 </key>
+<key type="INDEX" name="index_linkedin_posts_on_idea_id">
+<part>idea_id</part>
+</key>
 </table>
-<table x="920" y="440" name="chats">
+<table x="1340" y="380" name="twitter_posts">
 <row name="id" null="0" autoincrement="1">
 <datatype>BIGINT</datatype>
 </row>
-<row name="model_id" null="1" autoincrement="0">
+<row name="script_id" null="1" autoincrement="0">
 <datatype>BIGINT</datatype>
-<default>NULL</default><relation table="models" row="id" />
+<default>NULL</default><relation table="scripts" row="id" />
 </row>
+<row name="idea_id" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default><relation table="ideas" row="id" />
+</row>
+<row name="title" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="hook" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="body" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
 <row name="created_at" null="0" autoincrement="0">
 <datatype>TIMESTAMP</datatype>
 </row>
@@ -244,11 +377,51 @@
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>
-<key type="INDEX" name="index_chats_on_model_id">
-<part>model_id</part>
+<key type="INDEX" name="index_twitter_posts_on_script_id">
+<part>script_id</part>
+</key>
+<key type="INDEX" name="index_twitter_posts_on_idea_id">
+<part>idea_id</part>
 </key>
 </table>
-<table x="1280" y="400" name="messages">
+<table x="1340" y="660" name="instagram_posts">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="script_id" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default><relation table="scripts" row="id" />
+</row>
+<row name="idea_id" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default><relation table="ideas" row="id" />
+</row>
+<row name="title" null="1" autoincrement="0">
+<datatype>VARCHAR</datatype>
+<default>NULL</default></row>
+<row name="hook" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="body" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default></row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+<key type="INDEX" name="index_instagram_posts_on_script_id">
+<part>script_id</part>
+</key>
+<key type="INDEX" name="index_instagram_posts_on_idea_id">
+<part>idea_id</part>
+</key>
+</table>
+<table x="1720" y="300" name="messages">
 <row name="id" null="0" autoincrement="1">
 <datatype>BIGINT</datatype>
 </row>
@@ -316,7 +489,7 @@
 <part>tool_call_id</part>
 </key>
 </table>
-<table x="1640" y="80" name="models">
+<table x="2100" y="80" name="models">
 <row name="id" null="0" autoincrement="1">
 <datatype>BIGINT</datatype>
 </row>
@@ -382,7 +555,7 @@
 <part>modalities</part>
 </key>
 </table>
-<table x="1640" y="440" name="tool_calls">
+<table x="2100" y="480" name="tool_calls">
 <row name="id" null="0" autoincrement="1">
 <datatype>BIGINT</datatype>
 </row>
