@@ -405,3 +405,13 @@
   75%  { opacity: 1; }
   100% { opacity: 0; }
 }
+
+/* Liquid "+" CTA (shared/_liquid_plus_cta) — orange strokes wipe in
+   top-to-bottom over the black outline on hover. */
+.liquid-fill {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 0.5s ease-in-out;
+}
+.liquid-btn:hover .liquid-fill {
+  clip-path: inset(0 0 0 0);
+}

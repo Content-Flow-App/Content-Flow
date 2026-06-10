@@ -1,0 +1,29 @@
+<%# Outline "+" page CTA with the liquid-fill hover (orange strokes wipe in
+    top-to-bottom — styles live in colors_and_type.css under .liquid-btn).
+    Locals:
+      path  — link target
+      label — lowercase action text, e.g. "new idea" %>
+<%= link_to path, class: "shrink-0 flex items-end liquid-btn" do %>
+  <svg viewBox="0 0 151 151" class="w-16 h-16 md:w-28 md:h-28 z-10 relative" xmlns="http://www.w3.org/2000/svg">
+    <!-- Base black strokes -->
+    <g>
+      <path d="M61.06 61.0601H18.46C10.6176 61.0601 4.26001 67.4176 4.26001 75.2601C4.26001 83.1025 10.6176 89.4601 18.46 89.4601H61.06" stroke="black" stroke-width="8.52" stroke-linecap="round" fill="none" />
+      <path d="M89.46 61.0601H132.06C139.902 61.0601 146.26 67.4176 146.26 75.2601C146.26 83.1025 139.902 89.4601 132.06 89.4601H89.46" stroke="black" stroke-width="8.52" stroke-linecap="round" fill="none" />
+      <path d="M89.46 61.0601L89.46 18.4601C89.46 10.6176 83.1025 4.26006 75.26 4.26006C67.4176 4.26006 61.06 10.6176 61.06 18.46L61.06 61.0601" stroke="black" stroke-width="8.52" stroke-linecap="round" fill="none" />
+      <path d="M61.06 89.46L61.06 132.06C61.06 139.902 67.4176 146.26 75.26 146.26C83.1025 146.26 89.46 139.902 89.46 132.06L89.46 89.46" stroke="black" stroke-width="8.52" stroke-linecap="round" fill="none" />
+    </g>
+
+    <!-- Animated orange strokes -->
+    <g class="liquid-fill">
+      <path d="M61.06 61.0601H18.46C10.6176 61.0601 4.26001 67.4176 4.26001 75.2601C4.26001 83.1025 10.6176 89.4601 18.46 89.4601H61.06" style="stroke: var(--cf-orange);" stroke-width="8.52" stroke-linecap="round" fill="none" />
+      <path d="M89.46 61.0601H132.06C139.902 61.0601 146.26 67.4176 146.26 75.2601C146.26 83.1025 139.902 89.4601 132.06 89.4601H89.46" style="stroke: var(--cf-orange);" stroke-width="8.52" stroke-linecap="round" fill="none" />
+      <path d="M89.46 61.0601L89.46 18.4601C89.46 10.6176 83.1025 4.26006 75.26 4.26006C67.4176 4.26006 61.06 10.6176 61.06 18.46L61.06 61.0601" style="stroke: var(--cf-orange);" stroke-width="8.52" stroke-linecap="round" fill="none" />
+      <path d="M61.06 89.46L61.06 132.06C61.06 139.902 67.4176 146.26 75.26 146.26C83.1025 146.26 89.46 139.902 89.46 132.06L89.46 89.46" style="stroke: var(--cf-orange);" stroke-width="8.52" stroke-linecap="round" fill="none" />
+    </g>
+  </svg>
+  <span class="cf-action -ml-10 font-normal relative z-30">
+    <span class="text-transparent"><%= label %></span>
+    <span class="absolute left-0 top-0 text-[var(--cf-ink)] pointer-events-none" aria-hidden="true"><%= label %></span>
+    <span class="absolute left-0 top-0 text-[var(--cf-orange)] liquid-fill pointer-events-none" aria-hidden="true"><%= label %></span>
+  </span>
+<% end %>

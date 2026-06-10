@@ -4,14 +4,12 @@
 <% content_for :title, "Add Substack source" %>
 
 <div class="min-h-screen">
-  <div class="px-7 pt-8">
+  <div class="px-7 pt-2">
+    <%= render "shared/back_link", path: substack_sources_path, label: "go back to sources" %>
     <div class="flex justify-between items-end gap-4 mb-16">
-      <h1 class="cf-headline text-[clamp(72px,13vw,120px)]">
+      <h1 class="cf-headline text-[clamp(72px,13vw,120px)] mt-2.5">
         ADD<br>SOURCE
       </h1>
-      <%= link_to substack_sources_path, class: "shrink-0 cf-action font-normal hover:text-[var(--cf-orange)] transition-colors duration-150" do %>
-        ← sources
-      <% end %>
     </div>
 
     <%= render "form", source: @source %>

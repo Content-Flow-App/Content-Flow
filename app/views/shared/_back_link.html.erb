@@ -1,0 +1,8 @@
+<%# "go back" breadcrumb shown above a page's h1 — arrow.svg flipped 180° + lowercase label.
+    Locals:
+      path  — link target
+      label — e.g. "go back to ideas" %>
+<%= link_to path, class: "cf-meta inline-flex items-center gap-2 hover:text-[var(--cf-orange)] transition-colors duration-150", style: "position: relative; z-index: 20; cursor: pointer;" do %>
+  <%= image_tag "arrow.svg", style: "width: 20px; height: 20px; transform: rotate(180deg); pointer-events: none;", alt: "" %>
+  <span style="pointer-events: none;"><%= label %></span>
+<% end %>

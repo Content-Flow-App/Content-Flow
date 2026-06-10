@@ -2,10 +2,7 @@
 
 <div class="flex flex-col" style="height: calc(100vh - 64px);" data-controller="script-edit">
   <div class="px-7 pt-2 pb-4 flex flex-col flex-1 overflow-y-auto overflow-x-hidden min-h-0 relative">
-    <%= link_to idea_path(@idea), class: "cf-meta inline-flex items-center gap-2 hover:text-[var(--cf-orange)] transition-colors duration-150", style: "position: relative; z-index: 20; cursor: pointer;" do %>
-      <%= image_tag "arrow.svg", style: "width: 20px; height: 20px; transform: rotate(180deg); pointer-events: none;", alt: "" %>
-      <span style="pointer-events: none;">go back</span>
-    <% end %>
+    <%= render "shared/back_link", path: idea_path(@idea), label: "go back" %>
 
     <div data-script-edit-target="header" class="flex justify-between items-start mb-10 relative z-10">
       <h1 class="cf-headline text-[clamp(72px,13vw,120px)]" style="margin-top: 10px;" data-script-edit-target="showTitle"><%= @script.title.upcase %></h1>
