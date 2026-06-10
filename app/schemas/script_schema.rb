@@ -8,7 +8,7 @@
 # excluded: it is creator/app-supplied context fed *into* generation (see
 # LlmContext), not something the model fills in.
 class ScriptSchema < RubyLLM::Schema
-  string :title, description: "A short, descriptive title for the script."
+  string :title, max_length: 50, description: "A punchy title, maximum 4-5 words. No subtitles, no colons, no years. It will be displayed very large — keep it poster-short. Examples: \"AI Kills Your Job\", \"Stop Faking Productivity\", \"Your Attention Is Gone\"."
   string :description, description: "The script content itself — the full draft the creator will record or post."
   string :style, description: "The tone or format of the script (e.g. \"educational\", \"storytelling\", \"listicle\")."
   string :length, description: "The intended length bucket: \"short\", \"medium\", or \"long\"."

@@ -11,7 +11,5 @@ class LinkedinPostSchema < RubyLLM::Schema
   string :title,
          description: "A short, descriptive title for the LinkedIn post (internal label, not necessarily shown in the post)."
   string :hook, description: "The opening line or two — the scroll-stopping hook that makes a reader expand the post."
-  string :body, description: "The full body of the LinkedIn post following the hook, formatted and ready to publish.
-  Front-load your ideas: Treat the first 210 characters like a newspaper headline to compel readers to click ‘See more’.
-  Character post limit is 400 to 500 words."
+  string :body, description: "The full body following the hook. Use short paragraphs separated by blank lines — one idea per paragraph. Front-load the key insight in the first ~200 characters (all that shows before ‘See more’). Aim for 300-500 words. Close with a question or discussion prompt and 3-5 relevant hashtags on their own line."
 end
