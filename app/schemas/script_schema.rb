@@ -9,7 +9,7 @@
 # LlmContext), not something the model fills in.
 class ScriptSchema < RubyLLM::Schema
   string :title, description: "A short, descriptive title for the script."
-  string :description, description: "The script content itself — the full draft the creator will record or post."
+  string :description, description: "The script content itself — the full draft the creator will record or post. Use markdown formatting: blank lines between paragraphs, **bold** for emphasis, and bullet or numbered lists where appropriate."
   string :style, description: "The tone or format of the script (e.g. \"educational\", \"storytelling\", \"listicle\")."
   string :length, description: "The intended length bucket: \"short\", \"medium\", or \"long\"."
 end

@@ -13,7 +13,7 @@ class Script < ApplicationRecord
   # as a SCRIPT INSTRUCTIONS block.
   def system_prompt
     text = <<~TEXT.strip
-      PARENT SCRIPT
+      **PARENT SCRIPT**
       Title: #{title}
       Style: #{style}
       Length: #{length}
@@ -21,7 +21,7 @@ class Script < ApplicationRecord
     TEXT
 
     if custom_instructions.present?
-      text + "\n\nSCRIPT INSTRUCTIONS\n#{custom_instructions}"
+      text + "\n\n**SCRIPT INSTRUCTIONS**\n#{custom_instructions}"
     else
       text
     end

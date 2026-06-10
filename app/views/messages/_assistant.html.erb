@@ -4,5 +4,5 @@
     <span class="cf-meta text-[var(--cf-orange)]">ai</span>
     <span class="cf-meta"><%= assistant.created_at&.strftime("%I:%M %p") %></span>
   </div>
-  <div id="message_<%= assistant.id %>_content" class="cf-body whitespace-pre-wrap"><%= assistant.content %></div>
+  <div id="message_<%= assistant.id %>_content" class="cf-body cf-prose"><%= markdown(assistant.content) %></div>
 </div>

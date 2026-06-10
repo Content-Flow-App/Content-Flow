@@ -40,7 +40,7 @@
       <% if @script.description.present? %>
         <div data-script-edit-target="showPart" class="max-w-2xl mb-10" data-controller="see-full-script">
           <p class="cf-h2 font-normal mb-2">description</p>
-          <p class="cf-body whitespace-pre-wrap cf-line-clamp-3" data-script-edit-target="showDescription" data-see-full-script-target="text"><%= @script.description %></p>
+          <div class="cf-body cf-prose cf-line-clamp-3" data-script-edit-target="showDescription" data-see-full-script-target="text"><%= markdown(@script.description) %></div>
           <button type="button" data-see-full-script-target="button" data-action="click->see-full-script#toggle" class="cf-meta hover:text-[var(--cf-orange)] mt-2 cursor-pointer bg-transparent border-none p-0">see full script</button>
         </div>
       <% end %>

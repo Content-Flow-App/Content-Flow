@@ -7,7 +7,7 @@ class Idea < ApplicationRecord
   # This node's layer of the chat system prompt (see LlmContext).
   def system_prompt
     <<~TEXT.strip
-      PARENT IDEA
+      **PARENT IDEA**
       Title: #{title}
       Topic: #{topic}
       Description: #{description}

@@ -7,7 +7,7 @@ class Creator < ApplicationRecord
   # reached from a chat via `user.creator` (a Creator owns no chats itself).
   def system_prompt
     <<~TEXT.strip
-      CREATOR PROFILE
+      **CREATOR PROFILE**
       Name: #{name}
       Topic: #{topic}
       Goal: #{goal}
