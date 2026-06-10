@@ -28,4 +28,18 @@ class Chat < ApplicationRecord
     generate_twitter_post: "generate_twitter_post",
     generate_instagram_post: "generate_instagram_post"
   }, validate: { allow_nil: true }
+
+  # The visible conversation as a plain transcript for the extraction ask. Only
+  # real user/assistant turns — the persisted system instruction (LlmContext)
+  # and any blank or tool messages are excluded. Lives on the model because two
+  # callers need it: GenerationsController (the empty-transcript guard, in the
+  # request) and GenerationJob (the extraction prompt, in the background).
+  def transcript
+    messages
+      .where(role: %w[user assistant])
+      .where.not(content: [nil, ""])
+      .order(:created_at)
+      .map { |message| "#{message.role}: #{message.content}" }
+      .join("\n\n")
+  end
 end

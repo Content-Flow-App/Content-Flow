@@ -1,0 +1,13 @@
+<%#
+  Teaching note — implicit template lookup:
+  GenerationsController#create ends in `respond_to { |format| format.turbo_stream }`
+  with no explicit `render`, so Rails looks for a template at
+  views/<controller>/<action>.<format>.erb -> views/generations/create.turbo_stream.erb
+  — this file. It renders a <turbo-stream> element that Turbo executes on the
+  page that submitted the form: replace the node with id "generation-action"
+  with the loading state. The background GenerationJob later replaces the same
+  node again with either the redirect partial or the restored button.
+%>
+<%= turbo_stream.replace "generation-action" do %>
+  <%= render "chats/generation_saving", chat: @chat %>
+<% end %>

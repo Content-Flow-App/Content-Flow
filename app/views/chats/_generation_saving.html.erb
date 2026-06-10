@@ -1,0 +1,11 @@
+<%# Loading state shown while GenerationJob runs. Keeps the same wrapper id as
+    _generation_action so the job's later broadcasts (redirect or restored
+    button) can target and replace it. Pulsing dots match _thinking. %>
+<div id="generation-action">
+  <div class="mt-8 pt-6 border-t border-[var(--cf-gray-line)] flex items-center gap-3">
+    <span class="w-2 h-2 rounded-full bg-[var(--cf-orange)] animate-pulse"></span>
+    <span class="w-2 h-2 rounded-full bg-[var(--cf-orange)] animate-pulse [animation-delay:0.25s]"></span>
+    <span class="w-2 h-2 rounded-full bg-[var(--cf-orange)] animate-pulse [animation-delay:0.5s]"></span>
+    <span class="cf-meta">saving your <%= generation_noun(chat) %>...</span>
+  </div>
+</div>

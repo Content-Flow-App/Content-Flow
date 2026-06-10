@@ -12,19 +12,13 @@
 %>
 <div id="generation-action">
 <% chat = local_assigns.fetch(:chat, chat) %>
-<% save_label = {
-     "generate_idea"          => "save as idea",
-     "generate_script"        => "save as script",
-     "generate_linkedin_post" => "save as linkedin post",
-     "generate_twitter_post"   => "save as twitter post",
-     "generate_instagram_post" => "save as instagram post"
-   }[chat.purpose] %>
+<% noun = generation_noun(chat) %>
 
-  <% if save_label &&
+  <% if noun &&
         chat.chattable.present? &&
         chat.messages.where(role: "assistant").where.not(content: [nil, ""]).exists? %>
     <div class="mt-8 pt-6 border-t border-[var(--cf-gray-line)]">
-      <%= button_to save_label, chat_generation_path(chat),
+      <%= button_to "save as #{noun}", chat_generation_path(chat),
             class: "cf-btn-primary bg-[var(--cf-orange)] hover:bg-[var(--cf-orange-press)] active:translate-y-px text-white rounded-full py-4 px-10",
             form: { data: { controller: "submit-once",
                             action: "submit->submit-once#submit" } },

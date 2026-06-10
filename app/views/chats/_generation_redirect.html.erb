@@ -1,0 +1,15 @@
+<%# Broadcast by GenerationJob on success. The `redirect` Stimulus controller
+    Turbo.visits the saved record's show page the moment this lands in the
+    DOM; the link is the visible fallback if the user has already scrolled
+    away or the visit is interrupted. %>
+<div id="generation-action"
+     data-controller="redirect"
+     data-redirect-url-value="<%= url %>">
+  <div class="mt-8 pt-6 border-t border-[var(--cf-gray-line)]">
+    <p class="cf-meta">
+      saved —
+      <%= link_to "view your #{generation_noun(chat)}", url,
+            class: "text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %>
+    </p>
+  </div>
+</div>

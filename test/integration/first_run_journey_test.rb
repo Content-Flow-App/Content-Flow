@@ -16,9 +16,14 @@ require "test_helper"
 # "E2E" here means full HTTP-layer integration (ActionDispatch), not a browser
 # test. Capybara/Selenium is not installed.
 class FirstRunJourneyTest < ActionDispatch::IntegrationTest
+  # perform_enqueued_jobs: the save action only *enqueues* GenerationJob; the
+  # test adapter records jobs instead of running them, so we wrap each save in
+  # perform_enqueued_jobs to run the job inline, as Solid Queue would async.
+  include ActiveJob::TestHelper
+
   # Swaps StructuredExtraction.extract for the duration of the block, returning
   # `result` as the payload each time it is called. Identical to the helper in
-  # GenerationsControllerTest — kept local so the journey test is self-contained.
+  # GenerationJobTest — kept local so the journey test is self-contained.
   def with_extraction(result)
     original = StructuredExtraction.method(:extract)
     StructuredExtraction.define_singleton_method(:extract) { |**| result }
@@ -76,12 +81,16 @@ class FirstRunJourneyTest < ActionDispatch::IntegrationTest
 
     idea_payload = { "title" => "AI Workflow Guide", "description" => "A punchy angle.", "topic" => "AI tooling" }
     assert_difference -> { user.ideas.count }, 1 do
-      with_extraction(idea_payload) { post chat_generation_path(idea_chat) }
+      with_extraction(idea_payload) do
+        perform_enqueued_jobs(only: GenerationJob) { post chat_generation_path(idea_chat) }
+      end
     end
 
     idea = user.ideas.order(:created_at).last
     assert_equal "AI Workflow Guide", idea.title
-    assert_redirected_to idea_path(idea)
+    # The HTTP response is the html fallback back to the chat; the navigation
+    # to the new record arrives over the chat's Turbo Stream (GenerationJobTest).
+    assert_redirected_to chat_path(idea_chat)
 
     # ── 5. scripts#new → redirects to generate_script chat ─────────────────
     get new_idea_script_path(idea)
@@ -96,12 +105,14 @@ class FirstRunJourneyTest < ActionDispatch::IntegrationTest
     script_payload = { "title" => "Three Tools You Need", "description" => "Step-by-step.",
                        "style" => "educational", "length" => "short" }
     assert_difference -> { idea.scripts.count }, 1 do
-      with_extraction(script_payload) { post chat_generation_path(script_chat) }
+      with_extraction(script_payload) do
+        perform_enqueued_jobs(only: GenerationJob) { post chat_generation_path(script_chat) }
+      end
     end
 
     script = idea.scripts.order(:created_at).last
     assert_equal "Three Tools You Need", script.title
-    assert_redirected_to script_path(script)
+    assert_redirected_to chat_path(script_chat)
 
     # ── 7. linkedin_posts#new → redirects to generate_linkedin_post chat ────
     get new_script_linkedin_post_path(script)
@@ -115,13 +126,15 @@ class FirstRunJourneyTest < ActionDispatch::IntegrationTest
 
     post_payload = { "title" => "Launch Post", "hook" => "Stop scrolling.", "body" => "Here's the guide." }
     assert_difference -> { LinkedinPost.count }, 1 do
-      with_extraction(post_payload) { post chat_generation_path(post_chat) }
+      with_extraction(post_payload) do
+        perform_enqueued_jobs(only: GenerationJob) { post chat_generation_path(post_chat) }
+      end
     end
 
     linkedin_post = script.reload.linkedin_post
     assert linkedin_post.present?, "expected a LinkedIn post to be created"
     assert_equal "Launch Post", linkedin_post.title
-    assert_redirected_to script_linkedin_post_path(script)
+    assert_redirected_to chat_path(post_chat)
 
     # ── 9. Onboarding complete ──────────────────────────────────────────────
     assert user.reload.onboarding_complete?,
