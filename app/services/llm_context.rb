@@ -118,7 +118,14 @@ class LlmContext
 
   def instagram_guidelines_layer
     <<~TEXT.strip
-      **PLATFORM GUIDELINES — INSTAGRAM**
+      **SCRIPT GUIDELINES — INSTAGRAM REEL**
+      - The script is spoken on camera — no emojis, no written-post language.
+      - Max 130 words (~45 seconds). Cut everything that isn't essential.
+      - Never open with "Hey", "Hello", or a self-introduction.
+        Start with a strong hook that earns attention in the first 3 seconds.
+      - Structure: hook → one main point → one call-to-action.
+
+      **CAPTION GUIDELINES — INSTAGRAM**
       - Feeds truncate the caption after roughly 125 characters behind a
         "...more" tap, so the hook has to land as a scroll-stopper entirely on
         its own, with no setup from the rest of the caption.
