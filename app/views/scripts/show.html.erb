@@ -1,7 +1,7 @@
 <% content_for :title, @script.title %>
 
 <div class="flex flex-col" style="height: calc(100vh - 64px);" data-controller="script-edit">
-  <div class="px-7 pt-2 pb-4 flex flex-col flex-1 overflow-hidden min-h-0 relative">
+  <div class="px-7 pt-2 pb-4 flex flex-col flex-1 overflow-y-auto overflow-x-hidden min-h-0 relative">
     <%= link_to idea_path(@idea), class: "cf-meta inline-flex items-center gap-2 hover:text-[var(--cf-orange)] transition-colors duration-150", style: "position: relative; z-index: 20; cursor: pointer;" do %>
       <%= image_tag "arrow.svg", style: "width: 20px; height: 20px; transform: rotate(180deg); pointer-events: none;", alt: "" %>
       <span style="pointer-events: none;">go back</span>
@@ -29,10 +29,10 @@
     </div>
 
     <%# ---- Content Container ---- %>
-    <div class="overflow-hidden relative flex-1 flex flex-col min-h-0" style="margin-top: 15px;">
+    <div class="relative flex-1 flex flex-col" style="margin-top: 15px;">
       <%# ---- Show content ---- %>
-      <div data-script-edit-target="show" class="relative flex-1 flex flex-col w-full min-h-0">
-        <div class="flex flex-col flex-1 overflow-y-auto pr-7 -mr-7 pb-32 pt-2">
+      <div data-script-edit-target="show" class="relative flex-1 flex flex-col w-full">
+        <div class="flex flex-col flex-1 pb-32 pt-2">
       <div data-script-edit-target="showPart" class="flex gap-6 cf-meta mb-8">
         <% if @script.style.present? %><span data-script-edit-target="showStyle"><%= @script.style %></span><% end %>
         <% if @script.length.present? %><span data-script-edit-target="showLength"><%= @script.length %></span><% end %>
