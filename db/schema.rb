@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_09_085608) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_10_144232) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -86,9 +86,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_09_085608) do
     t.text "body"
     t.datetime "created_at", null: false
     t.text "hook"
-    t.bigint "script_id", null: false
+    t.bigint "idea_id"
+    t.bigint "script_id"
     t.string "title"
     t.datetime "updated_at", null: false
+    t.index ["idea_id"], name: "index_instagram_posts_on_idea_id"
     t.index ["script_id"], name: "index_instagram_posts_on_script_id"
   end
 
@@ -96,9 +98,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_09_085608) do
     t.text "body"
     t.datetime "created_at", null: false
     t.string "hook"
-    t.bigint "script_id", null: false
+    t.bigint "idea_id"
+    t.bigint "script_id"
     t.string "title"
     t.datetime "updated_at", null: false
+    t.index ["idea_id"], name: "index_linkedin_posts_on_idea_id"
     t.index ["script_id"], name: "index_linkedin_posts_on_script_id"
   end
 
@@ -343,9 +347,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_09_085608) do
     t.text "body"
     t.datetime "created_at", null: false
     t.text "hook"
-    t.bigint "script_id", null: false
+    t.bigint "idea_id"
+    t.bigint "script_id"
     t.string "title"
     t.datetime "updated_at", null: false
+    t.index ["idea_id"], name: "index_twitter_posts_on_idea_id"
     t.index ["script_id"], name: "index_twitter_posts_on_script_id"
   end
 
@@ -366,7 +372,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_09_085608) do
   add_foreign_key "chats", "models"
   add_foreign_key "creators", "users"
   add_foreign_key "ideas", "users"
+  add_foreign_key "instagram_posts", "ideas"
   add_foreign_key "instagram_posts", "scripts"
+  add_foreign_key "linkedin_posts", "ideas"
   add_foreign_key "linkedin_posts", "scripts"
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "models"
@@ -381,5 +389,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_09_085608) do
   add_foreign_key "substack_posts", "substack_sources"
   add_foreign_key "substack_sources", "users"
   add_foreign_key "tool_calls", "messages"
+  add_foreign_key "twitter_posts", "ideas"
   add_foreign_key "twitter_posts", "scripts"
 end

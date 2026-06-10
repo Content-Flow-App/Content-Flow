@@ -50,7 +50,7 @@ class GenerationsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_match "generation-action", response.body
-    assert_match(/saving your idea/i, response.body)
+    assert_match(/cece is cooking/i, response.body)
   end
 
   test "a plain html request falls back to a redirect with a notice" do

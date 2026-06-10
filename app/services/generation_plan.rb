@@ -46,21 +46,34 @@ class GenerationPlan
     ),
     "generate_linkedin_post" => Plan.new(
       schema: LinkedinPostSchema,
-      owner_resolver: ->(id) { current_user_scripts.find(id) },
+      # chattable_type is Script for the scripted path, Idea for the direct path.
+      owner_resolver: ->(id) {
+        @chat.chattable_type == "Idea" ? current_user.ideas.find(id) : current_user_scripts.find(id)
+      },
       persist: ->(owner, attrs) { GenerationPlan.assign_linkedin_post(owner, attrs) },
-      redirect_target: ->(record) { script_linkedin_post_path(record.script) }
+      redirect_target: ->(record) {
+        record.script ? script_linkedin_post_path(record.script) : idea_linkedin_post_path(record.idea)
+      }
     ),
     "generate_twitter_post" => Plan.new(
       schema: TwitterPostSchema,
-      owner_resolver: ->(id) { current_user_scripts.find(id) },
+      owner_resolver: ->(id) {
+        @chat.chattable_type == "Idea" ? current_user.ideas.find(id) : current_user_scripts.find(id)
+      },
       persist: ->(owner, attrs) { GenerationPlan.assign_twitter_post(owner, attrs) },
-      redirect_target: ->(record) { script_twitter_post_path(record.script) }
+      redirect_target: ->(record) {
+        record.script ? script_twitter_post_path(record.script) : idea_twitter_post_path(record.idea)
+      }
     ),
     "generate_instagram_post" => Plan.new(
       schema: InstagramPostSchema,
-      owner_resolver: ->(id) { current_user_scripts.find(id) },
+      owner_resolver: ->(id) {
+        @chat.chattable_type == "Idea" ? current_user.ideas.find(id) : current_user_scripts.find(id)
+      },
       persist: ->(owner, attrs) { GenerationPlan.assign_instagram_post(owner, attrs) },
-      redirect_target: ->(record) { script_instagram_post_path(record.script) }
+      redirect_target: ->(record) {
+        record.script ? script_instagram_post_path(record.script) : idea_instagram_post_path(record.idea)
+      }
     )
   }.freeze
 

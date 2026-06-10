@@ -7,20 +7,26 @@ module UserScopedResource
     Script.joins(:idea).where(ideas: { user_id: current_user.id })
   end
 
-  # LinkedinPosts the current user owns. Ownership runs two hops up the chain
-  # (post -> script -> idea -> user), so we join through both and filter on the
-  # idea's user_id. Used to authorize a post by re-resolving it through a
-  # user-scoped relation (a `.find` here raises RecordNotFound -> 404 for a
-  # non-owner) instead of trusting an id from the request.
+  # Posts owned by the current user via EITHER path:
+  #   scripted: post -> script -> idea -> user
+  #   direct:   post -> idea -> user
+  # We use two separate scoped queries and combine with OR to avoid the table
+  # alias conflict that arises from joining ideas twice in a single query.
   def current_user_linkedin_posts
-    LinkedinPost.joins(script: :idea).where(ideas: { user_id: current_user.id })
+    via_script = LinkedinPost.joins(script: :idea).where(ideas: { user_id: current_user.id })
+    via_idea   = LinkedinPost.joins(:idea).where(ideas: { user_id: current_user.id })
+    LinkedinPost.where(id: via_script).or(LinkedinPost.where(id: via_idea))
   end
 
   def current_user_twitter_posts
-    TwitterPost.joins(script: :idea).where(ideas: { user_id: current_user.id })
+    via_script = TwitterPost.joins(script: :idea).where(ideas: { user_id: current_user.id })
+    via_idea   = TwitterPost.joins(:idea).where(ideas: { user_id: current_user.id })
+    TwitterPost.where(id: via_script).or(TwitterPost.where(id: via_idea))
   end
 
   def current_user_instagram_posts
-    InstagramPost.joins(script: :idea).where(ideas: { user_id: current_user.id })
+    via_script = InstagramPost.joins(script: :idea).where(ideas: { user_id: current_user.id })
+    via_idea   = InstagramPost.joins(:idea).where(ideas: { user_id: current_user.id })
+    InstagramPost.where(id: via_script).or(InstagramPost.where(id: via_idea))
   end
 end

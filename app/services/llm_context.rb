@@ -68,10 +68,18 @@ class LlmContext
   # Adding a new platform leaf = one branch here + a #system_prompt on the model.
   def layers_for(node)
     case node
-    when User                                       then [ node.system_prompt ]
-    when Idea                                       then layers_for(node.user)   + [ node.system_prompt ]
-    when Script                                     then layers_for(node.idea)   + [ node.system_prompt ]
-    when LinkedinPost, TwitterPost, InstagramPost   then layers_for(node.script) + [ node.system_prompt ]
+    when User                                      then [ node.system_prompt ]
+    when Idea                                      then layers_for(node.user)        + [ node.system_prompt ]
+    when Script                                    then layers_for(node.idea)        + [ node.system_prompt ]
+    when LinkedinPost, TwitterPost, InstagramPost
+      # Direct-path posts have no script; walk via parent_idea instead.
+      # Scripted path: creator → idea → script → post.
+      # Direct path:   creator → idea → post (script layer skipped — nothing to say).
+      if node.script
+        layers_for(node.script) + [ node.system_prompt ]
+      else
+        layers_for(node.idea) + [ node.system_prompt ]
+      end
     else []
     end
   end

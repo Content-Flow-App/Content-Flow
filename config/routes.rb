@@ -59,10 +59,20 @@ Rails.application.routes.draw do
   end
 
   resources :ideas do
+    # Direct-flow posts (idea → post, no script). Singular resource generates no
+    # :id segment — all paths scoped via :idea_id, e.g. GET /ideas/:idea_id/linkedin_post.
+    # New route helpers: idea_linkedin_post_path(@idea), new_idea_linkedin_post_path(@idea), etc.
+    resource :linkedin_post,  only: [ :show, :new, :create, :edit, :update, :destroy ]
+    resource :twitter_post,   only: [ :show, :new, :create, :edit, :update, :destroy ]
+    resource :instagram_post, only: [ :show, :new, :create, :edit, :update, :destroy ]
+
+    # Scripted-flow posts (idea → script → post). shallow: true means show/edit/
+    # update/destroy use /scripts/:id (no idea_id needed); new/create stay nested
+    # under /ideas/:idea_id/scripts. Post resources are nested further under scripts.
     resources :scripts, shallow: true do
-      resource :linkedin_post, only: [:show, :new, :create, :edit, :update, :destroy]
-      resource :twitter_post, only: [:show, :new, :create, :edit, :update, :destroy]
-      resource :instagram_post, only: [:show, :new, :create, :edit, :update, :destroy]
+      resource :linkedin_post,  only: [ :show, :new, :create, :edit, :update, :destroy ]
+      resource :twitter_post,   only: [ :show, :new, :create, :edit, :update, :destroy ]
+      resource :instagram_post, only: [ :show, :new, :create, :edit, :update, :destroy ]
     end
   end
 

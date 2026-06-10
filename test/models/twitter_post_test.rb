@@ -19,10 +19,31 @@ class TwitterPostTest < ActiveSupport::TestCase
     assert_includes post.errors[:title], "can't be blank"
   end
 
-  test "requires a script" do
+  test "requires exactly one parent (neither script nor idea is an orphan)" do
     post = TwitterPost.new(title: "Orphan")
     assert_not post.valid?
-    assert_includes post.errors[:script], "must exist"
+    assert_includes post.errors[:base], "must belong to either a script or an idea, not both"
+  end
+
+  test "requires exactly one parent (both script and idea is invalid)" do
+    post = TwitterPost.new(title: "Ambiguous", script: @script, idea: @idea)
+    assert_not post.valid?
+    assert_includes post.errors[:base], "must belong to either a script or an idea, not both"
+  end
+
+  test "valid with a title and a direct idea" do
+    post = @idea.build_twitter_post(title: "Direct thread")
+    assert post.valid?
+  end
+
+  test "reaches the owning user through its idea (direct path)" do
+    post = @idea.create_twitter_post!(title: "Direct thread")
+    assert_equal @user, post.user
+  end
+
+  test "is destroyed with its idea (direct path)" do
+    @idea.create_twitter_post!(title: "Doomed")
+    assert_difference("TwitterPost.count", -1) { @idea.destroy }
   end
 
   test "enforces one twitter post per script" do

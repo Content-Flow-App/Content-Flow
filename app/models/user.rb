@@ -30,7 +30,12 @@ class User < ApplicationRecord
     return :creator unless creator.present?
     return :idea    unless ideas.any?
     return :script  unless Script.where(idea: ideas).exists?
-    return :post    unless LinkedinPost.where(script: Script.where(idea: ideas)).exists?
+
+    # A post satisfies the onboarding step whether it came via a script or was
+    # created directly from an idea (dual-flow). Check both paths.
+    has_post = LinkedinPost.where(script: Script.where(idea: ideas)).exists? ||
+               LinkedinPost.where(idea: ideas).exists?
+    return :post unless has_post
 
     :done
   end
