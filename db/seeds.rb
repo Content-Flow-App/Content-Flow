@@ -45,12 +45,12 @@ puts "  Done. Tables are clean.\n\n"
 # `create!` calls 100+ times.
 SEED_DATA = [
   {
-    email: "demo@contentflow.com",
+    email: "theo@contentflow.com",
     creator: {
       name: "Theodora",
-      topic: "AI & Productivity",
-      audience: "Startup founders and knowledge workers",
-      goal: "Build thought leadership and grow my audience"
+      topic: "AI, Productivity and Technology",
+      audience: "Startup founders, knowledge workers, young professionals, between 18-35 years of age",
+      goal: "Build thought leadership and grow my audience, teach non technical people how to use AI and Software"
     },
     ideas: [
       {
