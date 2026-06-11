@@ -1,6 +1,7 @@
 # db/seeds.rb
 #
-# Seeds the content-flow chain: User → Creator → Idea → Script → LinkedinPost
+# Seeds the content-flow chain: User → Creator → Idea → Script → posts
+# (LinkedIn / Twitter / Instagram, attached both directly to ideas and to scripts)
 #
 # Run with: bin/rails db:seed
 #
@@ -35,10 +36,13 @@ puts "  Done. Tables are clean.\n\n"
 # ------------------------------------------------------------------------------
 # 2. Sample data
 # ------------------------------------------------------------------------------
-# One entry per creator. Each creator owns a user account and 3 ideas; every
-# idea carries exactly one script, and every script carries exactly one
-# LinkedIn post. Looping over this structure keeps the creation logic in one
-# place instead of repeating `create!` calls 50+ times.
+# One entry per creator. Each creator owns a user account and 3 ideas. Every
+# idea carries exactly one script, and BOTH the idea and its script carry one
+# direct post per platform (LinkedIn, Twitter, Instagram): the idea's posts
+# live under the flat `linkedin_post:` / `twitter_post:` / `instagram_post:`
+# keys, the script's under the nested `script_posts:` hash. Looping over this
+# structure keeps the creation logic in one place instead of repeating
+# `create!` calls 100+ times.
 SEED_DATA = [
   {
     email: "demo@contentflow.com",
@@ -110,6 +114,53 @@ SEED_DATA = [
 
             Which of these have you tried?
           BODY
+        },
+        script_posts: {
+          linkedin_post: {
+            title: "The 3-layer AI content stack",
+            hook: "Stop asking if AI will replace creators. Ask what your stack looks like:",
+            body: <<~BODY
+              Every efficient content workflow I've seen has the same three layers:
+
+              1. Ideation — AI for angles, you for taste
+              2. Drafting — AI for speed, you for voice
+              3. Distribution — AI for formats, you for timing
+
+              The tools change monthly. The layers don't.
+
+              Which layer is weakest in your workflow?
+            BODY
+          },
+          twitter_post: {
+            title: "3-layer AI stack",
+            hook: "Every AI content workflow that actually works has the same 3 layers 🧵",
+            body: <<~BODY
+              1/ Ideation: AI generates angles. You pick the one with taste.
+
+              2/ Drafting: AI gets you to 70% fast. Your voice carries the last 30%.
+
+              3/ Distribution: AI reformats one idea for every platform. You decide where it lands.
+
+              Tools change monthly. Layers don't.
+            BODY
+          },
+          instagram_post: {
+            title: "The AI content stack, explained",
+            hook: "Your content workflow has 3 layers. AI can power all of them ↓",
+            body: <<~BODY
+              The tools keep changing. The system doesn't.
+
+              ✦ Ideation — AI for angles, you for taste
+              ✦ Drafting — AI for speed, you for voice
+              ✦ Distribution — AI for formats, you for timing
+
+              Build the system once. Swap the tools as they improve.
+
+              Save this before your next content sprint 🔖
+
+              Which layer needs the most work in your setup?
+            BODY
+          }
         }
       },
       {
@@ -176,12 +227,71 @@ SEED_DATA = [
 
             Drop your one non-negotiable work habit below 👇
           BODY
+        },
+        script_posts: {
+          linkedin_post: {
+            title: "Measure output, not hours",
+            hook: "I deleted my time tracker and got more done. Here's what I measure instead:",
+            body: <<~BODY
+              Hours worked is a vanity metric.
+
+              What I track now:
+
+              1. Did one meaningful thing ship today?
+              2. Did I protect my deep-work block?
+              3. Did I end on time?
+
+              Three yeses beats ten logged hours.
+
+              What do you actually measure?
+            BODY
+          },
+          twitter_post: {
+            title: "Output over hours",
+            hook: "I deleted my time tracker. Productivity went up. Here's the replacement 🧵",
+            body: <<~BODY
+              1/ Tracking hours tells you how long you sat there. Not whether anything happened.
+
+              2/ The three questions I ask at 5pm instead:
+              → Did one meaningful thing ship?
+              → Did the deep-work block survive?
+              → Did I stop on time?
+
+              3/ Three yeses beats ten logged hours.
+
+              What's your end-of-day check?
+            BODY
+          },
+          instagram_post: {
+            title: "Stop tracking hours",
+            hook: "I deleted my time tracker and finally got productive. Here's what I do instead ↓",
+            body: <<~BODY
+              Hours are how long you sat there. Not what happened.
+
+              My 5pm scorecard:
+
+              ✦ One meaningful thing shipped
+              ✦ Deep-work block protected
+              ✦ Hard stop respected
+
+              Three yeses = a good day. No spreadsheet required.
+
+              What's on your end-of-day checklist? 👇
+            BODY
+          }
         }
       },
       {
         title: "Building a second brain with AI",
         topic: "Knowledge Management",
         description: "How to combine note-taking systems with AI to never lose a good idea again.",
+        script: {
+          title: "Second Brain Systems",
+          style: "educational",
+          length: "medium",
+          description: "A practical walkthrough of building an AI-assisted note system that compounds.",
+          custom_instructions: "You are a knowledge-management nerd. Write systematic, actionable scripts."
+        },
         linkedin_post: {
           title: "Build a second brain",
           hook: "I haven't lost a good idea in 2 years. Here's the system:",
@@ -235,6 +345,56 @@ SEED_DATA = [
 
             What's your note-taking app of choice?
           BODY
+        },
+        script_posts: {
+          linkedin_post: {
+            title: "The capture habit",
+            hook: "Your second brain fails at the first step, not the last. Fix capture first:",
+            body: <<~BODY
+              Everyone obsesses over the perfect note app.
+
+              Almost nobody fixes capture.
+
+              1. One inbox, zero friction
+              2. Capture in under 10 seconds or you won't
+              3. Process weekly, not in the moment
+
+              A mediocre system you feed daily beats a perfect one you abandon.
+
+              How do you capture ideas on the go?
+            BODY
+          },
+          twitter_post: {
+            title: "Capture before organising",
+            hook: "Your second brain isn't failing at organisation. It's failing at capture 🧵",
+            body: <<~BODY
+              1/ The perfect folder structure doesn't matter if ideas never make it in.
+
+              2/ Capture rules that stick:
+              → One inbox for everything
+              → Under 10 seconds or it won't happen
+              → Sort weekly, never in the moment
+
+              3/ Feed a mediocre system daily and it beats the perfect system you abandoned.
+
+              Where do your ideas go right now?
+            BODY
+          },
+          instagram_post: {
+            title: "Fix capture first",
+            hook: "Your note system isn't broken. Your capture habit is ↓",
+            body: <<~BODY
+              Stop redesigning your folders. Start catching your ideas.
+
+              ✦ One inbox — everything goes in, no sorting
+              ✦ Ten-second rule — if capture takes longer, you'll skip it
+              ✦ Weekly review — organise in batches, not in the moment
+
+              The system that gets fed daily wins. Every time.
+
+              Save this and set up your inbox today 🔖
+            BODY
+          }
         }
       }
     ]
@@ -312,6 +472,56 @@ SEED_DATA = [
 
             Have you ever tried the snowball method? 👇
           BODY
+        },
+        script_posts: {
+          linkedin_post: {
+            title: "Momentum beats math",
+            hook: "The avalanche method is mathematically better. I still tell people to snowball. Here's why:",
+            body: <<~BODY
+              Personal finance is more personal than finance.
+
+              The snowball works because:
+
+              1. The first win lands in weeks, not years
+              2. Every cleared debt frees up cash and confidence
+              3. You stop avoiding your own numbers
+
+              A plan you finish beats a plan that's optimal.
+
+              Which debt would you knock out first?
+            BODY
+          },
+          twitter_post: {
+            title: "Snowball vs avalanche",
+            hook: "The avalanche method saves more interest. I still recommend the snowball 🧵",
+            body: <<~BODY
+              1/ On paper, paying highest-interest first wins. On paper.
+
+              2/ In real life:
+              → The snowball's first win lands in weeks
+              → Each cleared debt frees cash AND confidence
+              → You stop dreading your own spreadsheet
+
+              3/ The best payoff plan is the one you finish.
+
+              Personal finance is more personal than finance.
+            BODY
+          },
+          instagram_post: {
+            title: "Why the snowball works",
+            hook: "The 'wrong' debt method got me debt-free. Here's why I'd choose it again ↓",
+            body: <<~BODY
+              Mathematically, the avalanche wins. Behaviourally, the snowball does.
+
+              ✦ First win in weeks — not years
+              ✦ Every cleared debt = more cash, more confidence
+              ✦ You actually open your banking app again
+
+              A plan you stick to beats a plan that's optimal.
+
+              Tag someone starting their payoff journey 💪
+            BODY
+          }
         }
       },
       {
@@ -378,12 +588,67 @@ SEED_DATA = [
 
             Are you investing in index funds? 👇
           BODY
+        },
+        script_posts: {
+          linkedin_post: {
+            title: "Fees eat fortunes",
+            hook: "A 1% fee sounds tiny. Over 30 years it can eat a quarter of your portfolio:",
+            body: <<~BODY
+              The most boring number in investing is the most important one.
+
+              1. 1% vs 0.05% in fees = a six-figure gap over a career
+              2. High fees rarely buy better returns
+              3. Index funds make low fees the default
+
+              Check your expense ratio before your returns.
+
+              Do you know what you're paying?
+            BODY
+          },
+          twitter_post: {
+            title: "The 1% fee trap",
+            hook: "A 1% fee doesn't sound like much. Over 30 years it can cost you a six-figure sum 🧵",
+            body: <<~BODY
+              1/ Fees compound exactly like returns do. Against you.
+
+              2/ The quiet math:
+              → 1% vs 0.05% on the same portfolio
+              → Same market, same decades
+              → The difference is often 20%+ of your final balance
+
+              3/ Most expensive funds don't outperform. You're paying more for less.
+
+              Check your expense ratio today.
+            BODY
+          },
+          instagram_post: {
+            title: "The fee that eats your future",
+            hook: "One tiny number decides more of your wealth than stock picks ever will ↓",
+            body: <<~BODY
+              It's not the market. It's the fee.
+
+              ✦ 1% fee vs 0.05% — same portfolio, wildly different outcome
+              ✦ Over 30 years the gap is often six figures
+              ✦ Expensive funds rarely beat cheap index funds
+
+              Boring, low-cost, automatic. That's the whole strategy.
+
+              Go check your expense ratio — it takes 2 minutes 📌
+            BODY
+          }
         }
       },
       {
         title: "The 50/30/20 budget, simplified",
         topic: "Budgeting",
         description: "How to split your income without tracking every single coffee.",
+        script: {
+          title: "Budgeting Without Spreadsheets",
+          style: "conversational",
+          length: "short",
+          description: "A friendly explainer on automating the 50/30/20 split so the budget runs itself.",
+          custom_instructions: "You are a relatable finance creator. Write warm, practical scripts."
+        },
         linkedin_post: {
           title: "The 50/30/20 budget",
           hook: "I tracked every expense for a year. Then I quit and did this instead:",
@@ -437,6 +702,58 @@ SEED_DATA = [
 
             Which budgeting method works for you?
           BODY
+        },
+        script_posts: {
+          linkedin_post: {
+            title: "Automate the split",
+            hook: "The best budget runs without you. Set it up once:",
+            body: <<~BODY
+              Willpower is a terrible budgeting tool.
+
+              Automation isn't:
+
+              1. Payday transfer #1 → bills account
+              2. Payday transfer #2 → savings and investments
+              3. What's left is guilt-free spending
+
+              Decide once. Let the system decide every month after.
+
+              Is your budget automated yet?
+            BODY
+          },
+          twitter_post: {
+            title: "Set-and-forget budget",
+            hook: "Your budget shouldn't need willpower. It needs two standing orders 🧵",
+            body: <<~BODY
+              1/ Every budget that relies on daily discipline eventually loses to a bad week.
+
+              2/ The payday setup:
+              → Transfer 1: bills account
+              → Transfer 2: savings + investing
+              → Whatever's left: spend it, guilt-free
+
+              3/ You make the decision once. The system makes it every month after.
+
+              Automated > disciplined.
+            BODY
+          },
+          instagram_post: {
+            title: "The budget that runs itself",
+            hook: "I haven't 'done my budget' in months. It does itself. Here's the setup ↓",
+            body: <<~BODY
+              Two standing orders replaced my entire budgeting routine.
+
+              ✦ Payday transfer #1 → bills
+              ✦ Payday transfer #2 → savings + investing
+              ✦ The rest → spend without guilt
+
+              No tracking. No categories. No Sunday-night spreadsheet shame.
+
+              Set it up once this payday 📌
+
+              Is your budget automated?
+            BODY
+          }
         }
       }
     ]
@@ -516,6 +833,58 @@ SEED_DATA = [
 
             What's your go-to short workout?
           BODY
+        },
+        script_posts: {
+          linkedin_post: {
+            title: "The minimum effective dose",
+            hook: "More training isn't better training. Better training is better training:",
+            body: <<~BODY
+              The gym doesn't reward time served.
+
+              What 20 focused minutes needs:
+
+              1. One main lift, done well
+              2. One conditioning finisher
+              3. Zero phone scrolling between sets
+
+              Intensity with intention beats volume with distraction.
+
+              How long is your average session?
+            BODY
+          },
+          twitter_post: {
+            title: "Minimum effective dose",
+            hook: "Your 90-minute workout is mostly rest and scrolling. Here's the honest version 🧵",
+            body: <<~BODY
+              1/ Track your next long session. Actual working time is usually under 25 minutes.
+
+              2/ The 20-minute version:
+              → One main lift, focused
+              → One short conditioning finisher
+              → Phone stays in the locker
+
+              3/ Same stimulus, quarter of the time, zero excuses left.
+
+              Try it for two weeks.
+            BODY
+          },
+          instagram_post: {
+            title: "Your workout is shorter than you think",
+            hook: "Time your next gym session. The actual work is ~20 minutes. So just do 20 minutes ↓",
+            body: <<~BODY
+              The 90-minute workout is mostly rest, chat, and scrolling.
+
+              The 20-minute version:
+
+              ✦ One main lift — full focus
+              ✦ One conditioning finisher — short and sharp
+              ✦ No phone until you're done
+
+              Same results. Quarter of the time. Zero excuses.
+
+              Try it for two weeks and tell me how it goes 💪
+            BODY
+          }
         }
       },
       {
@@ -580,12 +949,69 @@ SEED_DATA = [
 
             How many hours are you averaging right now? 👇
           BODY
+        },
+        script_posts: {
+          linkedin_post: {
+            title: "The wind-down routine",
+            hook: "You can't force sleep. You can make it inevitable:",
+            body: <<~BODY
+              Good sleep starts 90 minutes before bed.
+
+              The routine that fixed mine:
+
+              1. Screens dim, notifications off
+              2. Same bedtime, even weekends
+              3. Cool, dark room — boring on purpose
+
+              Recovery is built in the evening, not the morning.
+
+              What time do you actually wind down?
+            BODY
+          },
+          twitter_post: {
+            title: "Make sleep inevitable",
+            hook: "You can't force yourself to sleep. You can make it inevitable 🧵",
+            body: <<~BODY
+              1/ Sleep isn't a switch. It's a runway. Mine is 90 minutes long.
+
+              2/ The boring routine that works:
+              → Screens dim, notifications off
+              → Same bedtime every night (yes, weekends)
+              → Cool, dark, boring room
+
+              3/ Recovery is built in the evening. The morning just reports the result.
+
+              What's your wind-down look like?
+            BODY
+          },
+          instagram_post: {
+            title: "Build a sleep runway",
+            hook: "Sleep isn't a switch you flip. It's a runway you build. 90 minutes long ↓",
+            body: <<~BODY
+              You can't force sleep. You can prepare for it.
+
+              ✦ 90 minutes out — screens dim, notifications off
+              ✦ Same bedtime — even on weekends
+              ✦ Cool, dark room — boring is the goal
+
+              Your recovery is decided before your head hits the pillow.
+
+              What time does your wind-down start? 👇
+            BODY
+          }
         }
       },
       {
         title: "Protein without the chicken-and-rice boredom",
         topic: "Nutrition",
         description: "Simple ways to hit protein targets without eating the same meal daily.",
+        script: {
+          title: "Protein Made Easy",
+          style: "conversational",
+          length: "short",
+          description: "A quick script on hitting daily protein targets with simple, repeatable swaps.",
+          custom_instructions: "You are a fitness coach. Write motivating, no-nonsense scripts."
+        },
         linkedin_post: {
           title: "Protein without boredom",
           hook: "Hitting your protein goal doesn't mean eating chicken and rice 5x a day.",
@@ -637,6 +1063,56 @@ SEED_DATA = [
 
             What's your favourite high-protein meal?
           BODY
+        },
+        script_posts: {
+          linkedin_post: {
+            title: "Protein by default",
+            hook: "Stop chasing protein at dinner. Win it by default at breakfast:",
+            body: <<~BODY
+              Most people start the day 0 for 1 on protein.
+
+              Front-load instead:
+
+              1. 30g at breakfast before anything else
+              2. Anchor every meal around the protein first
+              3. Keep one zero-effort option in the fridge
+
+              Hit it early and the rest of the day takes care of itself.
+
+              What's your breakfast protein?
+            BODY
+          },
+          twitter_post: {
+            title: "Front-load your protein",
+            hook: "You're not behind on protein at dinner. You were behind at breakfast 🧵",
+            body: <<~BODY
+              1/ Cereal, toast, coffee — most breakfasts are a protein zero. The day never recovers.
+
+              2/ The fix:
+              → 30g before anything else
+              → Build each meal around protein first
+              → One zero-effort backup always in the fridge
+
+              3/ Win breakfast and the daily target stops being a chase.
+
+              What's your go-to morning protein?
+            BODY
+          },
+          instagram_post: {
+            title: "Win protein at breakfast",
+            hook: "If you're scrambling for protein at 9pm, the problem happened at 9am ↓",
+            body: <<~BODY
+              Most breakfasts are a protein zero. Then dinner becomes a panic.
+
+              ✦ 30g at breakfast — before anything else
+              ✦ Protein first at every meal — build the plate around it
+              ✦ One zero-effort option in the fridge at all times
+
+              Front-load it and the target hits itself.
+
+              What's your 30g breakfast? 🥚
+            BODY
+          }
         }
       }
     ]
@@ -714,6 +1190,53 @@ SEED_DATA = [
 
             What was your biggest mindset shift as an engineer?
           BODY
+        },
+        script_posts: {
+          linkedin_post: {
+            title: "Judgement is trainable",
+            hook: "Nobody is born with senior-engineer judgement. Here's how you build it:",
+            body: <<~BODY
+              Judgement looks like magic. It's actually reps.
+
+              How to get them faster:
+
+              1. Write down your predictions before decisions land
+              2. Review what you got wrong, not just what broke
+              3. Shadow the engineers whose calls keep ageing well
+
+              Experience is just feedback loops you actually closed.
+
+              How do you train judgement on your team?
+            BODY
+          },
+          twitter_post: {
+            title: "Training judgement",
+            hook: "Senior judgement isn't a gift. It's reps. Here's how to get them faster 🧵",
+            body: <<~BODY
+              1/ Write your prediction down before every big decision. Review it when reality lands.
+
+              2/ Post-mortem your own calls, not just the outages.
+
+              3/ Find the engineer whose decisions keep ageing well. Ask them why, every time.
+
+              Experience = feedback loops you actually closed.
+            BODY
+          },
+          instagram_post: {
+            title: "How to build engineering judgement",
+            hook: "Judgement looks like talent. It's actually a training plan ↓",
+            body: <<~BODY
+              Senior engineers aren't psychic. They've just closed more feedback loops.
+
+              ✦ Predict in writing — before the decision lands
+              ✦ Review your misses — not just the incidents
+              ✦ Study the engineers whose calls age well
+
+              You can't shortcut the reps. You can stop wasting them.
+
+              Save this for your next growth conversation 💾
+            BODY
+          }
         }
       },
       {
@@ -782,12 +1305,69 @@ SEED_DATA = [
 
             What helped you most when joining a new codebase?
           BODY
+        },
+        script_posts: {
+          linkedin_post: {
+            title: "Trace, don't read",
+            hook: "Reading code is overrated. Tracing it is everything:",
+            body: <<~BODY
+              A codebase is not a book. Stop reading it like one.
+
+              The tracing toolkit:
+
+              1. A debugger and one real request
+              2. Logs that show the actual call order
+              3. Notes on the path — yours, not the wiki's
+
+              The map you draw yourself is the one you remember.
+
+              Debugger or print statements — which camp are you in?
+            BODY
+          },
+          twitter_post: {
+            title: "Trace the codebase",
+            hook: "Stop 'reading the codebase'. Trace it instead 🧵",
+            body: <<~BODY
+              1/ Code isn't prose. The execution order is nothing like the file order.
+
+              2/ The toolkit:
+              → One real request + a debugger
+              → Logs to confirm the actual call sequence
+              → Hand-drawn notes of the path
+
+              3/ The map you draw yourself sticks. The wiki's doesn't.
+
+              Debugger or print statements?
+            BODY
+          },
+          instagram_post: {
+            title: "Trace the code, don't read it",
+            hook: "The codebase isn't a book. Reading it top to bottom teaches you almost nothing ↓",
+            body: <<~BODY
+              Execution order ≠ file order. That's why reading fails.
+
+              ✦ Pick one real request
+              ✦ Step through it with a debugger
+              ✦ Sketch the path in your own notes
+
+              The map you draw yourself is the map you remember.
+
+              Team debugger or team print statement? 👇
+            BODY
+          }
         }
       },
       {
         title: "The career-defining power of writing",
         topic: "Soft Skills",
         description: "Why clear writing quietly accelerates engineering careers.",
+        script: {
+          title: "Write Your Way Up",
+          style: "conversational",
+          length: "medium",
+          description: "A script on using clear writing — docs, RFCs, PR descriptions — to accelerate an engineering career.",
+          custom_instructions: "You are a senior engineer and mentor. Write candid, helpful scripts."
+        },
         linkedin_post: {
           title: "Engineers who write win",
           hook: "The best career move I made as an engineer had nothing to do with code:",
@@ -841,6 +1421,56 @@ SEED_DATA = [
 
             Do you write about engineering outside of work?
           BODY
+        },
+        script_posts: {
+          linkedin_post: {
+            title: "The PR description advantage",
+            hook: "Want faster reviews? Stop writing better code. Start writing better PR descriptions:",
+            body: <<~BODY
+              Reviewers don't read your code first. They read your description.
+
+              What mine always include:
+
+              1. The problem, in one sentence
+              2. The approach, and what I ruled out
+              3. Where to look first
+
+              Five minutes of writing saves days of back-and-forth.
+
+              What makes a PR easy for you to review?
+            BODY
+          },
+          twitter_post: {
+            title: "Better PR descriptions",
+            hook: "Your PRs aren't reviewed slowly because of the code. It's the description 🧵",
+            body: <<~BODY
+              1/ A reviewer's first question is never "is this code good?" It's "what am I looking at?"
+
+              2/ Answer it up front:
+              → The problem, one sentence
+              → The approach, plus what you ruled out
+              → Where to start reading
+
+              3/ Five minutes of writing saves days of ping-pong.
+
+              What's your PR template?
+            BODY
+          },
+          instagram_post: {
+            title: "Write PRs people want to review",
+            hook: "The fastest way to better code reviews has nothing to do with the code ↓",
+            body: <<~BODY
+              Reviewers read your description before your diff.
+
+              ✦ One sentence: what problem is this solving?
+              ✦ One paragraph: the approach and what you ruled out
+              ✦ One pointer: where to look first
+
+              Five minutes of writing. Days of back-and-forth saved.
+
+              Save this for your next pull request 📝
+            BODY
+          }
         }
       }
     ]
@@ -918,6 +1548,56 @@ SEED_DATA = [
 
             What's one sustainable swap you've actually stuck with?
           BODY
+        },
+        script_posts: {
+          linkedin_post: {
+            title: "One swap at a time",
+            hook: "The greenest thing you can do this month is embarrassingly small. Do it anyway:",
+            body: <<~BODY
+              Grand eco-resolutions die by February.
+
+              Single swaps survive:
+
+              1. Pick one habit — just one
+              2. Run it for 30 days before adding another
+              3. Let the easy win pull the next one along
+
+              Small and permanent beats big and abandoned.
+
+              What's the one swap you'd start with?
+            BODY
+          },
+          twitter_post: {
+            title: "One swap at a time",
+            hook: "Your big sustainability overhaul will fail. The one tiny swap won't 🧵",
+            body: <<~BODY
+              1/ Grand eco-resolutions collapse the first busy week. Single habits don't.
+
+              2/ The protocol:
+              → One swap, just one
+              → 30 days before adding the next
+              → Let each easy win pull the next one along
+
+              3/ Small and permanent beats big and abandoned.
+
+              What swap would you start with?
+            BODY
+          },
+          instagram_post: {
+            title: "Start with one swap",
+            hook: "Forget the lifestyle overhaul. Pick one swap and keep it for 30 days ↓",
+            body: <<~BODY
+              Big green resolutions die by February. Tiny swaps don't.
+
+              ✦ One habit at a time — seriously, one
+              ✦ 30 days before you add the next
+              ✦ Easy wins pull harder ones along
+
+              Small and permanent beats big and abandoned. 🌱
+
+              What's your one swap this month?
+            BODY
+          }
         }
       },
       {
@@ -986,12 +1666,69 @@ SEED_DATA = [
 
             When did you last repair instead of replace? 🧵
           BODY
+        },
+        script_posts: {
+          linkedin_post: {
+            title: "The 30-wears test",
+            hook: "Before you buy it, ask one question: will I wear this 30 times?",
+            body: <<~BODY
+              Most impulse buys fail the question instantly.
+
+              The 30-wears test works because:
+
+              1. It filters trends from wardrobe staples
+              2. It reframes price as cost-per-wear
+              3. It takes five seconds at the till
+
+              The most sustainable garment is the one you keep wearing.
+
+              Would your last purchase pass?
+            BODY
+          },
+          twitter_post: {
+            title: "The 30-wears test",
+            hook: "One question kills most impulse clothing buys: will I wear it 30 times? 🧵",
+            body: <<~BODY
+              1/ Most fast-fashion purchases get worn fewer than 10 times. Some never.
+
+              2/ Why the test works:
+              → Filters trends from staples
+              → Turns price into cost-per-wear
+              → Takes 5 seconds at the checkout
+
+              3/ The most sustainable garment is the one you actually keep wearing.
+
+              Would your last buy pass?
+            BODY
+          },
+          instagram_post: {
+            title: "Will you wear it 30 times?",
+            hook: "One question before the checkout. It kills most impulse buys on the spot ↓",
+            body: <<~BODY
+              "Will I wear this 30 times?"
+
+              ✦ Filters trends from true staples
+              ✦ Reframes price as cost-per-wear
+              ✦ Takes five seconds to ask
+
+              The most sustainable piece in any wardrobe is the one that gets worn for years.
+
+              Be honest: would your last purchase pass? 👇
+            BODY
+          }
         }
       },
       {
         title: "Composting in a tiny apartment",
         topic: "Zero Waste",
         description: "Yes, you can compost without a backyard — here's how.",
+        script: {
+          title: "Small-Space Composting",
+          style: "educational",
+          length: "short",
+          description: "A compact how-to on starting compost in an apartment, from bin choice to drop-off.",
+          custom_instructions: "You are a sustainability advocate. Write warm, non-judgemental scripts."
+        },
         linkedin_post: {
           title: "Composting in an apartment",
           hook: "No backyard? You can still compost. I've done it in a studio flat for 3 years.",
@@ -1043,6 +1780,52 @@ SEED_DATA = [
 
             Have you tried composting? What stopped you?
           BODY
+        },
+        script_posts: {
+          linkedin_post: {
+            title: "Your first week of composting",
+            hook: "Want to start composting this week? Here's the whole setup:",
+            body: <<~BODY
+              Apartment composting takes one evening to set up.
+
+              1. Any sealed container with a lid — fancy bins optional
+              2. Find your nearest drop-off (your council's site lists them)
+              3. Freeze scraps between drop-offs — zero smell, zero fuss
+
+              That's the entire system. Start tonight.
+
+              What's been stopping you?
+            BODY
+          },
+          twitter_post: {
+            title: "Compost setup in one evening",
+            hook: "Apartment composting takes one evening to set up. Here's the whole thing 🧵",
+            body: <<~BODY
+              1/ You need: a sealed container, a freezer drawer, and your nearest drop-off point. That's it.
+
+              2/ The flow:
+              → Scraps go in the container
+              → Container lives in the freezer (zero smell)
+              → Weekly trip to the drop-off
+
+              3/ No garden, no worms, no odour. Tonight is a fine night to start.
+            BODY
+          },
+          instagram_post: {
+            title: "Start composting tonight",
+            hook: "No garden, no worms, no smell. Apartment composting in 3 steps ↓",
+            body: <<~BODY
+              The whole setup takes one evening:
+
+              ✦ Any sealed container — the fancy bin is optional
+              ✦ Freeze your scraps — zero smell between drop-offs
+              ✦ Find your nearest drop-off point — your council lists them
+
+              A third of your bin is organic waste. This is the easiest habit swap there is. 🌿
+
+              What's stopped you from starting?
+            BODY
+          }
         }
       }
     ]
@@ -1052,6 +1835,14 @@ SEED_DATA = [
 # ------------------------------------------------------------------------------
 # 3. Create the records
 # ------------------------------------------------------------------------------
+# Pairs each SEED_DATA post key with its model class so post creation below
+# can loop instead of repeating three near-identical blocks per parent.
+POST_TYPES = {
+  linkedin_post:  LinkedinPost,
+  twitter_post:   TwitterPost,
+  instagram_post: InstagramPost
+}.freeze
+
 puts "Seeding #{SEED_DATA.size} creators and their content...\n\n"
 
 SEED_DATA.each do |data|
@@ -1067,15 +1858,16 @@ SEED_DATA.each do |data|
   creator = Creator.create!(data[:creator].merge(user: user))
   puts "  Created creator: #{creator.name} (#{creator.topic})"
 
-  # --- Ideas → content chain (scripted or direct) ----------------------------
+  # --- Ideas → script → posts -------------------------------------------------
   # Idea belongs_to :user (there's no creator_id column), so each idea is tied
   # to the user we just created.
   #
-  # Two flows exist side-by-side:
-  #   Scripted: idea_data includes a :script hash → Script is created first,
-  #             then posts receive `script: script`.
-  #   Direct:   idea_data omits :script → posts receive `idea: idea` directly,
-  #             and no Script record is created.
+  # Every idea gets one script, and BOTH nodes get one direct post per platform:
+  #   Idea posts:   `idea: idea`     → idea_id set, script_id nil
+  #   Script posts: `script: script` → script_id set, idea_id nil
+  # Each post model validates exactly-one-parent plus uniqueness of idea_id and
+  # script_id, so "3 direct posts" per node means one LinkedIn + one Twitter +
+  # one Instagram — a fourth post of any platform would fail validation.
   data[:ideas].each do |idea_data|
     idea = Idea.create!(
       user: user,
@@ -1085,26 +1877,18 @@ SEED_DATA.each do |data|
     )
     puts "    Created idea: #{idea.title}"
 
-    if idea_data[:script]
-      # Scripted flow: idea → script → posts.
-      script = Script.create!(idea_data[:script].merge(idea: idea))
-      puts "      Created script: #{script.title}"
-      parent     = { script: script }
-      flow_label = "via script"
-    else
-      # Direct flow: idea → posts (no script created).
-      parent     = { idea: idea }
-      flow_label = "via idea (direct)"
+    script = Script.create!(idea_data[:script].merge(idea: idea))
+    puts "      Created script: #{script.title}"
+
+    POST_TYPES.each do |key, klass|
+      post = klass.create!(idea_data[key].merge(idea: idea))
+      puts "      Created #{klass.name} (direct on idea): #{post.title}"
     end
 
-    linkedin_post = LinkedinPost.create!(idea_data[:linkedin_post].merge(parent))
-    puts "      Created LinkedIn post: #{linkedin_post.title} (#{flow_label})"
-
-    twitter_post = TwitterPost.create!(idea_data[:twitter_post].merge(parent))
-    puts "      Created Twitter post: #{twitter_post.title} (#{flow_label})"
-
-    instagram_post = InstagramPost.create!(idea_data[:instagram_post].merge(parent))
-    puts "      Created Instagram post: #{instagram_post.title} (#{flow_label})"
+    POST_TYPES.each do |key, klass|
+      post = klass.create!(idea_data[:script_posts][key].merge(script: script))
+      puts "      Created #{klass.name} (via script): #{post.title}"
+    end
   end
 
   puts ""
