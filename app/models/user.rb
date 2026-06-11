@@ -9,6 +9,13 @@ class User < ApplicationRecord
   has_many :substack_sources, dependent: :destroy
   has_many :substack_posts, through: :substack_sources
 
+  # The aggregated idea feed: every post across the user's sources, newest
+  # first. Lives here because two callers must render the identical feed —
+  # SubstackPostsController#index and FetchSubstackSourceJob's live broadcast.
+  def substack_feed
+    substack_posts.includes(substack_source: :user).order(published_at: :desc)
+  end
+
   # as: :chattable tells Rails the foreign key lives in the polymorphic pair
   # chattable_type/chattable_id on chats (not a conventional user_id). The User
   # is the single top-level chat owner; brand context is reached via the

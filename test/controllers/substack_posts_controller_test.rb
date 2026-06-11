@@ -34,6 +34,14 @@ class SubstackPostsControllerTest < ActionDispatch::IntegrationTest
                   text: /use as inspiration/i
   end
 
+  test "index subscribes to the user's live feed stream and renders the feed container" do
+    get substack_posts_path
+    # turbo_stream_from renders this custom element; its presence means the
+    # page will receive FetchSubstackSourceJob's broadcasts live.
+    assert_select "turbo-cable-stream-source", count: 1
+    assert_select "div#substack_feed", count: 1
+  end
+
   test "index shows only current user's posts" do
     other = User.create!(email: "other-posts@cf.test", password: "password123")
     Creator.create!(user: other, name: "X", topic: "X", goal: "X", audience: "X")

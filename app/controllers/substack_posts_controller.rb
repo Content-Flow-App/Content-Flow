@@ -12,9 +12,7 @@
 # so the collection route is the right fit.
 class SubstackPostsController < ApplicationController
   def index
-    @posts   = current_user.substack_posts
-                            .includes(substack_source: :user)
-                            .order(published_at: :desc)
+    @posts   = current_user.substack_feed
     @sources = current_user.substack_sources.order(created_at: :desc)
   end
 
