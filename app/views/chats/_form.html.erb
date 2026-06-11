@@ -24,6 +24,7 @@
           class: "cf-select mt-2" %>
   </div>
 
+  <% seeded = local_assigns[:seed_prompt].present? %>
   <div class="fixed bottom-0 left-0 right-0 px-7 pb-8 pt-3 z-10">
     <div class="flex items-end gap-6">
       <%= form.text_area :prompt, rows: 1,
@@ -31,7 +32,7 @@
             autofocus: true,
             value: local_assigns[:seed_prompt],
             class: "flex-1 bg-transparent border-none outline-none font-normal py-3 placeholder-[var(--cf-fg-muted)] resize-none overflow-hidden",
-            style: "field-sizing: content; font-size: 52px; line-height: 1; letter-spacing: -0.04em; caret-color: var(--cf-orange);" %>
+            style: "field-sizing: content; font-size: #{seeded ? 'var(--cf-text-sm)' : '52px'}; line-height: #{seeded ? '1.4' : '1'}; letter-spacing: var(--cf-tracking); caret-color: var(--cf-orange);" %>
       <%= form.button class: "shrink-0 pb-3 cursor-pointer hover:opacity-70 transition-opacity duration-150" do %>
         <%= image_tag "arrow.svg", style: "width: 28px; height: 28px; pointer-events: none;", alt: "send" %>
       <% end %>
