@@ -1,0 +1,106 @@
+<%# The feed body — empty states and the posts table. Rendered in two places:
+    the index page, and FetchSubstackSourceJob's Turbo Stream broadcast after a
+    fetch finishes. Keeping both in one partial means the live update can never
+    drift from the full-page render.
+
+    The root div carries id="substack_feed" because broadcast_replace_to swaps
+    the *whole* target element for this partial — if the id lived outside the
+    partial it would disappear after the first replace and later broadcasts
+    would have nothing to target.
+
+    Locals: posts (ordered SubstackPost relation), sources (user's SubstackSources). %>
+<div id="substack_feed">
+  <% if sources.empty? %>
+    <%# Empty state — no sources added yet. %>
+    <p class="cf-meta py-10 text-center">
+      no sources yet —
+      <%= link_to "add a substack publication", new_substack_source_path,
+            class: "text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %>
+      to start your feed.
+    </p>
+  <% elsif posts.empty? %>
+    <%# Sources exist but no posts to show. Three distinct cases:
+        1. a source failed to fetch  → show why + link to manage it
+        2. a source hasn't been fetched yet (async job pending) → "fetching…"
+        3. everything fetched but genuinely empty → "no posts". %>
+    <% if (failed = sources.select { |s| s.fetch_error.present? }).any? %>
+      <div class="cf-meta py-10 text-center">
+        <p class="text-[var(--cf-orange)]">couldn't fetch <%= pluralize(failed.size, "source") %>:</p>
+        <% failed.each do |s| %>
+          <p class="mt-1"><%= s.name.presence || s.handle || s.feed_url %> — <%= s.fetch_error %></p>
+        <% end %>
+        <p class="mt-3">
+          <%= link_to "manage sources", substack_sources_path,
+                class: "text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %>
+        </p>
+      </div>
+    <% elsif sources.any? { |s| s.fetched_at.nil? } %>
+      <p class="cf-meta py-10 text-center">
+        fetching your posts — they'll appear here in a moment.
+      </p>
+    <% else %>
+      <p class="cf-meta py-10 text-center">
+        no posts yet — hit refresh to fetch your sources.
+      </p>
+    <% end %>
+  <% else %>
+    <div class="overflow-x-auto">
+      <table class="w-full border-collapse min-w-[600px]">
+        <thead>
+          <tr class="text-left">
+            <th class="pt-12 pb-3 cf-h2 font-normal">post</th>
+            <th class="pt-12 pb-3 pl-8 cf-h2 font-normal">source</th>
+            <th class="pt-12 pb-3 cf-h2 font-normal">published</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tr><td colspan="4"><div class="cf-rule"></div></td></tr>
+        <tbody>
+          <% posts.each do |post| %>
+            <tr class="cf-row">
+              <td class="py-[18px] cf-label font-normal max-w-xs">
+                <a
+                  href="<%= post.url %>"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="hover:text-[var(--cf-orange)] transition-colors duration-150"
+                >
+                  <%= post.title %>
+                </a>
+
+                <% if post.summary.present? %>
+                  <p class="cf-meta mt-1 font-normal leading-snug line-clamp-2">
+                    <%= post.summary %>
+                  </p>
+                <% end %>
+              </td>
+
+              <td class="py-[18px] pl-8 cf-label font-normal cf-meta whitespace-nowrap">
+                <%= post.substack_source.name.presence ||
+                    "#{post.substack_source.handle}.substack.com" ||
+                    "substack" %>
+              </td>
+
+              <td class="py-[18px] cf-label font-normal cf-meta whitespace-nowrap">
+                <%= post.published_at ? post.published_at.strftime("%b %d, %Y") : "—" %>
+              </td>
+
+              <td class="py-[18px] pr-px cf-label font-normal text-right whitespace-nowrap">
+                <%# "Use as inspiration" seeds the generate_idea chat flow.
+                    We pass substack_post_id so ChatsController#new can pre-fill
+                    the opening prompt with this post's title and summary. %>
+
+                <%= link_to "use as inspiration",
+                    new_chat_path(
+                      purpose: "generate_idea",
+                      substack_post_id: post.id
+                    ),
+                    class: "text-[var(--cf-orange)] hover:text-[var(--cf-orange-press)] transition-colors duration-150" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>
