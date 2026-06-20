@@ -4,7 +4,7 @@ class SubstackPostsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   def setup
-    @user   = User.create!(email: "posts-ctrl@cf.test", password: "password123")
+    @user   = create_user!(email: "posts-ctrl@cf.test")
     Creator.create!(user: @user, name: "Test", topic: "AI", goal: "grow", audience: "devs")
     @source = @user.substack_sources.create!(feed_url: "lennysnewsletter.substack.com/feed", name: "Lenny")
     sign_in @user
@@ -43,7 +43,7 @@ class SubstackPostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "index shows only current user's posts" do
-    other = User.create!(email: "other-posts@cf.test", password: "password123")
+    other = create_user!(email: "other-posts@cf.test")
     Creator.create!(user: other, name: "X", topic: "X", goal: "X", audience: "X")
     other_src = other.substack_sources.create!(feed_url: "another.substack.com/feed")
     other_src.substack_posts.create!(guid: "xyz", title: "Other user's post", published_at: Time.current)

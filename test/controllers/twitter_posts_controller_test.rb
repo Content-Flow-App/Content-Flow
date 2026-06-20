@@ -4,7 +4,7 @@ class TwitterPostsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   def setup
-    @user = User.create!(email: "twitter-ctrl@cf.test", password: "password123")
+    @user = create_user!(email: "twitter-ctrl@cf.test")
     Creator.create!(user: @user, name: "Ada", topic: "AI",
                     goal: "grow audience", audience: "founders")
     @idea = @user.ideas.create!(title: "Ship faster", topic: "AI",
@@ -60,7 +60,7 @@ class TwitterPostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "cannot reach another user's script" do
-    other = User.create!(email: "twitter-other@cf.test", password: "password123")
+    other = create_user!(email: "twitter-other@cf.test")
     other_idea = other.ideas.create!(title: "x", topic: "x", description: "x")
     other_script = other_idea.scripts.create!(title: "x", style: "x",
                                               length: "x", description: "x", custom_instructions: "x")

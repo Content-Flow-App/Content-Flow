@@ -2,7 +2,7 @@ require "test_helper"
 
 class RefreshStaleSubstackSourcesJobTest < ActiveJob::TestCase
   def setup
-    @user = User.create!(email: "refresh-job@cf.test", password: "password123")
+    @user = create_user!(email: "refresh-job@cf.test")
   end
 
   test "enqueues a fetch job for a never-fetched source" do

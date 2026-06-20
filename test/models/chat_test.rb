@@ -2,7 +2,7 @@ require "test_helper"
 
 class ChatTest < ActiveSupport::TestCase
   def setup
-    @user = User.create!(email: "chat-owner@cf.test", password: "password123")
+    @user = create_user!(email: "chat-owner@cf.test")
   end
 
   test "a chat can belong to a polymorphic chattable owner" do

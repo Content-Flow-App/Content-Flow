@@ -4,7 +4,7 @@ class SubstackSourcesControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   def setup
-    @user = User.create!(email: "sources-ctrl@cf.test", password: "password123")
+    @user = create_user!(email: "sources-ctrl@cf.test")
     Creator.create!(user: @user, name: "Test", topic: "AI", goal: "grow", audience: "devs")
     sign_in @user
   end
@@ -13,7 +13,7 @@ class SubstackSourcesControllerTest < ActionDispatch::IntegrationTest
 
   test "index lists only the current user's sources" do
     @user.substack_sources.create!(feed_url: "lennysnewsletter.substack.com/feed", name: "Lenny")
-    other = User.create!(email: "other-src@cf.test", password: "password123")
+    other = create_user!(email: "other-src@cf.test")
     Creator.create!(user: other, name: "X", topic: "X", goal: "X", audience: "X")
     other.substack_sources.create!(feed_url: "another.substack.com/feed")
 
@@ -60,7 +60,7 @@ class SubstackSourcesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "destroy cannot remove another user's source" do
-    other = User.create!(email: "other-del@cf.test", password: "password123")
+    other = create_user!(email: "other-del@cf.test")
     Creator.create!(user: other, name: "X", topic: "X", goal: "X", audience: "X")
     other_source = other.substack_sources.create!(feed_url: "another.substack.com/feed")
 

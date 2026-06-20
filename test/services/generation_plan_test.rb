@@ -34,7 +34,7 @@ class GenerationPlanTest < ActiveSupport::TestCase
   # generation flow never creates a second post for the same script.
   class AssignPostTest < ActiveSupport::TestCase
     def setup
-      @user   = User.create!(email: "assign@cf.test", password: "password123")
+      @user   = create_user!(email: "assign@cf.test")
       @idea   = @user.ideas.create!(title: "i", topic: "t", description: "d")
       @script = @idea.scripts.create!(title: "s", style: "x", length: "x",
                                       description: "d", custom_instructions: "p")

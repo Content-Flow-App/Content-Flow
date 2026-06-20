@@ -4,7 +4,7 @@ class ChatsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   def setup
-    @user = User.create!(email: "chat-create@cf.test", password: "password123")
+    @user = create_user!(email: "chat-create@cf.test")
     Creator.create!(user: @user, name: "Ada", topic: "AI",
                     goal: "grow audience", audience: "founders")
     @idea = @user.ideas.create!(title: "Ship faster", topic: "AI",
@@ -209,7 +209,7 @@ class ChatsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "new cannot seed from another user's substack post" do
-    other = User.create!(email: "other-seed@cf.test", password: "password123")
+    other = create_user!(email: "other-seed@cf.test")
     Creator.create!(user: other, name: "X", topic: "X", goal: "X", audience: "X")
     other_source = other.substack_sources.create!(feed_url: "another.substack.com/feed")
     other_post = other_source.substack_posts.create!(

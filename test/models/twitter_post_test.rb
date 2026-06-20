@@ -2,7 +2,7 @@ require "test_helper"
 
 class TwitterPostTest < ActiveSupport::TestCase
   def setup
-    @user   = User.create!(email: "twitter-model@cf.test", password: "password123")
+    @user   = create_user!(email: "twitter-model@cf.test")
     @idea   = @user.ideas.create!(title: "Ship faster", topic: "AI", description: "tips")
     @script = @idea.scripts.create!(title: "s", style: "educational",
                                     length: "short", description: "d", custom_instructions: "p")

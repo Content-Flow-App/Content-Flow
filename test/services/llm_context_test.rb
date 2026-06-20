@@ -2,7 +2,7 @@ require "test_helper"
 
 class LlmContextTest < ActiveSupport::TestCase
   def setup
-    @user = User.create!(email: "ctx-owner@cf.test", password: "password123")
+    @user = create_user!(email: "ctx-owner@cf.test")
     @creator = Creator.create!(user: @user, name: "Ada", topic: "AI",
                                goal: "grow audience", audience: "founders")
     @idea = @user.ideas.create!(title: "Ship faster", topic: "AI",
@@ -19,7 +19,7 @@ class LlmContextTest < ActiveSupport::TestCase
   end
 
   test "an owner with no creator profile yields no instructions" do
-    orphan = User.create!(email: "no-creator@cf.test", password: "password123")
+    orphan = create_user!(email: "no-creator@cf.test")
     assert_nil LlmContext.for(orphan)
   end
 

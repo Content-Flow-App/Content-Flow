@@ -7,7 +7,13 @@ module ActiveSupport
     # Run tests in parallel with specified workers
     parallelize(workers: :number_of_processors)
 
-    # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
-    fixtures :all
+    TEST_PASSWORD = "Str0ng!Password1"
+
+    def create_user!(email:, password: TEST_PASSWORD, confirmed: true)
+      user = User.new(email: email, password: password, password_confirmation: password)
+      user.skip_confirmation! if confirmed
+      user.save!
+      user
+    end
   end
 end
