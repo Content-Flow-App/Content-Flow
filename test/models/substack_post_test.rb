@@ -2,7 +2,7 @@ require "test_helper"
 
 class SubstackPostTest < ActiveSupport::TestCase
   def setup
-    @user   = User.create!(email: "post-test@cf.test", password: "password123")
+    @user   = create_user!(email: "post-test@cf.test")
     @source = @user.substack_sources.create!(feed_url: "lennysnewsletter.substack.com/feed")
   end
 

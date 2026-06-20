@@ -8,7 +8,7 @@ class FetchSubstackSourceJobTest < ActiveJob::TestCase
   include Turbo::Broadcastable::TestHelper
 
   setup do
-    @user   = User.create!(email: "fetch-job@cf.test", password: "password123")
+    @user   = create_user!(email: "fetch-job@cf.test")
     @source = @user.substack_sources.create!(feed_url: "lennysnewsletter.substack.com/feed", name: "Lenny")
     @stream = "substack_feed_#{@user.id}"
   end

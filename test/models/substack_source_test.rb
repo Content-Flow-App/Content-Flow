@@ -2,7 +2,7 @@ require "test_helper"
 
 class SubstackSourceTest < ActiveSupport::TestCase
   def setup
-    @user = User.create!(email: "source-test@cf.test", password: "password123")
+    @user = create_user!(email: "source-test@cf.test")
   end
 
   # --- URL normalisation ---------------------------------------------------
@@ -60,7 +60,7 @@ class SubstackSourceTest < ActiveSupport::TestCase
   end
 
   test "same feed_url is allowed for different users" do
-    other = User.create!(email: "other-source@cf.test", password: "password123")
+    other = create_user!(email: "other-source@cf.test")
     @user.substack_sources.create!(feed_url: "lennysnewsletter.substack.com/feed")
     source = other.substack_sources.build(feed_url: "lennysnewsletter.substack.com/feed")
     assert source.valid?

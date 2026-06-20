@@ -13,7 +13,7 @@ class GenerationJobTest < ActiveJob::TestCase
   include Rails.application.routes.url_helpers
 
   def setup
-    @user = User.create!(email: "genjob@cf.test", password: "password123")
+    @user = create_user!(email: "genjob@cf.test")
     Creator.create!(user: @user, name: "Ada", topic: "AI",
                     goal: "grow audience", audience: "founders")
     @idea = @user.ideas.create!(title: "Ship faster", topic: "AI",
@@ -138,7 +138,7 @@ class GenerationJobTest < ActiveJob::TestCase
   end
 
   test "a non-owner's chat broadcasts a failure and saves nothing" do
-    other = User.create!(email: "otherjob@cf.test", password: "password123")
+    other = create_user!(email: "otherjob@cf.test")
     other_idea = other.ideas.create!(title: "theirs", topic: "x", description: "d")
     chat = chat_with_transcript(other_idea, "generate_script")
 

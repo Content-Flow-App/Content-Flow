@@ -51,13 +51,23 @@ class FirstRunJourneyTest < ActionDispatch::IntegrationTest
     chat
   end
 
-  test "sign up → creator → generate idea → generate script → generate linkedin post" do
+  test "sign up → confirm → creator → generate idea → generate script → generate linkedin post" do
     # ── 1. Sign up ──────────────────────────────────────────────────────────
     post user_registration_path, params: {
-      user: { email: "journey@cf.test", password: "password123",
-              password_confirmation: "password123" }
+      user: { email: "journey@cf.test", password: ActiveSupport::TestCase::TEST_PASSWORD,
+              password_confirmation: ActiveSupport::TestCase::TEST_PASSWORD }
     }
-    # after_sign_up_path_for routes a new user to creator_path (no creator yet)
+    # With :confirmable, sign-up does not auto-sign-in — it redirects to
+    # sign-in with a "confirm your email" flash.
+    user = User.find_by!(email: "journey@cf.test")
+    assert_nil user.confirmed_at
+
+    # ── 1b. Confirm email and sign in ───────────────────────────────────────
+    user.confirm
+    post user_session_path, params: {
+      user: { email: "journey@cf.test", password: ActiveSupport::TestCase::TEST_PASSWORD }
+    }
+    # after_sign_in_path_for routes a new user to creator_path (no creator yet)
     assert_redirected_to creator_path
 
     # ── 2. Create creator profile ───────────────────────────────────────────

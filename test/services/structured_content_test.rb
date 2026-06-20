@@ -2,7 +2,7 @@ require "test_helper"
 
 class StructuredContentTest < ActiveSupport::TestCase
   def setup
-    @user = User.create!(email: "gen-owner@cf.test", password: "password123")
+    @user = create_user!(email: "gen-owner@cf.test")
   end
 
   test "maps a parsed Hash payload (string keys) onto schema fields" do

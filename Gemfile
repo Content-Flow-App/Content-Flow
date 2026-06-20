@@ -44,6 +44,7 @@ gem "image_processing", "~> 2.0"
 gem "aws-sdk-s3", require: false
 
 gem "devise"
+gem "postmark-rails"
 gem "feedjira"
 gem 'ruby_llm', '~> 1.16'
 gem 'ruby_llm-schema'
@@ -65,4 +66,5 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  gem "letter_opener_web"
 end

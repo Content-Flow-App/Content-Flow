@@ -4,7 +4,7 @@ class ScriptsControllerTest < ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
   def setup
-    @user = User.create!(email: "scripts@cf.test", password: "password123")
+    @user = create_user!(email: "scripts@cf.test")
     Creator.create!(user: @user, name: "Ada", topic: "AI",
                     goal: "grow audience", audience: "founders")
     @idea = @user.ideas.create!(title: "Ship faster", topic: "AI",

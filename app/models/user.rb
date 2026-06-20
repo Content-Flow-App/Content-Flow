@@ -1,8 +1,10 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  # :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable, :confirmable
+
+  validate :password_complexity
 
   has_one :creator
   has_many :ideas, dependent: :destroy
@@ -45,5 +47,14 @@ class User < ApplicationRecord
     return :post unless has_post
 
     :done
+  end
+
+  private
+
+  def password_complexity
+    return if password.blank?
+
+    errors.add(:password, "must include at least one number") unless password.match?(/\d/)
+    errors.add(:password, "must include at least one symbol") unless password.match?(/[^a-zA-Z\d\s]/)
   end
 end

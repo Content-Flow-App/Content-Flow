@@ -11,7 +11,7 @@ class GenerationsControllerTest < ActionDispatch::IntegrationTest
   include ActiveJob::TestHelper
 
   def setup
-    @user = User.create!(email: "gen@cf.test", password: "password123")
+    @user = create_user!(email: "gen@cf.test")
     Creator.create!(user: @user, name: "Ada", topic: "AI",
                     goal: "grow audience", audience: "founders")
     @idea = @user.ideas.create!(title: "Ship faster", topic: "AI",
@@ -63,7 +63,7 @@ class GenerationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "a non-owner gets 404 and no job is enqueued" do
-    other = User.create!(email: "other@cf.test", password: "password123")
+    other = create_user!(email: "other@cf.test")
     other_idea = other.ideas.create!(title: "theirs", topic: "x", description: "d")
     # A chat whose chattable is someone else's idea — simulating a tampered request.
     chat = other_idea.chats.create!(purpose: "generate_script")

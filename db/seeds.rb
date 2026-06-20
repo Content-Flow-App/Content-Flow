@@ -45,7 +45,7 @@ puts "  Done. Tables are clean.\n\n"
 # `create!` calls 100+ times.
 SEED_DATA = [
   {
-    email: "theo@contentflow.com",
+    email: "theo@content-flow.xyz",
     creator: {
       name: "Theodora",
       topic: "AI, Productivity and Technology",
@@ -400,7 +400,7 @@ SEED_DATA = [
     ]
   },
   {
-    email: "maya@contentflow.com",
+    email: "maya@content-flow.xyz",
     creator: {
       name: "Maya Chen",
       topic: "Personal Finance",
@@ -759,7 +759,7 @@ SEED_DATA = [
     ]
   },
   {
-    email: "marcus@contentflow.com",
+    email: "marcus@content-flow.xyz",
     creator: {
       name: "Marcus Webb",
       topic: "Fitness & Wellness",
@@ -1118,7 +1118,7 @@ SEED_DATA = [
     ]
   },
   {
-    email: "priya@contentflow.com",
+    email: "priya@content-flow.xyz",
     creator: {
       name: "Priya Nair",
       topic: "Software Engineering Careers",
@@ -1476,7 +1476,7 @@ SEED_DATA = [
     ]
   },
   {
-    email: "elena@contentflow.com",
+    email: "elena@content-flow.xyz",
     creator: {
       name: "Elena Rossi",
       topic: "Sustainable Living",
@@ -1847,11 +1847,13 @@ puts "Seeding #{SEED_DATA.size} creators and their content...\n\n"
 
 SEED_DATA.each do |data|
   # --- User -------------------------------------------------------------------
-  user = User.create!(
+  user = User.new(
     email: data[:email],
-    password: "password123",
-    password_confirmation: "password123"
+    password: "Str0ng!Password1",
+    password_confirmation: "Str0ng!Password1"
   )
+  user.skip_confirmation!
+  user.save!
   puts "Created user: #{user.email}"
 
   # --- Creator (one per user; User has_one :creator) --------------------------
@@ -1933,7 +1935,7 @@ puts ""
 # `has_many :substack_sources, dependent: :destroy` (and on to posts).
 puts "Seeding sample Substack feed..."
 
-demo_user = User.find_by!(email: "demo@contentflow.com")
+demo_user = User.find_by!(email: "theo@content-flow.xyz")
 
 SUBSTACK_FEED_DATA = [
   {
