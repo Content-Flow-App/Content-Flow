@@ -33,3 +33,7 @@ When making a refactor, always explain what is changing and why it is beneficial
 ## JavaScript
 
 All JavaScript must be written as Stimulus controllers. No inline scripts or bare `addEventListener` calls.
+
+## Specs
+Behavioral specs are in `openspec/specs/`. Consult the relevant domain
+spec before implementing any feature in that area.
