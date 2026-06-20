@@ -1,19 +1,18 @@
 ## ADDED Requirements
 
-### Requirement: Production email delivery via SMTP
-The system SHALL deliver transactional emails in production through an external
-SMTP relay (Postmark). SMTP credentials SHALL be stored in Rails encrypted
-credentials, not environment variables or plain-text config. The delivery method
-SHALL be `:smtp` with TLS enabled.
+### Requirement: Production email delivery via Postmark API
+The system SHALL deliver transactional emails in production through the Postmark
+API using the `postmark-rails` gem. The Server API Token SHALL be stored in Rails
+encrypted credentials as `postmark_api_token`, not environment variables or
+plain-text config. The delivery method SHALL be `:postmark`.
 
 #### Scenario: Devise sends a confirmation email in production
 - **WHEN** a user signs up in the production environment
-- **THEN** the confirmation email is delivered through the configured Postmark
-  SMTP relay
+- **THEN** the confirmation email is delivered through the Postmark API
 
-#### Scenario: SMTP credentials are missing
-- **WHEN** the application starts in production without SMTP credentials in
-  Rails credentials
+#### Scenario: API token is missing
+- **WHEN** the application attempts to send email in production without a
+  `postmark_api_token` in Rails credentials
 - **THEN** email delivery fails with a clear error rather than silently dropping
   messages
 

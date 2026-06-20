@@ -69,18 +69,21 @@ confirmation email itself.
 **Alternative considered**: Full RFC-5322 regex. Rejected — hundreds of
 characters, allows formats no one uses, false sense of completeness.
 
-### 4. Postmark via SMTP, not the Postmark API gem
+### 4. Postmark via `postmark-rails` gem, not raw SMTP
 
-**Choice**: Use Rails' built-in `delivery_method: :smtp` with Postmark's SMTP
-endpoint. No `postmark-rails` gem.
+**Choice**: Use the `postmark-rails` gem with `delivery_method: :postmark` and
+API-mode delivery. Store the Server API Token in Rails encrypted credentials as
+`postmark_api_token`.
 
-**Why**: Stays in the framework. Action Mailer speaks SMTP natively. The
-Postmark-specific gem adds API-mode delivery and extras (delivery stats, bounce
-handling) that aren't needed yet. SMTP is the universal transport — switching
-providers later means changing four config lines, not swapping a gem.
+**Why**: The gem is Postmark's official Rails integration. API-mode is faster than
+SMTP (single HTTP request vs. SMTP handshake), provides better error messages,
+and supports Postmark-specific features (message streams, open tracking) without
+extra configuration. The gem is lightweight and well-maintained. Verified domain:
+`content-flow.xyz`.
 
-**Alternative considered**: `postmark-rails` gem for API-mode delivery. Rejected
-— unnecessary dependency for transactional email.
+**Alternative considered**: Raw SMTP via Action Mailer's built-in `:smtp` delivery
+method. Would avoid a gem dependency but loses API-mode benefits and
+Postmark-specific error detail.
 
 ### 5. Credentials in Rails encrypted credentials, not ENV vars
 
@@ -93,17 +96,18 @@ already references `Rails.application.credentials.dig(:smtp, ...)`.
 **Alternative considered**: Heroku config vars / ENV. Rejected — less secure,
 not the Rails way.
 
-### 6. letter_opener for development, not :log or mailcatcher
+### 6. letter_opener_web for development, not :log or mailcatcher
 
-**Choice**: `letter_opener` gem in the development group.
+**Choice**: `letter_opener_web` gem in the development group, mounted at
+`/letter_opener`.
 
-**Why**: Opens emails in the browser automatically when triggered — closest to
-the real user experience. The `:log` method dumps HTML to the console (unreadable
-for styled emails). Mailcatcher requires running a separate process. Rails mailer
-previews are useful for design iteration but don't catch emails from real flows.
+**Why**: Provides a web UI to browse all sent emails at `/letter_opener`. More
+reliable than `letter_opener` (which depends on `launchy` to auto-open browser
+tabs and can silently fail on macOS). The `:log` method dumps HTML to the console
+(unreadable for styled emails). Mailcatcher requires running a separate process.
 
-**Alternative considered**: `:log` delivery method (zero gems). Rejected — HTML
-in terminal is painful for confirmation emails with links.
+**Alternative considered**: `letter_opener` (auto-open tabs). Rejected — `launchy`
+browser-open was unreliable on macOS; emails were captured but never displayed.
 
 ### 7. Backfill existing users in the migration
 
