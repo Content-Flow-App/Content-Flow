@@ -37,3 +37,7 @@ All JavaScript must be written as Stimulus controllers. No inline scripts or bar
 ## Specs
 Behavioral specs are in `openspec/specs/`. Consult the relevant domain
 spec before implementing any feature in that area.
+
+## Localhost
+
+We're using tailwind css, so the local server needs to start with bin/dev.       

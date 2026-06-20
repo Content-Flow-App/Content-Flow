@@ -14,6 +14,7 @@ class ApplicationController < ActionController::Base
 
   def check_creator_exist
     return unless user_signed_in?
+    return if devise_controller?
     redirect_to creator_path unless current_user.creator.present?
   end
 

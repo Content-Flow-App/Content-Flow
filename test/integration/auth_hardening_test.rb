@@ -153,4 +153,21 @@ class AuthHardeningTest < ActionDispatch::IntegrationTest
     follow_redirect! if response.redirect?
     assert_response :success
   end
+
+  # ── Sign out works without a creator profile ─────────────────────────────
+
+  test "user without a creator profile can sign out" do
+    user = create_user!(email: "nocreator@example.com")
+
+    post user_session_path, params: {
+      user: { email: "nocreator@example.com",
+              password: ActiveSupport::TestCase::TEST_PASSWORD }
+    }
+
+    delete destroy_user_session_path
+    assert_response :redirect
+
+    get dashboard_path
+    assert_redirected_to new_user_session_path
+  end
 end
