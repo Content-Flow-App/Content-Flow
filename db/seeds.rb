@@ -1847,11 +1847,13 @@ puts "Seeding #{SEED_DATA.size} creators and their content...\n\n"
 
 SEED_DATA.each do |data|
   # --- User -------------------------------------------------------------------
-  user = User.create!(
+  user = User.new(
     email: data[:email],
-    password: "password123",
-    password_confirmation: "password123"
+    password: "Str0ng!Password1",
+    password_confirmation: "Str0ng!Password1"
   )
+  user.skip_confirmation!
+  user.save!
   puts "Created user: #{user.email}"
 
   # --- Creator (one per user; User has_one :creator) --------------------------
@@ -1933,7 +1935,7 @@ puts ""
 # `has_many :substack_sources, dependent: :destroy` (and on to posts).
 puts "Seeding sample Substack feed..."
 
-demo_user = User.find_by!(email: "demo@contentflow.com")
+demo_user = User.find_by!(email: "theo@contentflow.com")
 
 SUBSTACK_FEED_DATA = [
   {
