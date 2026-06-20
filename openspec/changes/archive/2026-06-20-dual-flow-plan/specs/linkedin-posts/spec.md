@@ -1,13 +1,4 @@
-# linkedin-posts
-
-## Purpose
-
-A LinkedIn post is a single record derived from either a script (scripted flow)
-or directly from an idea (direct flow), managed as a singular nested resource
-(no collection), with a show page that links onward to the dashboard and
-new-idea creation.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: LinkedIn post as a singular resource nested under a script
 The system SHALL provide a LinkedIn post as a singular resource nested under a script, supporting `show`, `new`, `create`, `edit`, `update`, and `destroy`. A new post SHALL be built through `@script.build_linkedin_post`. A LinkedIn post SHALL capture `title`, `hook`, and `body`. There SHALL be no `index` action for LinkedIn posts. The `script_id` foreign key SHALL be nullable so a post can instead belong directly to an idea; the script-nested routes, controller branch, and behavior SHALL remain unchanged.
@@ -19,6 +10,8 @@ The system SHALL provide a LinkedIn post as a singular resource nested under a s
 #### Scenario: A script has at most one LinkedIn post
 - **WHEN** a script already has a LinkedIn post and the user opens its new/edit flow
 - **THEN** the system operates on that single post rather than creating a collection
+
+## ADDED Requirements
 
 ### Requirement: LinkedIn post belongs to exactly one parent
 The system SHALL allow a LinkedIn post to belong to **either** a script (scripted flow) **or** an idea (direct flow), never both and never neither. The post SHALL expose `parent_idea` (resolving to `script&.idea || idea`) and SHALL derive its owning user through that parent idea. A validation SHALL reject a post that has both `script_id` and `idea_id` set, or neither.
@@ -45,10 +38,3 @@ The system SHALL provide a LinkedIn post as a singular resource nested directly 
 #### Scenario: Parent is resolved from whichever route is used
 - **WHEN** the post controller runs with `params[:script_id]` versus `params[:idea_id]`
 - **THEN** it resolves the parent to the user-scoped script in the first case and the user-scoped idea in the second
-
-### Requirement: LinkedIn post show page links onward
-The system SHALL display, on a LinkedIn post's detail page, calls to action leading to the dashboard and to creating a new idea.
-
-#### Scenario: Post detail page offers onward navigation
-- **WHEN** an authenticated user views a LinkedIn post
-- **THEN** the page shows CTAs to the dashboard and to creating a new idea
