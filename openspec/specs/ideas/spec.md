@@ -1,0 +1,37 @@
+# ideas
+
+## Purpose
+
+Full CRUD for ideas, scoped to the current user, with a show page that links
+onward into script creation.
+
+## Requirements
+
+### Requirement: Ideas CRUD scoped to the current user
+The system SHALL provide full CRUD for ideas (`index`, `show`, `new`, `create`, `edit`, `update`, `destroy`) with every action scoped through `current_user.ideas`. An idea SHALL capture `title`, `description`, and `topic`.
+
+#### Scenario: User lists their own ideas
+- **WHEN** an authenticated user visits the ideas index
+- **THEN** the system lists only ideas belonging to `current_user`
+
+#### Scenario: User creates an idea
+- **WHEN** an authenticated user submits the new idea form with a valid title, description, and topic
+- **THEN** the system creates the idea owned by `current_user` and redirects to it
+
+### Requirement: Idea show page links to scripts
+The system SHALL show, on an idea's detail page, the scripts that belong to that idea and a "Write a script" call to action leading to the new-script form for that idea.
+
+#### Scenario: Idea detail page offers script creation
+- **WHEN** an authenticated user views one of their ideas
+- **THEN** the page lists the idea's scripts and displays a "Write a script" CTA targeting the new-script form for that idea
+
+### Requirement: Idea show page links to direct posts
+The system SHALL show, on an idea's detail page, a "posts" section listing the posts created directly from that idea (alongside the existing scripts section), and SHALL offer both a "write a script" call to action (scripted flow) and a "create a post directly" call to action (direct flow). The direct CTA SHALL target the new idea-nested post for that idea.
+
+#### Scenario: Idea detail page offers both creation paths
+- **WHEN** an authenticated user views one of their ideas
+- **THEN** the page shows a "write a script" CTA targeting the new-script form and a "create a post directly" CTA targeting the new idea-nested post
+
+#### Scenario: Direct posts are listed on the idea
+- **WHEN** an idea has one or more posts created directly from it
+- **THEN** the idea show page lists those posts in a "posts" section with a link to each
