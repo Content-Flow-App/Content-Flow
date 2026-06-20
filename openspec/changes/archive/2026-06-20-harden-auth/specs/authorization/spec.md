@@ -1,4 +1,4 @@
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: Email format validation
 The system SHALL validate email addresses using a regex that enforces: word
