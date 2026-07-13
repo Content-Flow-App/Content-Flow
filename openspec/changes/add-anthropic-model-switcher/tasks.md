@@ -1,8 +1,8 @@
 ## 1. Registry
 
-- [ ] 1.1 Confirm `ANTHROPIC_API_KEY` is set and live on Heroku (already verified in exploration: `HTTP 200` against `api.anthropic.com/v1/models`, `claude-sonnet-5` present)
-- [ ] 1.2 Run `Model.refresh!` (locally against dev DB, then in production, e.g. `heroku run rails runner "Model.refresh!" --app content-flow-app`) and confirm a `claude-sonnet-5` / `anthropic` row exists with real pricing/context-window/capabilities data
-- [ ] 1.3 Confirm no other provider's row collides on `model_id: "claude-sonnet-5"` (checked already: none exists yet)
+- [x] 1.1 Confirm `ANTHROPIC_API_KEY` is set and live on Heroku (already verified in exploration: `HTTP 200` against `api.anthropic.com/v1/models`, `claude-sonnet-5` present)
+- [x] 1.2 Run `Model.refresh!` locally against dev DB — confirmed a `claude-sonnet-5` / `anthropic` row exists with real pricing/context-window/capabilities data. **Production refresh (`heroku run rails runner "Model.refresh!" --app content-flow-app`) still pending** — holding off until this change actually ships, per the task's own "once this ships" framing; see note below.
+- [x] 1.3 Confirm no other provider's row collides on `model_id: "claude-sonnet-5"` (confirmed: only one row, provider `anthropic`)
 
 ## 2. Configuration
 
