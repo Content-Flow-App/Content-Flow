@@ -64,4 +64,25 @@ class ChatTest < ActiveSupport::TestCase
     assert_not chat.valid?
     assert_includes chat.errors[:purpose], "is not included in the list"
   end
+
+  # ── model resolution ──────────────────────────────────────────────────────
+  # acts_as_chat resolves the model on save (resolve_model_from_strings); a
+  # chat created with no explicit model falls back to RubyLLM.config.default_model,
+  # and an explicit model wins over that default. Nothing exercised this
+  # directly before — see test/config/ruby_llm_registry_test.rb for the
+  # lower-level registry guard.
+
+  test "a chat with no explicit model resolves to the configured default" do
+    chat = @user.chats.create!
+
+    assert_equal "claude-sonnet-5", chat.model_id
+    assert_equal "anthropic", chat.provider
+  end
+
+  test "a chat created with an explicit model honors it over the default" do
+    chat = @user.chats.create!(model: "gpt-4o-mini")
+
+    assert_equal "gpt-4o-mini", chat.model_id
+    assert_equal "openai", chat.provider
+  end
 end
