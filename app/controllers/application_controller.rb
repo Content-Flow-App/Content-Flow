@@ -2,6 +2,15 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   before_action :check_creator_exist
 
+  # The only providers actually configured with working credentials (see
+  # config/initializers/ruby_llm.rb). RubyLLM's registry knows about ~1350
+  # models across a dozen more providers (gemini, deepseek, mistral,
+  # perplexity, xai, azure, bedrock, vertexai, openrouter, ollama, gpustack)
+  # that would raise RubyLLM::ConfigurationError if picked — this allowlist
+  # keeps `available_chat_models` safe regardless of what happens to be in
+  # the `models` table.
+  CHAT_PROVIDERS = %w[openai anthropic].freeze
+
   private
 
   def after_sign_up_path_for(resource)
@@ -30,6 +39,7 @@ class ApplicationController < ActionController::Base
 
   def available_chat_models
     RubyLLM.models.chat_models.all
+           .select { |model| CHAT_PROVIDERS.include?(model.provider.to_s) }
            .sort_by { |model| [ model.provider.to_s, model.name.to_s ] }
   end
 end
