@@ -6,9 +6,10 @@
 
 ## 2. Configuration
 
-- [ ] 2.1 Change `RubyLLM.config.default_model` to `"claude-sonnet-5"` in `config/initializers/ruby_llm.rb`
-- [ ] 2.2 Leave `openai_api_key` / `openai_api_base` (GitHub Models) and the existing `GithubModelsModelPrefix` payload patch untouched — verify with a diff that only `default_model` changed in that file
-- [ ] 2.3 Add a comment noting `claude-sonnet-5` is the live Anthropic Console model id (not a placeholder), matching the style of the existing "Setup - Working" comments
+- [x] 2.1 Change `RubyLLM.config.default_model` to `"claude-sonnet-5"` in `config/initializers/ruby_llm.rb`
+- [x] 2.2 Leave `openai_api_key` / `openai_api_base` (GitHub Models) and the existing `GithubModelsModelPrefix` payload patch untouched — verified with `git diff`, only the `anthropic`/`default_model` lines and comments changed
+- [x] 2.3 Add a comment noting `claude-sonnet-5` is the live Anthropic Console model id (not a placeholder), matching the style of the existing "Setup - Working" comments
+- [x] 2.4 (found during implementation) Point `config.model_registry_file` at a new committed `config/ruby_llm_models.json` (scoped to `openai`/`anthropic`), since the test DB's `models` table is empty by design and was silently falling back to the `ruby_llm` gem's own bundled registry, which doesn't know about `claude-sonnet-5` — this broke 52 tests with `ModelNotFoundError` until fixed. See design.md Decision 5.
 
 ## 3. Model switcher scoping
 
