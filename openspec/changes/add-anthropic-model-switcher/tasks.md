@@ -13,9 +13,9 @@
 
 ## 3. Model switcher scoping
 
-- [ ] 3.1 Add a `CHAT_PROVIDERS = %w[openai anthropic].freeze` constant to `app/controllers/application_controller.rb`
-- [ ] 3.2 Update `available_chat_models` to filter `RubyLLM.models.chat_models.all` to `CHAT_PROVIDERS` before sorting
-- [ ] 3.3 Verify `ModelsController#index` (which also calls `available_chat_models`) still renders correctly with the narrowed list
+- [x] 3.1 Add a `CHAT_PROVIDERS = %w[openai anthropic].freeze` constant to `app/controllers/application_controller.rb`
+- [x] 3.2 Update `available_chat_models` to filter `RubyLLM.models.chat_models.all` to `CHAT_PROVIDERS` before sorting
+- [x] 3.3 Verify `ModelsController#index` still renders correctly with the narrowed list — added `test/controllers/models_controller_test.rb` (previously nonexistent) rather than only checking by hand: confirms `index` renders exactly the scoped count (158 models, down from ~1350) and lists no gemini/openrouter rows, and `show` still renders a real model
 
 ## 4. New-chat switcher UI
 
