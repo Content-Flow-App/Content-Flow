@@ -13,11 +13,11 @@
     </div>
   <% end %>
 
-  <div class="mb-6 hidden">
+  <div class="mb-6 max-w-sm">
     <%= form.label :model, "model", class: "cf-form-label" %>
     <%= form.select :model,
           options_for_select(
-            @chat_models.map { |m| [m.label, m.id] }.unshift([default_model_display_name, nil]),
+            @chat_models.map { |m| [chat_model_label(m), m.id] }.unshift([default_model_display_name, nil]),
             @selected_model
           ),
           {},
