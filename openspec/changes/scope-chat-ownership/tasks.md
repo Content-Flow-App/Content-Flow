@@ -6,9 +6,9 @@
 
 ## 2. Models
 
-- [ ] 2.1 Add `belongs_to :user` to `Chat` (leave `belongs_to :chattable` untouched)
-- [ ] 2.2 Add `validates :user_id, presence: true` on `Chat` so any future creation path that forgets to stamp an owner fails loudly at save time
-- [ ] 2.3 Add `has_many :owned_chats, class_name: "Chat", foreign_key: :user_id` to `User` (do not modify the existing `has_many :chats, as: :chattable`)
+- [x] 2.1 Add `belongs_to :user` to `Chat` (leave `belongs_to :chattable` untouched)
+- [x] 2.2 Add `validates :user_id, presence: true` on `Chat` so any future creation path that forgets to stamp an owner fails loudly at save time
+- [x] 2.3 Add `has_many :owned_chats, class_name: "Chat", foreign_key: :user_id` to `User` (do not modify the existing `has_many :chats, as: :chattable`)
 
 ## 3. Controllers
 
