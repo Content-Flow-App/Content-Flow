@@ -19,12 +19,12 @@
 
 ## 4. Tests
 
-- [ ] 4.1 `chats_controller_test.rb`: non-owner gets 404 on `GET show` for another user's chat
-- [ ] 4.2 `chats_controller_test.rb`: non-owner gets 404 on `DELETE destroy` for another user's chat, and the chat is not destroyed
-- [ ] 4.3 `chats_controller_test.rb`: `index` only returns the current user's own chats, never another user's (create chats for two users, assert the response excludes the other user's)
-- [ ] 4.4 `chats_controller_test.rb`: a standalone chat (created with no `chattable`) is owned by and visible to its creator (regression guard for the gap that motivated `user_id`)
-- [ ] 4.5 `messages_controller_test.rb`: non-owner gets 404 on `POST create` into another user's chat, no message is persisted, and no `ChatResponseJob` is enqueued
-- [ ] 4.6 Model test: `Chat` backfill/association — creating a chat without `user_id` is invalid; `User#owned_chats` returns chats by `user_id` and is distinct from `User#chats`
+- [x] 4.1 `chats_controller_test.rb`: non-owner gets 404 on `GET show` for another user's chat
+- [x] 4.2 `chats_controller_test.rb`: non-owner gets 404 on `DELETE destroy` for another user's chat, and the chat is not destroyed
+- [x] 4.3 `chats_controller_test.rb`: `index` only returns the current user's own chats, never another user's (create chats for two users, assert the response excludes the other user's)
+- [x] 4.4 `chats_controller_test.rb`: a standalone chat (created with no `chattable`) is owned by and visible to its creator (regression guard for the gap that motivated `user_id`)
+- [x] 4.5 `messages_controller_test.rb`: non-owner gets 404 on `POST create` into another user's chat, no message is persisted, and no `ChatResponseJob` is enqueued
+- [x] 4.6 Model test: `Chat` backfill/association — creating a chat without `user_id` is invalid; `User#owned_chats` returns chats by `user_id` and is distinct from `User#chats`
 
 ## 5. Verification
 

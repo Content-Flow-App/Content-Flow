@@ -179,6 +179,53 @@ class ChatsControllerTest < ActionDispatch::IntegrationTest
     assert_select "button", "save as linkedin post"
   end
 
+  # ── ownership scoping (IDOR regression — see issue #27) ───────────────────
+
+  test "index only returns the current user's own chats" do
+    mine = @user.chats.create!(user: @user)
+
+    other = create_user!(email: "chat-other-index@cf.test")
+    Creator.create!(user: other, name: "Other", topic: "AI", goal: "grow", audience: "devs")
+    theirs = other.chats.create!(user: other)
+
+    get chats_path
+
+    assert_response :success
+    assert_select "a[href=?]", chat_path(mine)
+    assert_select "a[href=?]", chat_path(theirs), count: 0
+  end
+
+  test "show returns 404 for another user's chat" do
+    other = create_user!(email: "chat-other-show@cf.test")
+    Creator.create!(user: other, name: "Other", topic: "AI", goal: "grow", audience: "devs")
+    theirs = other.chats.create!(user: other)
+
+    get chat_path(theirs)
+
+    assert_response :not_found
+  end
+
+  test "destroy returns 404 for another user's chat and does not destroy it" do
+    other = create_user!(email: "chat-other-destroy@cf.test")
+    Creator.create!(user: other, name: "Other", topic: "AI", goal: "grow", audience: "devs")
+    theirs = other.chats.create!(user: other)
+
+    assert_no_difference -> { Chat.count } do
+      delete chat_path(theirs)
+    end
+
+    assert_response :not_found
+  end
+
+  test "a standalone chat with no chattable remains visible to its creator" do
+    # The plain /chats flow: no chattable at all, only a direct user_id owner.
+    chat = Chat.create!(user: @user)
+
+    get chat_path(chat)
+
+    assert_response :success
+  end
+
   # ── new: Substack "use as inspiration" seed flow ──────────────────────────
   # The Substack feed's "use as inspiration" link hits #new with
   # `purpose=generate_idea` + `substack_post_id=…`. #new pre-fills the prompt
