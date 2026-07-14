@@ -36,7 +36,7 @@ class GenerationJobTest < ActiveJob::TestCase
   end
 
   def chat_with_transcript(owner, purpose)
-    chat = owner.chats.create!(purpose: purpose)
+    chat = owner.chats.create!(purpose: purpose, user: owner.is_a?(User) ? owner : owner.user)
     chat.messages.create!(role: "user", content: "Let's make something good.")
     chat.messages.create!(role: "assistant", content: "Sure — here's a strong draft.")
     chat

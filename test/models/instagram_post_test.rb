@@ -65,7 +65,7 @@ class InstagramPostTest < ActiveSupport::TestCase
 
   test "owns chats via the polymorphic chattable association" do
     post = @script.create_instagram_post!(title: "My caption")
-    chat = post.chats.create!
+    chat = post.chats.create!(user: post.user)
 
     assert_equal post, chat.chattable
     assert_equal "InstagramPost", chat.chattable_type
@@ -74,7 +74,7 @@ class InstagramPostTest < ActiveSupport::TestCase
 
   test "its chats are destroyed with it" do
     post = @script.create_instagram_post!(title: "Doomed")
-    post.chats.create!
+    post.chats.create!(user: post.user)
 
     assert_difference("Chat.count", -1) { post.destroy }
   end

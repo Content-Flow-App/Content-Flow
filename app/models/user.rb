@@ -24,6 +24,13 @@ class User < ApplicationRecord
   # creator. dependent: :destroy clears a user's chats when the user is removed.
   has_many :chats, as: :chattable, dependent: :destroy
 
+  # The chats this user actually owns (via chats.user_id), for authorization —
+  # distinct from #chats above, which is the polymorphic "chats where I am the
+  # chattable subject" relation. A chat's owner and its chattable are
+  # independent: owned_chats covers every chat the user created, including
+  # standalone ones with no chattable at all.
+  has_many :owned_chats, class_name: "Chat", foreign_key: :user_id, dependent: :destroy
+
   # A User is the top-level chat node; its system-prompt layer is the creator
   # profile, reached through the association. Returns nil when there is no
   # creator yet, so LlmContext emits no instructions for a brand-less owner.

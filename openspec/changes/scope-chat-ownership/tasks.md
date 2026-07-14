@@ -6,16 +6,16 @@
 
 ## 2. Models
 
-- [ ] 2.1 Add `belongs_to :user` to `Chat` (leave `belongs_to :chattable` untouched)
-- [ ] 2.2 Add `validates :user_id, presence: true` on `Chat` so any future creation path that forgets to stamp an owner fails loudly at save time
-- [ ] 2.3 Add `has_many :owned_chats, class_name: "Chat", foreign_key: :user_id` to `User` (do not modify the existing `has_many :chats, as: :chattable`)
+- [x] 2.1 Add `belongs_to :user` to `Chat` (leave `belongs_to :chattable` untouched)
+- [x] 2.2 Add `validates :user_id, presence: true` on `Chat` so any future creation path that forgets to stamp an owner fails loudly at save time
+- [x] 2.3 Add `has_many :owned_chats, class_name: "Chat", foreign_key: :user_id` to `User` (do not modify the existing `has_many :chats, as: :chattable`)
 
 ## 3. Controllers
 
-- [ ] 3.1 `ChatsController#create`: stamp `user_id: current_user.id` on every created chat, regardless of `chattable`
-- [ ] 3.2 `ChatsController#set_chat`: change to `current_user.owned_chats.find(params[:id])`
-- [ ] 3.3 `ChatsController#index`: change to `current_user.owned_chats.order(created_at: :desc)`
-- [ ] 3.4 `MessagesController#set_chat`: change to `current_user.owned_chats.find(params[:chat_id])`
+- [x] 3.1 `ChatsController#create`: stamp `user_id: current_user.id` on every created chat, regardless of `chattable`
+- [x] 3.2 `ChatsController#set_chat`: change to `current_user.owned_chats.find(params[:id])`
+- [x] 3.3 `ChatsController#index`: change to `current_user.owned_chats.order(created_at: :desc)`
+- [x] 3.4 `MessagesController#set_chat`: change to `current_user.owned_chats.find(params[:chat_id])`
 
 ## 4. Tests
 

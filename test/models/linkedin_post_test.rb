@@ -37,7 +37,7 @@ class LinkedinPostTest < ActiveSupport::TestCase
 
   test "owns chats via the polymorphic chattable association" do
     post = @script.create_linkedin_post!(title: "My post")
-    chat = post.chats.create!
+    chat = post.chats.create!(user: post.user)
 
     assert_equal post, chat.chattable
     assert_equal "LinkedinPost", chat.chattable_type
@@ -46,7 +46,7 @@ class LinkedinPostTest < ActiveSupport::TestCase
 
   test "its chats are destroyed with it" do
     post = @script.create_linkedin_post!(title: "Doomed")
-    post.chats.create!
+    post.chats.create!(user: post.user)
 
     assert_difference("Chat.count", -1) { post.destroy }
   end

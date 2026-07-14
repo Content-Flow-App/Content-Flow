@@ -7,6 +7,13 @@ class Chat < ApplicationRecord
   # would fail the implicit presence validation.
   belongs_to :chattable, polymorphic: true, optional: true
 
+  # The chat's actual owner for authorization purposes — distinct from
+  # chattable, which only drives LlmContext's system-prompt injection and can
+  # be nil (a standalone chat). user_id is always required so a request can be
+  # scoped to it directly, without branching on whether a chattable exists.
+  belongs_to :user
+  validates :user_id, presence: true
+
   # What this chat is for. Declaring an enum over the string `purpose` column
   # gives us, for each key:
   #   - a scope          Chat.generate_idea            (WHERE purpose = 'generate_idea')
