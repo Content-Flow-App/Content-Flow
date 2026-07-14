@@ -2,7 +2,7 @@ class ChatsController < ApplicationController
   before_action :set_chat, only: [ :show, :destroy ]
 
   def index
-    @chats = Chat.order(created_at: :desc)
+    @chats = current_user.owned_chats.order(created_at: :desc)
   end
 
   def new
@@ -19,7 +19,8 @@ class ChatsController < ApplicationController
       @chat = Chat.create!(
         model: params.dig(:chat, :model).presence,
         chattable: chattable,
-        purpose: purpose
+        purpose: purpose,
+        user: current_user
       )
 
       # Persist the creator-aware system prompt as a role: :system message
@@ -52,7 +53,7 @@ class ChatsController < ApplicationController
   private
 
   def set_chat
-    @chat = Chat.find(params[:id])
+    @chat = current_user.owned_chats.find(params[:id])
   end
 
   # Resolves an optional chat owner from the params. It arrives two ways, like

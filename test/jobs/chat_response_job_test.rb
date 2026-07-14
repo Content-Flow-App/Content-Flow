@@ -8,7 +8,8 @@ class ChatResponseJobTest < ActiveJob::TestCase
   include Turbo::Broadcastable::TestHelper
 
   setup do
-    @chat = Chat.create!
+    @user = create_user!(email: "chat-response-job@cf.test")
+    @chat = Chat.create!(user: @user)
     @stream = "chat_#{@chat.id}"
   end
 

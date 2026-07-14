@@ -6,7 +6,7 @@ class ChatTest < ActiveSupport::TestCase
   end
 
   test "a chat can belong to a polymorphic chattable owner" do
-    chat = @user.chats.create!
+    chat = @user.chats.create!(user: @user)
 
     assert_equal @user, chat.chattable
     assert_equal "User", chat.chattable_type
@@ -14,8 +14,8 @@ class ChatTest < ActiveSupport::TestCase
     assert_includes @user.chats, chat
   end
 
-  test "a chat is valid with no owner (optional polymorphic association)" do
-    chat = Chat.new
+  test "a chat is valid with no chattable, as long as it has a user (standalone chat)" do
+    chat = Chat.new(user: @user)
 
     assert chat.valid?, "standalone chats must remain valid for the existing /chats flow"
     assert_nil chat.chattable
@@ -28,7 +28,7 @@ class ChatTest < ActiveSupport::TestCase
     post   = LinkedinPost.create!(script: script, title: "p", hook: "h", body: "b")
 
     [ idea, script, post ].each do |owner|
-      chat = owner.chats.create!
+      chat = owner.chats.create!(user: owner.user)
       assert_equal owner, chat.chattable
       assert_includes owner.chats, chat
     end
@@ -36,7 +36,7 @@ class ChatTest < ActiveSupport::TestCase
 
   test "destroying an owner destroys its chats" do
     idea = @user.ideas.create!(title: "t", topic: "ai", description: "d")
-    idea.chats.create!
+    idea.chats.create!(user: idea.user)
 
     assert_difference -> { Chat.count }, -1 do
       idea.destroy
@@ -44,7 +44,7 @@ class ChatTest < ActiveSupport::TestCase
   end
 
   test "purpose persists and exposes a predicate + scope" do
-    chat = @user.chats.create!(purpose: "generate_idea")
+    chat = @user.chats.create!(purpose: "generate_idea", user: @user)
 
     assert_equal "generate_idea", chat.reload.purpose
     assert chat.generate_idea?
@@ -52,7 +52,7 @@ class ChatTest < ActiveSupport::TestCase
   end
 
   test "a nil purpose is valid (plain free-form chat)" do
-    chat = Chat.new
+    chat = Chat.new(user: @user)
 
     assert chat.valid?
     assert_nil chat.purpose
@@ -73,14 +73,14 @@ class ChatTest < ActiveSupport::TestCase
   # lower-level registry guard.
 
   test "a chat with no explicit model resolves to the configured default" do
-    chat = @user.chats.create!
+    chat = @user.chats.create!(user: @user)
 
     assert_equal "claude-sonnet-5", chat.model_id
     assert_equal "anthropic", chat.provider
   end
 
   test "a chat created with an explicit model honors it over the default" do
-    chat = @user.chats.create!(model: "gpt-4o-mini")
+    chat = @user.chats.create!(model: "gpt-4o-mini", user: @user)
 
     assert_equal "gpt-4o-mini", chat.model_id
     assert_equal "openai", chat.provider

@@ -7,7 +7,7 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
     @user = create_user!(email: "messages-create@cf.test")
     Creator.create!(user: @user, name: "Ada", topic: "AI",
                     goal: "grow audience", audience: "founders")
-    @chat = @user.chats.create!
+    @chat = @user.chats.create!(user: @user)
     sign_in @user
   end
 

@@ -12,10 +12,10 @@
 
 ## 3. Controllers
 
-- [ ] 3.1 `ChatsController#create`: stamp `user_id: current_user.id` on every created chat, regardless of `chattable`
-- [ ] 3.2 `ChatsController#set_chat`: change to `current_user.owned_chats.find(params[:id])`
-- [ ] 3.3 `ChatsController#index`: change to `current_user.owned_chats.order(created_at: :desc)`
-- [ ] 3.4 `MessagesController#set_chat`: change to `current_user.owned_chats.find(params[:chat_id])`
+- [x] 3.1 `ChatsController#create`: stamp `user_id: current_user.id` on every created chat, regardless of `chattable`
+- [x] 3.2 `ChatsController#set_chat`: change to `current_user.owned_chats.find(params[:id])`
+- [x] 3.3 `ChatsController#index`: change to `current_user.owned_chats.order(created_at: :desc)`
+- [x] 3.4 `MessagesController#set_chat`: change to `current_user.owned_chats.find(params[:chat_id])`
 
 ## 4. Tests
 

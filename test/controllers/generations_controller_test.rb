@@ -21,7 +21,7 @@ class GenerationsControllerTest < ActionDispatch::IntegrationTest
 
   # Builds a chat with a non-blank visible transcript so generation can proceed.
   def chat_with_transcript(owner, purpose)
-    chat = owner.chats.create!(purpose: purpose)
+    chat = owner.chats.create!(purpose: purpose, user: owner.is_a?(User) ? owner : owner.user)
     chat.messages.create!(role: "user", content: "Let's make something good.")
     chat.messages.create!(role: "assistant", content: "Sure — here's a strong draft.")
     chat
@@ -66,7 +66,7 @@ class GenerationsControllerTest < ActionDispatch::IntegrationTest
     other = create_user!(email: "other@cf.test")
     other_idea = other.ideas.create!(title: "theirs", topic: "x", description: "d")
     # A chat whose chattable is someone else's idea — simulating a tampered request.
-    chat = other_idea.chats.create!(purpose: "generate_script")
+    chat = other_idea.chats.create!(purpose: "generate_script", user: other)
     chat.messages.create!(role: "user", content: "hi")
 
     assert_no_enqueued_jobs(only: GenerationJob) do
@@ -77,7 +77,7 @@ class GenerationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "a missing chattable redirects back with an alert and enqueues nothing" do
-    chat = Chat.create!(purpose: "generate_script") # no chattable
+    chat = Chat.create!(purpose: "generate_script", user: @user) # no chattable
     chat.messages.create!(role: "user", content: "hi")
     chat.messages.create!(role: "assistant", content: "sure")
 
@@ -90,7 +90,7 @@ class GenerationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "an empty transcript redirects back to the chat and enqueues nothing" do
-    chat = @user.chats.create!(purpose: "generate_idea") # no user/assistant messages
+    chat = @user.chats.create!(purpose: "generate_idea", user: @user) # no user/assistant messages
 
     assert_no_enqueued_jobs(only: GenerationJob) do
       post chat_generation_path(chat)
