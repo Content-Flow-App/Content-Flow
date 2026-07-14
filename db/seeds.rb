@@ -1900,22 +1900,27 @@ end
 # 4. Sample chats (exercise the polymorphic `chattable` association — F1)
 # ------------------------------------------------------------------------------
 # A chat can belong to any chattable owner (User/Idea/Script/LinkedinPost) via
-# chattable_type/chattable_id, or stand alone (chattable: nil). We seed one of
-# each so the new association — and the existing standalone /chats flow — both
-# have demo data to poke at in the console or UI.
+# chattable_type/chattable_id, or stand alone (chattable: nil) — chattable only
+# drives LlmContext's system-prompt injection. Every chat also carries a direct
+# `user_id` owner (belongs_to :user, required) for authorization, independent
+# of chattable — see openspec/changes/scope-chat-ownership. We seed one owned
+# and one standalone chat so both shapes have demo data to poke at in the
+# console or UI.
 puts "Seeding sample chats..."
 
-# Owned chat: idea.chats.create! sets chattable_type "Idea" + chattable_id.
+# Owned chat: idea.chats.create! sets chattable_type "Idea" + chattable_id;
+# user: demo_idea.user sets the actual authorization owner.
 demo_idea = Idea.find_by!(title: "How AI is changing the way we create content")
-idea_chat = demo_idea.chats.create!
+idea_chat = demo_idea.chats.create!(user: demo_idea.user)
 idea_chat.messages.create!(role: "user",      content: "Help me brainstorm hooks for this idea.")
 idea_chat.messages.create!(role: "assistant", content: "Sure — bold, curious, or contrarian?")
 puts "  Created idea chat (chattable: Idea ##{demo_idea.id}) with #{idea_chat.messages.count} messages"
 
-# Standalone chat: no owner, mirrors the existing /chats flow.
-standalone = Chat.create!
+# Standalone chat: no chattable, but still has a real user_id owner — mirrors
+# the existing /chats flow.
+standalone = Chat.create!(user: demo_idea.user)
 standalone.messages.create!(role: "user", content: "What should I post about today?")
-puts "  Created standalone chat (no owner) with #{standalone.messages.count} message"
+puts "  Created standalone chat (no chattable) with #{standalone.messages.count} message"
 
 puts ""
 
