@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_20_153105) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_14_104025) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -49,8 +49,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_20_153105) do
     t.bigint "model_id"
     t.string "purpose"
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
     t.index ["chattable_type", "chattable_id"], name: "index_chats_on_chattable"
     t.index ["model_id"], name: "index_chats_on_model_id"
+    t.index ["user_id"], name: "index_chats_on_user_id"
   end
 
   create_table "creators", force: :cascade do |t|
@@ -375,6 +377,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_20_153105) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "chats", "models"
+  add_foreign_key "chats", "users"
   add_foreign_key "creators", "users"
   add_foreign_key "ideas", "users"
   add_foreign_key "instagram_posts", "ideas"
