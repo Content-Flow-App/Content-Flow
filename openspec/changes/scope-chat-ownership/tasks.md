@@ -1,8 +1,8 @@
 ## 1. Migration and backfill
 
-- [ ] 1.1 Generate migration adding `user_id` to `chats` (`add_reference :chats, :user, foreign_key: true, index: true`, nullable)
-- [ ] 1.2 In the same migration, backfill `user_id` via SQL joins per `chattable_type`: `User` direct, `Idea`, `Script` → idea, and each of `LinkedinPost`/`TwitterPost`/`InstagramPost` → parent idea via script-or-idea
-- [ ] 1.3 Run the migration against a copy of current data (or dev db) and confirm the count of rows left with `user_id: nil` is limited to standalone chats (`chattable_id: nil`) — no unexpected misses on rows that do have a chattable
+- [x] 1.1 Generate migration adding `user_id` to `chats` (`add_reference :chats, :user, foreign_key: true, index: true`, nullable)
+- [x] 1.2 In the same migration, backfill `user_id` via SQL joins per `chattable_type`: `User` direct, `Idea`, `Script` → idea, and each of `LinkedinPost`/`TwitterPost`/`InstagramPost` → parent idea via script-or-idea
+- [x] 1.3 Run the migration against a copy of current data (or dev db) and confirm the count of rows left with `user_id: nil` is limited to standalone chats (`chattable_id: nil`) — no unexpected misses on rows that do have a chattable
 
 ## 2. Models
 
