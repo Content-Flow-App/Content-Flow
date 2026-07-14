@@ -65,6 +65,26 @@ class ChatTest < ActiveSupport::TestCase
     assert_includes chat.errors[:purpose], "is not included in the list"
   end
 
+  # ── direct ownership (user_id) — see issue #27 ────────────────────────────
+
+  test "a chat without a user is invalid" do
+    chat = Chat.new(chattable: @user)
+
+    assert_not chat.valid?
+    assert_includes chat.errors[:user], "must exist"
+  end
+
+  test "User#owned_chats is scoped by user_id and is distinct from User#chats" do
+    standalone = Chat.create!(user: @user) # no chattable at all
+    direct     = @user.chats.create!(user: @user) # chattable = @user too
+
+    assert_includes @user.owned_chats, standalone
+    assert_includes @user.owned_chats, direct
+
+    assert_includes @user.chats, direct
+    assert_not_includes @user.chats, standalone, "a standalone chat has no chattable, so it can't appear in the chattable-based #chats relation even though it's owned"
+  end
+
   # ── model resolution ──────────────────────────────────────────────────────
   # acts_as_chat resolves the model on save (resolve_model_from_strings); a
   # chat created with no explicit model falls back to RubyLLM.config.default_model,

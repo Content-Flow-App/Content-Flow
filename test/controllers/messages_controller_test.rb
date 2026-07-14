@@ -61,4 +61,20 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :not_acceptable
   end
+
+  # ── ownership scoping (IDOR regression — see issue #27) ───────────────────
+
+  test "create returns 404 for another user's chat, persists no message, and enqueues no job" do
+    other = create_user!(email: "messages-other@cf.test")
+    Creator.create!(user: other, name: "Other", topic: "AI", goal: "grow", audience: "devs")
+    theirs = other.chats.create!(user: other)
+
+    assert_no_enqueued_jobs do
+      assert_no_difference -> { theirs.messages.count } do
+        post chat_messages_path(theirs), params: { message: { content: "hi" } }
+      end
+    end
+
+    assert_response :not_found
+  end
 end
