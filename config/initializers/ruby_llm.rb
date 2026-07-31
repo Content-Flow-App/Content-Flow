@@ -33,9 +33,16 @@ RubyLLM.configure do |config|
   config.anthropic_api_key = ENV.fetch("ANTHROPIC_API_KEY", nil)
   config.default_model = "claude-sonnet-5"
 
-  # Cap each API attempt at 30 s. With the default 3 retries the worst-case
-  # hang before an error fires is 4 × 30 s = 2 minutes instead of 20.
-  config.request_timeout = 30
+  # Cap each API attempt at 90 s. With the default 3 retries the worst-case
+  # hang before an error fires is 4 × 90 s = 6 minutes instead of 20.
+  #
+  # Originally set to 30 s (issue #45) to bound retries at 2 minutes. That was
+  # too tight for claude-opus-5: its extended-reasoning responses can take
+  # longer than 30 s to produce a first byte, so every attempt — and every
+  # retry — tripped the cap. Confirmed in production on chat 171 (issue #49):
+  # the job "completed" in 121.27 s, ~4 × 30 s, with no assistant message
+  # persisted — a real Faraday::TimeoutError on every attempt, not a hang.
+  config.request_timeout = 90
   # Use the new association-based acts_as API (recommended)
   config.use_new_acts_as = true
 

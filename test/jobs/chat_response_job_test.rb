@@ -25,10 +25,13 @@ class ChatResponseJobTest < ActiveJob::TestCase
     klass.define_method(meth, original)
   end
 
-  test "request_timeout is capped at 30s so a hung request fails fast" do
+  test "request_timeout is capped at 90s so a hung request fails fast" do
     # The core of the timeout fix: without this cap RubyLLM defaults to 300s
     # and, with 3 retries, a hung request could block the job for ~20 minutes.
-    assert_equal 30, RubyLLM.config.request_timeout
+    # 90s (not the original 30s from issue #45) because claude-opus-5's
+    # extended-reasoning responses can legitimately take longer than 30s to
+    # produce a first byte — see issue #49.
+    assert_equal 90, RubyLLM.config.request_timeout
   end
 
   test "a Faraday::TimeoutError is rescued and broadcasts a timeout message" do
