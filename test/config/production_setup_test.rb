@@ -17,7 +17,11 @@ class ProductionSetupTest < ActiveSupport::TestCase
 
     assert_equal "bin/rails server", procfile["web"]
     assert_equal "bin/jobs", procfile["worker"]
-    assert_equal "bin/rails db:prepare", procfile["release"]
+    # release also runs Model.refresh! (issue #49) — db:prepare alone leaves
+    # newly-added models (e.g. claude-opus-5) missing from the `models` table
+    # until someone remembers to refresh manually, which is what let chat 171
+    # hit RubyLLM::ModelNotFoundError and get stuck in production.
+    assert_equal "bin/rails db:prepare && bin/rails runner \"Model.refresh!\"", procfile["release"]
   end
 
   test "bin/jobs is executable" do

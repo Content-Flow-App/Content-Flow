@@ -77,6 +77,25 @@ class ChatResponseJobTest < ActiveJob::TestCase
     assert_includes html, "no longer available"
   end
 
+  # RubyLLM::ModelNotFoundError is also a plain StandardError, not a
+  # RubyLLM::Error subclass — same gap as ConfigurationError above. Fires when
+  # a chat's model_id isn't in this environment's `models` table yet, e.g. a
+  # newly-added model whose row hasn't been pulled in by Model.refresh! since
+  # the last deploy (see issue #49 — this is the failure mode that left
+  # chat 171 stuck on "thinking" forever in production).
+  test "a RubyLLM::ModelNotFoundError is rescued and broadcasts an unavailable-model message" do
+    elements = nil
+    with_instance_stub(Chat, :complete, proc { raise RubyLLM::ModelNotFoundError, "Unknown model: \"claude-opus-5\" for provider: :anthropic." }) do
+      elements = capture_turbo_stream_broadcasts(@stream) do
+        assert_nothing_raised { ChatResponseJob.perform_now(@chat.id) }
+      end
+    end
+
+    html = elements.map(&:to_html).join
+    assert_includes html, "ai error"
+    assert_includes html, "isn't available right now"
+  end
+
   test "the generation-action loading state is always cleared on failure" do
     elements = nil
     with_instance_stub(Chat, :complete, proc { raise Faraday::TimeoutError }) do
