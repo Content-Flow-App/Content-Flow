@@ -99,6 +99,44 @@ class ChatResponseJobTest < ActiveJob::TestCase
     assert_includes html, "isn't available right now"
   end
 
+  # No existing test exercised the success path at all — every other test in
+  # this file, plus FirstRunJourneyTest, stubs or bypasses `chat.complete`
+  # entirely. That left the exact behavior this session's two production
+  # incidents were about (the thinking indicator never clearing) with zero
+  # coverage on the happy path that's supposed to clear it.
+  test "on success, the thinking indicator is removed and the assistant reply is broadcast" do
+    elements = nil
+    with_instance_stub(Chat, :complete, proc { messages.create!(role: "assistant", content: "Here's an idea.") }) do
+      elements = capture_turbo_stream_broadcasts(@stream) do
+        ChatResponseJob.perform_now(@chat.id)
+      end
+    end
+
+    removals = elements.select { |el| el["action"] == "remove" }
+    assert_includes removals.map { |el| el["target"] }, "thinking-indicator"
+
+    appends = elements.select { |el| el["action"] == "append" && el["target"] == "messages" }
+    assert_includes appends.map(&:to_html).join, "Here's an idea."
+
+    assert_includes elements.map { |el| el["target"] }, "generation-action"
+  end
+
+  # RubyLLM::OverloadedError < RubyLLM::Error — unlike ConfigurationError and
+  # ModelNotFoundError above, this one *is* caught by the generic
+  # `rescue RubyLLM::Error => e` branch, which was previously untested.
+  test "a generic RubyLLM::Error is rescued and broadcasts its message" do
+    elements = nil
+    with_instance_stub(Chat, :complete, proc { raise RubyLLM::OverloadedError.new(nil, "The server is overloaded.") }) do
+      elements = capture_turbo_stream_broadcasts(@stream) do
+        assert_nothing_raised { ChatResponseJob.perform_now(@chat.id) }
+      end
+    end
+
+    html = elements.map(&:to_html).join
+    assert_includes html, "ai error"
+    assert_includes html, "The server is overloaded."
+  end
+
   test "the generation-action loading state is always cleared on failure" do
     elements = nil
     with_instance_stub(Chat, :complete, proc { raise Faraday::TimeoutError }) do
