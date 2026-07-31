@@ -28,5 +28,5 @@
 
 ## 5. Verification
 
-- [ ] 5.1 Run the full test suite and confirm no existing test relying on `User#chats` (chattable-based) regresses
-- [ ] 5.2 Manually verify in `bin/dev`: sign in as two different users, confirm user A cannot open, delete, or message into user B's chat by editing the URL, and that `/chats` for each user shows only their own
+- [x] 5.1 Run the full test suite and confirm no existing test relying on `User#chats` (chattable-based) regresses
+- [x] 5.2 Manually verify in `bin/dev`: sign in as two different users, confirm user A cannot open, delete, or message into user B's chat by editing the URL, and that `/chats` for each user shows only their own
