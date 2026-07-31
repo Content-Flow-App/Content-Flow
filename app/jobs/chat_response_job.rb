@@ -41,6 +41,16 @@ class ChatResponseJob < ApplicationJob
   rescue RubyLLM::RateLimitError
     broadcast_error(chat_id, "rate limit reached",
       "The AI provider has hit its daily request limit. Please try again later.")
+  rescue RubyLLM::ConfigurationError
+    # Not a RubyLLM::Error subclass, so it needs its own rescue. Fires if a
+    # chat's model has no credentials configured for its provider — normally
+    # prevented by the RepointNonAnthropicChatsToDefaultModel migration and
+    # the CHAT_MODELS allowlist, but kept as a safety net so a chat left in
+    # this state degrades to a visible error instead of silently never
+    # replying (see issue #45 — this was the failure mode `RubyLLM::Error`
+    # alone didn't catch).
+    broadcast_error(chat_id, "ai error",
+      "This chat's model is no longer available. Start a new chat to keep going.")
   rescue RubyLLM::Error => e
     broadcast_error(chat_id, "ai error", e.message)
   rescue Faraday::TimeoutError

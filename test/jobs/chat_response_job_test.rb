@@ -58,6 +58,25 @@ class ChatResponseJobTest < ActiveJob::TestCase
     assert_includes html, "rate limit reached"
   end
 
+  # RubyLLM::ConfigurationError is a plain StandardError, not a RubyLLM::Error
+  # subclass — before this rescue it would propagate unhandled out of the
+  # job. This is exactly what happens when a chat's model has no credentials
+  # configured for its provider (e.g. a chat still pointing at a
+  # since-removed GitHub Models model — see issue #45 / the
+  # RepointNonAnthropicChatsToDefaultModel migration).
+  test "a RubyLLM::ConfigurationError is rescued and broadcasts an unavailable-model message" do
+    elements = nil
+    with_instance_stub(Chat, :complete, proc { raise RubyLLM::ConfigurationError, "Missing configuration for OpenAI: openai_api_key." }) do
+      elements = capture_turbo_stream_broadcasts(@stream) do
+        assert_nothing_raised { ChatResponseJob.perform_now(@chat.id) }
+      end
+    end
+
+    html = elements.map(&:to_html).join
+    assert_includes html, "ai error"
+    assert_includes html, "no longer available"
+  end
+
   test "the generation-action loading state is always cleared on failure" do
     elements = nil
     with_instance_stub(Chat, :complete, proc { raise Faraday::TimeoutError }) do

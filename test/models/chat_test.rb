@@ -100,9 +100,9 @@ class ChatTest < ActiveSupport::TestCase
   end
 
   test "a chat created with an explicit model honors it over the default" do
-    chat = @user.chats.create!(model: "gpt-4o-mini", user: @user)
+    chat = @user.chats.create!(model: "claude-opus-5", user: @user)
 
-    assert_equal "gpt-4o-mini", chat.model_id
-    assert_equal "openai", chat.provider
+    assert_equal "claude-opus-5", chat.model_id
+    assert_equal "anthropic", chat.provider
   end
 end

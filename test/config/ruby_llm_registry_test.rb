@@ -19,11 +19,27 @@ class RubyLlmRegistryTest < ActiveSupport::TestCase
     assert_equal "anthropic", model.provider
   end
 
-  test "the previous default (gpt-4o-mini via GitHub Models) still resolves" do
-    model = RubyLLM.models.find("gpt-4o-mini")
+  test "claude-opus-5 resolves (added to the fallback registry ahead of the gem, like claude-sonnet-5)" do
+    model = RubyLLM.models.find("claude-opus-5")
 
-    assert_equal "gpt-4o-mini", model.id
-    assert_equal "openai", model.provider
+    assert_equal "claude-opus-5", model.id
+    assert_equal "anthropic", model.provider
+  end
+
+  test "claude-haiku-4-5-20251001 resolves" do
+    model = RubyLLM.models.find("claude-haiku-4-5-20251001")
+
+    assert_equal "claude-haiku-4-5-20251001", model.id
+    assert_equal "anthropic", model.provider
+  end
+
+  # GitHub Models was dropped entirely — see config/initializers/ruby_llm.rb.
+  # Guards against it quietly coming back (e.g. a merge conflict resurrecting
+  # the old openai_api_key/openai_api_base lines), which would put chats at
+  # risk of the exact failure in issue #45 again.
+  test "no OpenAI-compatible provider (GitHub Models) is configured" do
+    assert_nil RubyLLM.config.openai_api_key
+    assert_nil RubyLLM.config.openai_api_base
   end
 
   test "config.model_registry_file exists and is valid, non-empty JSON" do
