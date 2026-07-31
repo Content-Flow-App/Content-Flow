@@ -16,12 +16,26 @@ class ChatsController < ApplicationController
   def create
     prompt = params.dig(:chat, :prompt)
     if prompt.present?
-      @chat = Chat.create!(
-        model: params.dig(:chat, :model).presence,
-        chattable: chattable,
-        purpose: purpose,
-        user: current_user
-      )
+      owner = chattable
+      requested_purpose = purpose
+
+      begin
+        @chat = Chat.create!(
+          model: params.dig(:chat, :model).presence,
+          chattable: owner,
+          purpose: requested_purpose,
+          user: current_user
+        )
+      rescue RubyLLM::ConfigurationError
+        # A model with no credentials configured for any provider (e.g. a
+        # stale request for a since-removed GitHub Models id — see issue #45)
+        # raises here, from acts_as_chat's before_save callback, before
+        # ChatResponseJob's own RubyLLM::Error rescues ever get a chance to
+        # run. Without this it would 500 instead of a friendly redirect.
+        redirect_to new_chat_path(purpose: requested_purpose, chattable_type: owner&.class&.name, chattable_id: owner&.id),
+          alert: "That model is no longer available. Please choose another one."
+        return
+      end
 
       # Persist the creator-aware system prompt as a role: :system message
       # before the job runs, so the assistant streams with the context already in

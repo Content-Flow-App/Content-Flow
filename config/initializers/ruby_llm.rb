@@ -1,11 +1,21 @@
 RubyLLM.configure do |config|
   # Project - Content Flow
-  # For text generation → gpt-4o-mini. It's the natural default: low latency, low cost, and strong general quality. Step up to gpt-4o only for tasks where you notice the mini model struggling
-  # (complex reasoning, long nuanced content). This is also exactly the model you had working before the gpt-5-nano change.
-  # For embeddings → text-embedding-3-small. Best balance of quality, speed, and cost, and it pairs naturally with the OpenAI-style client you've already configured. Choose text-embedding-3-large
-  # only if you measure a meaningful retrieval-quality gain and can accept 2× the vector size (which also affects your DB column / storage). Reach for the Cohere models only if multilingual
-  # content is a real requirement.
-  
+  #
+  # GitHub Models (models.github.ai/inference) was dropped entirely — see
+  # issue #45. It was our only route to OpenAI/Mistral/DeepSeek chat models,
+  # and GitHub confirmed via live API error it's mid "scheduled retirement
+  # brownout": `RubyLLM::Error: GitHub Models is temporarily unavailable as
+  # part of a scheduled retirement brownout.` That's not a transient outage —
+  # it's GitHub sunsetting the free inference endpoint — so any chat routed
+  # through it (including chats created before Anthropic became the default)
+  # was liable to break in production with no recovery. Anthropic direct is
+  # now the only chat provider.
+  #
+  # For embeddings (unused today) → text-embedding-3-small would be the natural
+  # choice if this app ever adds retrieval: best balance of quality, speed, and
+  # cost. text-embedding-3-large only pays off if you measure a real
+  # retrieval-quality gain and can accept 2× the vector size.
+
   # Setup - Dummy
   config.gemini_api_key    = ENV.fetch("GEMINI_API_KEY", nil)
   config.deepseek_api_key  = ENV.fetch("DEEPSEEK_API_KEY", nil)
@@ -17,19 +27,12 @@ RubyLLM.configure do |config|
   # against the live API, not assumed from the bundled registry, which at the
   # time only knew as far as `claude-sonnet-4-6`). It's now the app default;
   # `Model.refresh!` pulled its real pricing/context-window/capabilities data
-  # into the `models` table.
+  # into the `models` table. `claude-opus-5` and `claude-haiku-4-5-20251001`
+  # (confirmed the same way, live against `v1/models`) round out the
+  # selectable allowlist — see ApplicationController::CHAT_MODELS.
   config.anthropic_api_key = ENV.fetch("ANTHROPIC_API_KEY", nil)
   config.default_model = "claude-sonnet-5"
 
-  # GitHub Models' original Azure-hosted endpoint (models.inference.ai.azure.com)
-  # was retired on 2025-10-17 — any token, however valid, gets "Bad credentials"
-  # there now. Its replacement, models.github.ai/inference, needs a token with
-  # `models: read` permission (a fine-grained PAT, set under the token's
-  # "Account permissions" → "Models"). Set GITHUB_TOKEN on Heroku to one of
-  # those. No longer the default model, but stays fully configured and
-  # selectable.
-  config.openai_api_key = ENV.fetch("GITHUB_TOKEN", Rails.application.credentials.dig(:openai_api_key))
-  config.openai_api_base = "https://models.github.ai/inference"
   # Cap each API attempt at 30 s. With the default 3 retries the worst-case
   # hang before an error fires is 4 × 30 s = 2 minutes instead of 20.
   config.request_timeout = 30
@@ -47,30 +50,3 @@ RubyLLM.configure do |config|
   # `RubyLLM.models.save_to_json` after `Model.refresh!` picks up new models.
   config.model_registry_file = Rails.root.join("config", "ruby_llm_models.json").to_s
 end
-
-# The new GitHub Models endpoint requires the OpenAI-compatible `model` field
-# in the request body to carry a publisher prefix ("openai/gpt-4o-mini"), but
-# our Model registry (and every existing chat/message row) stores the bare id
-# ("gpt-4o-mini") — deliberately, since a prefixed id would collide with
-# OpenRouter's own "openai/<model>" naming in RubyLLM's registry and resolve
-# to the wrong (unconfigured) provider. So the prefix is added right before
-# the request is sent, only when we're actually talking to GitHub Models.
-module RubyLLM
-  module Providers
-    class OpenAI
-      module GithubModelsModelPrefix
-        GITHUB_MODELS_HOST = "models.github.ai"
-
-        def render_payload(...)
-          payload = super
-          if config.openai_api_base.to_s.include?(GITHUB_MODELS_HOST) && !payload[:model].to_s.include?("/")
-            payload[:model] = "openai/#{payload[:model]}"
-          end
-          payload
-        end
-      end
-    end
-  end
-end
-
-RubyLLM::Providers::OpenAI.prepend(RubyLLM::Providers::OpenAI::GithubModelsModelPrefix)

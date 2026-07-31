@@ -75,6 +75,21 @@ class ChatsControllerTest < ActionDispatch::IntegrationTest
     assert_nil Chat.last.purpose
   end
 
+  # gpt-4o-mini is no longer configured (GitHub Models was dropped — issue
+  # #45) but still resolves in the registry, so a stale client submitting it
+  # directly (bypassing the switcher, which no longer offers it) hits
+  # RubyLLM::ConfigurationError from acts_as_chat's before_save callback,
+  # before ChatResponseJob's own rescues ever get a chance to run. Without a
+  # rescue here this would 500 instead of a friendly redirect.
+  test "create rescues a model with no configured provider and redirects with an alert instead of 500ing" do
+    assert_no_difference -> { Chat.count } do
+      post chats_path, params: { chat: { prompt: "hi", model: "gpt-4o-mini" } }
+    end
+
+    assert_redirected_to new_chat_path
+    assert_equal "That model is no longer available. Please choose another one.", flash[:alert]
+  end
+
   test "new renders an allowlisted purpose into the form's hidden field" do
     get new_chat_path(purpose: "generate_idea")
 
