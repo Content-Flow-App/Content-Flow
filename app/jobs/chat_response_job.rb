@@ -51,6 +51,15 @@ class ChatResponseJob < ApplicationJob
     # alone didn't catch).
     broadcast_error(chat_id, "ai error",
       "This chat's model is no longer available. Start a new chat to keep going.")
+  rescue RubyLLM::ModelNotFoundError
+    # Also not a RubyLLM::Error subclass (same gap as ConfigurationError above).
+    # Fires when a chat's model_id isn't in this environment's `models` table
+    # yet — e.g. a newly-added model whose row hasn't been pulled in by
+    # Model.refresh! since the last deploy (see issue #49). Without this the
+    # job dies unhandled: the thinking-indicator is never removed and no
+    # error reaches the user, so the chat just looks stuck forever.
+    broadcast_error(chat_id, "ai error",
+      "This chat's model isn't available right now. Start a new chat to keep going.")
   rescue RubyLLM::Error => e
     broadcast_error(chat_id, "ai error", e.message)
   rescue Faraday::TimeoutError
