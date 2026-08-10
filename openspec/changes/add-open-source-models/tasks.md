@@ -1,16 +1,16 @@
 ## 1. Provision credentials (blocking — no code depends on this being skipped)
 
-- [ ] 1.1 Create a DeepSeek API key at `platform.deepseek.com/api_keys` (currently empty) and top up the account's prepaid balance (currently $0.00)
-- [ ] 1.2 Create an OpenRouter account/API key and fund it with credit
-- [ ] 1.3 Set `DEEPSEEK_API_KEY` and `OPENROUTER_API_KEY` locally (`.env`) and confirm both resolve via `ENV.fetch` in a Rails console
-- [ ] 1.4 Set `DEEPSEEK_API_KEY` and `OPENROUTER_API_KEY` on Heroku (`heroku config:set`)
+- [x] 1.1 Create a DeepSeek API key at `platform.deepseek.com/api_keys` (currently empty) and top up the account's prepaid balance (currently $0.00)
+- [x] 1.2 Create an OpenRouter account/API key and fund it with credit
+- [x] 1.3 Set `DEEPSEEK_API_KEY` and `OPENROUTER_API_KEY` locally (`.env`) and confirm both resolve via `ENV.fetch` in a Rails console
+- [x] 1.4 Set `DEEPSEEK_API_KEY` and `OPENROUTER_API_KEY` on Heroku (`heroku config:set`)
 
 ## 2. Verify candidate models live, before touching the allowlist
 
-- [ ] 2.1 Confirm DeepSeek's native chat model id via a real request against DeepSeek's `v1/models` (or a real chat completion) using the new key
-- [ ] 2.2 Confirm Kimi K3's exact OpenRouter model id via OpenRouter's live `/api/v1/models` catalog (or a real chat completion)
-- [ ] 2.3 Confirm GLM-5.2's exact OpenRouter model id the same way
-- [ ] 2.4 If either Kimi K3 or GLM-5.2 is not reachable on the funded tier, note it as deferred (mirrors the prior change's GPT-5/o-series exclusion) rather than adding it speculatively
+- [x] 2.1 Confirm DeepSeek's native chat model id via a real request against DeepSeek's `v1/models` (or a real chat completion) using the new key — `deepseek-chat` is gone; live account returns `deepseek-v4-flash` and `deepseek-v4-pro`, completion-tested against `deepseek-v4-flash`. Which one ships is still open (see design.md Open Questions).
+- [x] 2.2 Confirm Kimi K3's exact OpenRouter model id via OpenRouter's live `/api/v1/models` catalog (or a real chat completion) — confirmed `moonshotai/kimi-k3`, completion-tested and billed.
+- [x] 2.3 Confirm GLM-5.2's exact OpenRouter model id the same way — confirmed `z-ai/glm-5.2`, completion-tested and billed.
+- [x] 2.4 If either Kimi K3 or GLM-5.2 is not reachable on the funded tier, note it as deferred (mirrors the prior change's GPT-5/o-series exclusion) rather than adding it speculatively — both reachable on the funded tier, neither deferred.
 
 ## 3. Configure providers
 
