@@ -42,7 +42,7 @@
 
 ## 7. Deploy
 
-- [ ] 7.1 Run `Model.refresh!` in production (one-off dyno run) against the live keys, confirming the new rows exist
-- [ ] 7.2 Deploy the code changes in the same release as (or strictly after) Task 7.1
-- [ ] 7.3 Restart production dynos if the deploy itself doesn't already cycle them
-- [ ] 7.4 Smoke-test Task 6's scenarios in production
+- [x] 7.1 Run `Model.refresh!` in production (one-off dyno run) against the live keys, confirming the new rows exist
+- [x] 7.2 Deploy the code changes in the same release as (or strictly after) Task 7.1
+- [x] 7.3 Restart production dynos if the deploy itself doesn't already cycle them
+- [x] 7.4 Smoke-test Task 6's scenarios in production
