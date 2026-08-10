@@ -33,12 +33,12 @@
 
 ## 6. Verify end-to-end
 
-- [ ] 6.1 Start a new chat, confirm the switcher lists all three DeepSeek/OpenRouter entries alongside the three Anthropic ones, with correct publisher labels
-- [ ] 6.2 Select DeepSeek, send a message, confirm a real reply with no `RubyLLM::ConfigurationError`
-- [ ] 6.3 Select Kimi K3 (if shipped), send a message, confirm a real reply
-- [ ] 6.4 Select GLM-5.2 (if shipped), send a message, confirm a real reply
-- [ ] 6.5 Confirm an unspecified new chat still defaults to `claude-sonnet-5`
-- [ ] 6.6 Confirm the `/models` registry pages show correct publisher labels for the new rows
+- [x] 6.1 Start a new chat, confirm the switcher lists all three DeepSeek/OpenRouter entries alongside the three Anthropic ones, with correct publisher labels
+- [x] 6.2 Select DeepSeek, send a message, confirm a real reply with no `RubyLLM::ConfigurationError`
+- [x] 6.3 Select Kimi K3 (if shipped), send a message, confirm a real reply
+- [x] 6.4 Select GLM-5.2 (if shipped), send a message, confirm a real reply
+- [x] 6.5 Confirm an unspecified new chat still defaults to `claude-sonnet-5`
+- [x] 6.6 Confirm the `/models` registry pages show correct publisher labels for the new rows
 
 ## 7. Deploy
 
