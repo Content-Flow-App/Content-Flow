@@ -14,9 +14,9 @@
 
 ## 3. Configure providers
 
-- [ ] 3.1 In `config/initializers/ruby_llm.rb`, move `config.deepseek_api_key` from the "Setup - Dummy" section to "Setup - Working", with a comment recording the verification done in Task 2.1
-- [ ] 3.2 Add `config.openrouter_api_key = ENV.fetch("OPENROUTER_API_KEY", nil)` to the "Setup - Working" section, with a comment recording the verification done in Tasks 2.2–2.3
-- [ ] 3.3 Confirm `config.default_model` is untouched (`"claude-sonnet-5"`)
+- [x] 3.1 In `config/initializers/ruby_llm.rb`, move `config.deepseek_api_key` from the "Setup - Dummy" section to "Setup - Working", with a comment recording the verification done in Task 2.1
+- [x] 3.2 Add `config.openrouter_api_key = ENV.fetch("OPENROUTER_API_KEY", nil)` to the "Setup - Working" section, with a comment recording the verification done in Tasks 2.2–2.3
+- [x] 3.3 Confirm `config.default_model` is untouched (`"claude-sonnet-5"`)
 
 ## 4. Expand the allowlist and fix provider labels
 
