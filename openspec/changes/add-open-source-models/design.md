@@ -10,6 +10,16 @@ Issue #47's research recommends, in order: DeepSeek (native RubyLLM provider, "z
 
 The precedent for this kind of change is the archived `add-anthropic-model-switcher` change: exact `[provider, model_id]` allowlist (never provider-level), each model individually verified live before being added, a `metadata[:real_publisher]` correction for models routed through a multi-vendor aggregator, and a committed `config/ruby_llm_models.json` fallback regenerated whenever the allowlist changes. This design reuses all four mechanisms rather than inventing new ones.
 
+### Update — live verification complete (issues #60, #54)
+
+Both accounts are now provisioned and funded (#60), and all three candidate model ids have been confirmed live (#54) — via a real chat completion in every case, not just a catalog listing:
+
+- **DeepSeek** (`GET /v1/models`, then a real completion): the account no longer exposes a `deepseek-chat` alias. Two live chat models were returned instead — **`deepseek-v4-flash`** and **`deepseek-v4-pro`** — both under `owned_by: "deepseek"`. A completion against `deepseek-v4-flash` succeeded. **Which of the two becomes the `CHAT_MODELS` entry is still open** — see Open Questions.
+- **Kimi K3** (OpenRouter `/api/v1/models`, then a real completion): confirmed as **`moonshotai/kimi-k3`**, exactly the example form Decision 3 guessed. Completion succeeded and was billed ($0.00054), proving funded credit.
+- **GLM-5.2** (OpenRouter `/api/v1/models`, then a real completion): confirmed as **`z-ai/glm-5.2`**, also exactly the guessed form. Completion succeeded and was billed ($0.00007632).
+
+Neither OpenRouter model needs to be deferred — both are reachable on the funded tier, so the "defer if unreachable" branch of Decision 3 / tasks.md §2.4 doesn't apply.
+
 ## Goals / Non-Goals
 
 **Goals:**
@@ -43,7 +53,9 @@ DeepSeek ships a first-class RubyLLM provider class with its own `deepseek_api_k
 
 ### 3. Kimi K3 and GLM-5.2 are added under the native `openrouter` provider, registered with their OpenRouter-native ids
 
-Both are reachable through RubyLLM's native `OpenRouter` provider class (`openrouter_api_key`/`openrouter_api_base`), which is publisher-agnostic — one key covers any model OpenRouter fronts. Register them with whatever id OpenRouter's live catalog reports (OpenRouter ids are conventionally `{publisher-slug}/{model-slug}`, e.g. a form like `moonshotai/kimi-k3` or `z-ai/glm-5.2`) — the **exact** ids are confirmed against OpenRouter's `/api/v1/models` during implementation, not assumed from naming convention alone, matching this repo's verification discipline. If either model isn't yet listed on OpenRouter at implementation time, that model is deferred rather than added speculatively.
+Both are reachable through RubyLLM's native `OpenRouter` provider class (`openrouter_api_key`/`openrouter_api_base`), which is publisher-agnostic — one key covers any model OpenRouter fronts. Register them with whatever id OpenRouter's live catalog reports (OpenRouter ids are conventionally `{publisher-slug}/{model-slug}`) — the **exact** ids are confirmed against OpenRouter's `/api/v1/models` during implementation, not assumed from naming convention alone, matching this repo's verification discipline. If either model isn't yet listed on OpenRouter at implementation time, that model is deferred rather than added speculatively.
+
+**Confirmed (issue #54)**: both ids are live and match the guessed convention exactly — `moonshotai/kimi-k3` and `z-ai/glm-5.2`. Each was verified with a real, billed chat completion (not just a catalog listing), so neither needs to be deferred.
 
 **Alternative considered**: pick one of Kimi K3 / GLM-5.2 only, deferring the other. Rejected as a default — the issue names both as the "then" step of the rollout with no stated preference between them, and OpenRouter's single-credential model means adding both costs nothing beyond the extra verification step. (If live verification during implementation shows only one is actually reachable on this account/tier, that alone is a valid reason to ship one and defer the other — same posture the prior change took toward the GPT-5/o-series models that turned out to be blocked.)
 
@@ -55,8 +67,8 @@ The prior change's `chat_model_provider_label`/`chat_model_label` helpers and `R
 
 ## Risks / Trade-offs
 
-- **[Risk]** OpenRouter's exact model ids for Kimi K3 / GLM-5.2 are not yet confirmed live (no OpenRouter account checked in this session). → **Mitigation**: tasks.md verifies both against OpenRouter's live `/api/v1/models` before either is added to `CHAT_MODELS`; if an id differs from what's assumed here, the spec's scenario text is updated to match the confirmed id, not the other way around.
-- **[Risk]** DeepSeek's $0 balance means even a successful key creation doesn't unblock verification until the account is funded — a real dependency on a manual top-up step outside this repo. → **Mitigation**: tasks.md calls this out as an explicit, first-sequence, non-code task.
+- ~~**[Risk]** OpenRouter's exact model ids for Kimi K3 / GLM-5.2 are not yet confirmed live~~ **Resolved (#54)**: both confirmed via live `/api/v1/models` and a real billed completion — `moonshotai/kimi-k3`, `z-ai/glm-5.2`.
+- ~~**[Risk]** DeepSeek's $0 balance means even a successful key creation doesn't unblock verification~~ **Resolved (#60)**: account funded, confirmed with a real completion against `deepseek-v4-flash`. Note the model id itself moved — `deepseek-chat` is no longer listed; see the Open Questions entry on `deepseek-v4-flash` vs. `deepseek-v4-pro`.
 - **[Risk]** `RubyLLM::Models.instance` is a per-process memoized singleton (documented risk from the prior change) — any already-running dev server or production dyno won't see new `Model` rows from `Model.refresh!` until restarted. → **Mitigation**: same as before — tasks.md and the Migration Plan call out the restart step explicitly.
 - **[Trade-off]** Adding a fourth and fifth model to `CHAT_MODELS` means the switcher now spans three separate credential surfaces (Anthropic, DeepSeek, OpenRouter) instead of one — three things that can independently go down or exhaust a rate limit. Accepted: each is individually verified before being listed, and the exact-allowlist mechanism (unchanged from the prior design) is what keeps a broken provider from silently exposing broken models, not provider-count minimization.
 - **[Trade-off]** Both new providers are metered/prepaid, same category as the original Anthropic switch — but unlike Anthropic (billed centrally, already budgeted), DeepSeek and OpenRouter are brand-new spend lines with no existing budget relationship. Flagged here as a cost-owner decision, not something this design can resolve.
@@ -73,6 +85,7 @@ The prior change's `chat_model_provider_label`/`chat_model_label` helpers and `R
 
 ## Open Questions
 
-- Exact OpenRouter model ids for Kimi K3 and GLM-5.2 — to be confirmed against OpenRouter's live catalog during implementation (Decision 3).
-- Whether both Kimi K3 and GLM-5.2 should ship together or Kimi K3 first, if implementation-time verification surfaces a reason to stage them (e.g. one is rate-limited or unavailable on the funded tier).
+- ~~Exact OpenRouter model ids for Kimi K3 and GLM-5.2~~ — **Resolved (#54)**: `moonshotai/kimi-k3`, `z-ai/glm-5.2`.
+- **New, replaces the resolved question above**: DeepSeek no longer lists a `deepseek-chat` alias — the live account shows `deepseek-v4-flash` and `deepseek-v4-pro` instead. Which one becomes the `CHAT_MODELS` entry is undecided: `flash` is the conventional lower-cost/lower-latency default (and is what tasks.md §2.1's verification completion used), while `pro` is presumably the higher-capability tier. Needs a decision before tasks.md §3.1.
+- ~~Whether both Kimi K3 and GLM-5.2 should ship together or Kimi K3 first~~ — **Resolved (#54)**: both are reachable on the funded tier, no staging needed.
 - Who owns the DeepSeek/OpenRouter billing relationship going forward (cost-owner decision, not a technical blocker to this change).
