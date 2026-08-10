@@ -32,6 +32,19 @@ class ModelsControllerTest < ActionDispatch::IntegrationTest
     assert_select "td", text: "azure", count: 0
   end
 
+  # OpenRouter fronts multiple publishers under RubyLLM's single `openrouter`
+  # provider tag — the provider column must show the real publisher, not
+  # "Openrouter", or the switcher/registry page lies about what actually
+  # generated the reply. Mirrors the equivalent test for the GitHub
+  # Models-routed Mistral/DeepSeek rows, removed in issue #45.
+  test "index shows the real publisher for OpenRouter-routed models, not OpenRouter" do
+    get models_path
+
+    assert_response :success
+    assert_select "#model_openrouter_moonshotai_kimi-k3 td:first-child", text: "Moonshot AI"
+    assert_select "#model_openrouter_z-ai_glm-5_2 td:first-child", text: "Zhipu"
+  end
+
   test "show renders a real model" do
     model = Model.find_or_create_by!(provider: "anthropic", model_id: "claude-sonnet-5") do |m|
       m.name = "Claude Sonnet 5"

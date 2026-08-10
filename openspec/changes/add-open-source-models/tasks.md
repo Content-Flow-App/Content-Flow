@@ -27,9 +27,9 @@
 
 ## 5. Refresh registry data
 
-- [ ] 5.1 Run `Model.refresh!` locally against the now-live DeepSeek and OpenRouter keys; confirm rows exist for every id added in Task 4.1
-- [ ] 5.2 Regenerate `config/ruby_llm_models.json` via `RubyLLM.models.save_to_json` and commit it
-- [ ] 5.3 Restart the local dev server (`bin/dev`) to pick up the new `Model` rows (per-process registry cache — confirmed gotcha from the prior change)
+- [x] 5.1 Run `Model.refresh!` locally against the now-live DeepSeek and OpenRouter keys; confirm rows exist for every id added in Task 4.1
+- [x] 5.2 Regenerate `config/ruby_llm_models.json` via `RubyLLM.models.save_to_json` and commit it
+- [x] 5.3 Restart the local dev server (`bin/dev`) to pick up the new `Model` rows (per-process registry cache — confirmed gotcha from the prior change)
 
 ## 6. Verify end-to-end
 
