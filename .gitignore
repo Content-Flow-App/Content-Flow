@@ -44,3 +44,6 @@
 # Node
 node_modules/
 test-results/
+
+# Claude Skills
+.claude/skills/change-to-github-epic
