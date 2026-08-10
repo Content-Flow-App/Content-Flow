@@ -18,7 +18,6 @@ RubyLLM.configure do |config|
 
   # Setup - Dummy
   config.gemini_api_key    = ENV.fetch("GEMINI_API_KEY", nil)
-  config.deepseek_api_key  = ENV.fetch("DEEPSEEK_API_KEY", nil)
 
   # Setup - Working
   #
@@ -31,6 +30,24 @@ RubyLLM.configure do |config|
   # (confirmed the same way, live against `v1/models`) round out the
   # selectable allowlist — see ApplicationController::CHAT_MODELS.
   config.anthropic_api_key = ENV.fetch("ANTHROPIC_API_KEY", nil)
+
+  # DeepSeek Platform API key — account funded and key live as of issue #60.
+  # Verified directly against DeepSeek's own `v1/models` plus a real chat
+  # completion (issue #54): `deepseek-chat` is gone from the account; the
+  # live catalog reports `deepseek-v4-flash` and `deepseek-v4-pro` instead,
+  # completion-tested against `deepseek-v4-flash`. Which one lands in
+  # ApplicationController::CHAT_MODELS is still open — see design.md Open
+  # Questions in openspec/changes/add-open-source-models.
+  config.deepseek_api_key = ENV.fetch("DEEPSEEK_API_KEY", nil)
+
+  # OpenRouter API key — account funded and key live as of issue #60.
+  # Verified directly against OpenRouter's own `/api/v1/models` plus real,
+  # billed chat completions (issue #54): `moonshotai/kimi-k3` ($0.00054) and
+  # `z-ai/glm-5.2` ($0.00007632), both reachable on the funded tier. One key
+  # covers any publisher OpenRouter fronts — see ApplicationController's
+  # `real_publisher` label correction for how those publishers are surfaced.
+  config.openrouter_api_key = ENV.fetch("OPENROUTER_API_KEY", nil)
+
   config.default_model = "claude-sonnet-5"
 
   # Cap each API attempt at 90 s. With the default 3 retries the worst-case
