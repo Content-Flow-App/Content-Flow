@@ -86,6 +86,6 @@ The prior change's `chat_model_provider_label`/`chat_model_label` helpers and `R
 ## Open Questions
 
 - ~~Exact OpenRouter model ids for Kimi K3 and GLM-5.2~~ — **Resolved (#54)**: `moonshotai/kimi-k3`, `z-ai/glm-5.2`.
-- **New, replaces the resolved question above**: DeepSeek no longer lists a `deepseek-chat` alias — the live account shows `deepseek-v4-flash` and `deepseek-v4-pro` instead. Which one becomes the `CHAT_MODELS` entry is undecided: `flash` is the conventional lower-cost/lower-latency default (and is what tasks.md §2.1's verification completion used), while `pro` is presumably the higher-capability tier. Needs a decision before tasks.md §3.1.
+- ~~DeepSeek no longer lists a `deepseek-chat` alias — the live account shows `deepseek-v4-flash` and `deepseek-v4-pro` instead. Which one becomes the `CHAT_MODELS` entry?~~ **Resolved**: both ship as separate `CHAT_MODELS` entries, same posture as offering both OpenRouter models rather than picking one.
 - ~~Whether both Kimi K3 and GLM-5.2 should ship together or Kimi K3 first~~ — **Resolved (#54)**: both are reachable on the funded tier, no staging needed.
 - Who owns the DeepSeek/OpenRouter billing relationship going forward (cost-owner decision, not a technical blocker to this change).
