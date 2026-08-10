@@ -20,10 +20,10 @@
 
 ## 4. Expand the allowlist and fix provider labels
 
-- [ ] 4.1 Add the verified `[provider, model_id]` pairs from Task 2 to `ApplicationController::CHAT_MODELS`
-- [ ] 4.2 Reintroduce `metadata[:real_publisher]` tagging for the OpenRouter-routed rows (Kimi → Moonshot AI, GLM → Zhipu), adapting the mechanism the prior `add-anthropic-model-switcher` change built for GitHub Models (removed in issue #45 — confirmed no trace remains in `app/`)
-- [ ] 4.3 Reintroduce `chat_model_provider_label`/`chat_model_label` helpers on `ApplicationController`, reading `metadata[:real_publisher]` when present and falling back to `model.provider_class&.name || model.provider` otherwise
-- [ ] 4.4 Update `app/views/chats/_form.html.erb` (already uses `chat_model_label`) and `app/views/models/_model.html.erb` / `app/views/models/show.html.erb` to use the label helpers if they don't already
+- [x] 4.1 Add the verified `[provider, model_id]` pairs from Task 2 to `ApplicationController::CHAT_MODELS`
+- [x] 4.2 Reintroduce `metadata[:real_publisher]` tagging for the OpenRouter-routed rows (Kimi → Moonshot AI, GLM → Zhipu), adapting the mechanism the prior `add-anthropic-model-switcher` change built for GitHub Models (removed in issue #45 — confirmed no trace remains in `app/`)
+- [x] 4.3 Reintroduce `chat_model_provider_label`/`chat_model_label` helpers on `ApplicationController`, reading `metadata[:real_publisher]` when present and falling back to `model.provider_class&.name || model.provider` otherwise
+- [x] 4.4 Update `app/views/chats/_form.html.erb` (already uses `chat_model_label`) and `app/views/models/_model.html.erb` / `app/views/models/show.html.erb` to use the label helpers if they don't already
 
 ## 5. Refresh registry data
 

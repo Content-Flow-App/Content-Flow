@@ -2,14 +2,14 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
   before_action :check_creator_exist
 
-  # The only models actually configured and working (see
+  # The models actually configured and working (see
   # config/initializers/ruby_llm.rb): Claude Opus 5, Sonnet 5 (default), and
-  # Haiku 4.5, all direct on the `anthropic` provider. GitHub Models — the
-  # prior route to OpenAI/Mistral/DeepSeek chat models — was dropped entirely
-  # (issue #45): GitHub confirmed via live API error it's mid "scheduled
-  # retirement brownout", i.e. sunsetting the endpoint, not a transient
-  # outage. Any chat routed through it was liable to break in production with
-  # no recovery, so Anthropic direct is now the only supported provider.
+  # Haiku 4.5 direct on `anthropic`; DeepSeek's V4 Flash and Pro direct on
+  # `deepseek`; and Kimi K3 / GLM-5.2 fronted by `openrouter` (issue #47 —
+  # open-weight models reinstated through real, dedicated credentials this
+  # time, not the shared GitHub Models aggregator dropped in issue #45). Each
+  # entry was verified live against its own provider's model-listing API
+  # before being added here (see openspec/changes/add-open-source-models).
   #
   # Still paired as exact [provider, model_id] rather than a bare provider
   # allowlist: RubyLLM.models.chat_models tags plenty of non-chat models as
@@ -20,11 +20,32 @@ class ApplicationController < ActionController::Base
   CHAT_MODELS = [
     %w[anthropic claude-opus-5],
     %w[anthropic claude-sonnet-5],
-    %w[anthropic claude-haiku-4-5-20251001]
+    %w[anthropic claude-haiku-4-5-20251001],
+    %w[deepseek deepseek-v4-flash],
+    %w[deepseek deepseek-v4-pro],
+    %w[openrouter moonshotai/kimi-k3],
+    %w[openrouter z-ai/glm-5.2]
   ].freeze
 
+  # OpenRouter fronts multiple publishers under RubyLLM's single `openrouter`
+  # provider tag, so `model.provider_class&.name` would mislabel these rows
+  # "Openrouter - Kimi K3" instead of naming the real publisher. Each
+  # OpenRouter-routed row carries its true publisher in
+  # metadata[:real_publisher] (see Model.tag_real_publishers! — reapplied
+  # after every Model.refresh!, since refresh! overwrites metadata wholesale
+  # from OpenRouter's live catalog); this reads it back for display instead
+  # of trusting the registry's provider field. DeepSeek-native and Anthropic
+  # rows carry no such tag and fall through to the normal path unchanged.
+  REAL_PUBLISHER_NAMES = {
+    "moonshotai" => "Moonshot AI",
+    "zhipu" => "Zhipu"
+  }.freeze
+
   def chat_model_provider_label(model)
-    model.provider_class&.name || model.provider
+    real_publisher = model.metadata[:real_publisher] || model.metadata["real_publisher"]
+    return model.provider_class&.name || model.provider unless real_publisher
+
+    REAL_PUBLISHER_NAMES.fetch(real_publisher, real_publisher)
   end
   helper_method :chat_model_provider_label
 
