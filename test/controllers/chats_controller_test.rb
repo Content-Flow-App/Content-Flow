@@ -90,6 +90,26 @@ class ChatsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "That model is no longer available. Please choose another one.", flash[:alert]
   end
 
+  # Positive-path mirror of the gpt-4o-mini regression test above: confirms
+  # deepseek_api_key/openrouter_api_key are actually wired up in
+  # config/initializers/ruby_llm.rb, one representative model per newly
+  # configured provider (issue #47).
+  test "create resolves a DeepSeek model without a configuration error" do
+    assert_enqueued_with(job: ChatResponseJob) do
+      post chats_path, params: { chat: { prompt: "hi", model: "deepseek-v4-flash" } }
+    end
+
+    assert_redirected_to Chat.last
+  end
+
+  test "create resolves an OpenRouter-routed model without a configuration error" do
+    assert_enqueued_with(job: ChatResponseJob) do
+      post chats_path, params: { chat: { prompt: "hi", model: "moonshotai/kimi-k3" } }
+    end
+
+    assert_redirected_to Chat.last
+  end
+
   test "new renders an allowlisted purpose into the form's hidden field" do
     get new_chat_path(purpose: "generate_idea")
 
