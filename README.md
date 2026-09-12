@@ -1,4 +1,7 @@
-# Product Idea
+# Content Flow
+Watch the introduction video --> https://www.loom.com/share/5a534284b6814612a0584c75b6d23765.
+
+## Prodcut
 
 **Content Flow** is an AI-powered workspace that helps creators discover relevant content ideas, transform them into platform-specific content, and organize their weekly content workflow.
 
